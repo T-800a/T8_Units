@@ -1,0 +1,431 @@
+========================================= C H A N G E L O G ===========================================================
+
+	Script:		T8 Units
+	Author(s):	T-800a
+	E-Mail:		t-800a@gmx.net
+
+	This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.
+	To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-sa/4.0/ or send a letter to 
+	Creative Commons, 444 Castro Street, Suite 900, Mountain View, California, 94041, USA.
+
+=======================================================================================================================
+
+##### V052 - 17.10.2014 #####
+
+# pushback / count Fehler behoben
+
+# man kann eine Funktion definieren die beim spawnen auf jeder einheit in einer Gruppe angewendet wird 
+  (_this > einzelne Einheit)
+
+# 3 Komponente in den Com. Vars bei Einheiten definitionen.  Wenn 3. Kompo. = true dann reagieren einheiten selbst auf
+  beschuss, wenn nich machen sie mit gegebener Aufgabe weiter
+
+# kleinigkeiten / undefinierte var Sachen etc.
+
+
+
+##### V051 - 15.09.2014 #####
+
+# if ( T8U_var_useHC ) then { ... }; korrigiert
+
+# GARRISON für CIV's geändert
+
+# andere Kleinigkeiten
+
+
+
+##### V050 - 06.09.2014 #####
+
+# Englische DOKU erstellt ... arrrrrghl
+
+# Funktionen, Globale Variabeln, Variabeln die an Gruppen gespeichert werden, ... umbenannt:
+
+	- T8U_fnc_xxxx
+	- T8U_var_xxxx
+	- T8U_gvar_xxx
+	- T8U_dir_xxxx
+
+# GARRISON Script mit eigener einfacheren variante ersetzt.
+
+# DAC Einheitern können zur Hilfe gerufen werden.
+
+# ZEUS: möglichkeit die Einheiten mit einem! ZEUS Modul zu sync-en.
+
+# HEADLESS CLIENT: ungetestete möglichkeit eingebaut das Script nur am HC auszuführen
+
+# DEBUG verfeinert, u.a. Kann man die Console von KillzoneKid verwenden um sich den DEBUG live ausgeben zu lassen anstatt
+die RPT zu spammen. DEBUG Marker kann man aus-/einschalten.
+
+# HALO Support Funktion, kann von 'ausserhalb' angesprochen werden um einfach so eine Gruppe Springer erscheinen zu 
+lassen. Bitte sehr Paul :)!
+
+# Routine zum Hilfe rufen / steuern der Gruppen reaktionen überarbeitet
+
+# Reaktionen einer Gruppe auf getroffene Mitglieder hinzugefügt. (Hinlegen / Unterdrückungsfeuer)
+
+# Schrecklich viele Fehlerchen behoben, optimiert, usw. ...
+
+
+
+##### V042 - 11.02.2014 #####
+
+# neue optionale Parameter für Aufgabe OVERWATCH
+
+[ 
+	[
+		ARRAY, 		- Einheitenarray
+		STRING,		- Spawnmarker
+		BOOL, 		- (optional) Infantriegruppe
+		SIDE		- (optional) Spawn Seite
+	],
+	
+	[
+		"OVERWATCH"	- Aufgabe der gespawnten Gruppe: PATROL, OVERWATCH, DEFEND, ... 
+		INTEGER,	- (optional: 250) Radius ab dem eine OV- Position gesucht wird
+		INTEGER		- (optional: 300) 'Ringbreite' in dem die OV- Position gesucht wird
+	
+	],
+
+	[ 
+		BOOL,		- (optional) Einheit kann um Hilfe rufen ( true )
+		BOOL		- (optional) Einheit kann zur Hilfe kommen ( true )
+	]					
+]
+
+# GARRISON und PATROL_GARRISON so überarbeitet das die jeweiligen Gruppen in den Meisten Fällen auch zur Hilfe
+kommen können, bzw zur Hilfe gerufen werden können. Gruppen anführer aus dem Garrison Script, dafür sucht dieser
+sich eine nahe Gedeckte Position (funtkion dafür Erstellt)
+
+# DEFEND_BASE isngesamt optimiert, dazugehörige Funktionen optimiert. Wenn Einheiten die Gebäude wieder verlassen 
+werden diese wieder 'freigegeben'.
+
+# kleine Anpassungen und Verbesserungen an etlichen Ecken und Enden
+
+
+
+##### V041 - 23.01.2014 #####
+
+# kleine Routine in der T8_UnitsINIT.sqf hinzugefügt die regelmäßig leere Gruppen löscht.
+
+
+
+##### V040 - 13.01.2014 #####
+
+# Dateisystem Komplett überarbeitet!!
+Funktionen in einzelnen Dateien abgespeichert, usw ...
+T8\ Ordner löschen und ersetzen!
+
+# Funktion T8_UnitsZone:
+neuer Parameter '_owner' !! Nicht Optional !!
+[ _unitsArray, _marker, _owner, _actSide, _distance, _condition, _onAct, _onDeAct ] call T8_UnitsZone;
+
+Angabe der Fraktion der Einheiten die mit dieser Zone gehached werden, als String. z.B.: "WEST", "EAST", "GUER" und "CIV"
+
+# Erstellen von Wegpunkten für Aufgaben in einer Funktion zusammengefasst
+
+# Besetzten von Häusern in Funktion zusammengefasst
+
+# Erstellen von Wegpunkten überarbeitet
+Bei Patrol Aufgaben werden jetzt die Form und Größe der Marker berücksichtigt.
+
+# die Aufgaben können nicht mehr, ohne das ganze Script zu initialisieren, an im Editor platzierten Gruppen ausgeführt werden.
+
+# Vereinheitlichungen, Vereinfachungen, Bugfixes an viel zu vielen Ecken 
+
+
+
+
+##### V030 FIX - 04.01.2014 #####
+
+# Kritische Fehlermeldung beim Initalisieren leerer gecached Zonen entfernt (alle Einheiten getötet)!
+
+# kleiner Fehler an den DEFEND Aufgaben behoben!
+
+
+
+##### V030 - 03.01.2014 #####
+
+# [] execVM "T8_UnitsINIT.sqf"; darf NICHT mehr im << if ( isServer ) then { ... }; >> Bereich ausgeführt weden !!! 
+Immer Direkt in der init.sqf so das Spieler diese auch laden !!! ( Wichtig für neues Hint System )
+
+# Neue Initalisierungs Variable T8_UnitsInitDONE !!!
+siehe in der missionEXEC.sqf >>> waitUntil { !isNil "T8_UnitsInitDONE" };
+
+# Civilisten anpassungen aus V023 rückgängig gemacht, das Zivis z.b. nicht for EAST fliehen wenn GUR freundlich zu EAST ( Einstellungen im Editor )
+
+# Fehler Feedback verbessert
+> neue Datein: T8_UnitsHintSys.sqf
+> änderungen in der T8_UnitsINIT.sqf
+Haupt ( fehler ) meldungen werden als Hint angezeigt, auch im MP! + Mehr Feedback generell.
+
+# Gruppen mit Feindkontakt, die keine Hilfe benötigen ( T8_UnitsOvSuperiority ) bekommen jetzt Anriffs Wegpunkte auf Feindkontakt zugewiesen.
+Rufen aber weiterhin nach Hilfe sollten sie nicht mehr in Überzahl ( T8_UnitsOvSuperiority ) sein.
+
+# Gruppen die Um Hilfe rufen und Ofiiziere oder Squadleader als Gruppen-Führer haben, versuchen erst 'externe' Hilfe zu rufen.
+verfügbare Nachschub Gruppen werden in den Variablen T8_UnitsSupportUnitsEAST, T8_UnitsSupportUnitsWEST, T8_UnitsSupportUnitsRESISTANCE in der
+missionEXEC.sqf definiert.
+Ruft nun ein Gruppen Führer nach dieser Hilfe wird die Letzt verfügbare Gruppe aus den 'Nachschub' array entfernt und als Fallschirmspringer
+in der Nähe des Gruppenführeres abgeworfen. ( etwaige Landeposition wird mit Rauch makiert )
+
+BSP. für den Nachschubarray:
+T8_UnitsSupportUnitsEAST = [[ "O_soldier_TL_F", "O_medic_F", "O_soldier_F", "O_soldier_AR_F" ], [ "O_soldier_TL_F", "O_medic_F", "O_soldier_F", "O_soldier_AR_F" ]];
+
+Es stehen also zwei Gruppen á 4 Mann als Nachschub zur verfügung.
+
+-->> Zukünftig noch andere Ünterstüzungsmöglichkeiten ??!!??
+
+# Alter Aufbau der Gruppen Array (von vor V010) aus dem Script entfernt!
+
+# Viele Kleinigkeiten gefixt / optimiert / geändert
+
+# AT8_taskOverwatch.sqf: Routine zum finden geeigneter Punkte vereinfacht! (Altlasten entfernt)
+
+# AT8_taskPatrol*.sqf: Routinen zum erstellen der Wegpunkte verbessert / sicherer gemacht!
+
+
+
+##### V023 - 06.12.2013 #####
+Ein paar sachen bezüglich Zivilisten in der Spawnroutine hinzugefügt. 
+Zivilisten sollten nun nicht vor Opfor Soldaten fliehen. Und auf Zivilisten Gruppen werden keine weiteren scripte 
+Ausgeführt, ausser "Aufgaben" bezogene sachen. 
+Andere kleinigkeiten ...
+
+
+
+##### V022 - 06.12.2013 #####
+neuer Parameter in der T8_UnitsINIT.sqf: T8_UnitsCacheTime = 90;
+Zeit zwischen verlassen der Zone und 'cachen' der verbliebenen Einheiten.	
+
+
+
+##### V021 - 04.12.2013 #####
+Weiter verbesserungen / bugfixes an den "Zonen"
+
+
+
+##### V021 - 04.12.2013 #####
+"Schutzschalter" bei den Zonen eigebaut um Massenspawn zu verhindern.
+
+
+
+##### V020 - 02.12.2013 #####
+
+# Neue Aufgabe: DEFEND_BASE
+Infantrie Gruppe bemannt statische Waffen und Miltärgebäude im Marker
+
+BSP: 	[ [ [ "O_soldier_TL_F", "O_medic_F", "O_soldier_F" ], "MarkerName" ], [ "DEFEND_BASE" ] ] 
+
+# Neue Spawn Methode: T8_UnitsZone
+
+Erstellt eine Zone um den angegeben Marker und Spawn Gruppen sobald Einheiten der eingestllten Fraktion in der Nähe sind.
+Verlassen die Einheiten die Zone werden die Einheiten despawnt, bereits gefallene Einheiten werden berücksichtigt beim nächsten spawn.
+
+BSP:	[ "ArraySpawnZone", "MarkerSpawnZone", "WEST" ] spawn T8_UnitsZone;
+
+[
+	_unitsArray,	- vordefinierter Array der zu spawnenden Einheiten
+	_marker,	- Marker als Zentrum der Zone
+	_actSide,	- Seite die die Zone aktiviert
+	_distance,	- (optional) entfernung ab wann die Zone aktiviert wird
+	_condition,	- (optional) Trigger Bedienungen standart: "this"
+	_onAct,		- (optional) Scripte die bei Aktivierung ausgeführt werden sollen
+	_onDeAct	- (optional) Scripte die bei De-aktivierung ausgeführt werden sollen
+] call T8_UnitsZone
+
+
+##### V011 - 17.11.2013 #####
+
+# Neue Aufgabe: PATROL_GARRISON
+Nur für reine Infantrie Gruppen & Gruppe kann nicht zur Hilfe kommen.
+Die Gruppe führt eine Patrollie im Kreis aus, an ihren Wegpunkten gehen sie in nahe Liegende Häuser und verweilen dort 
+für ca. 90 sekunden. Danach gehen sie weiter zum nächsten Wegpunkt. usw.
+
+BSP: 	[ [ [ "O_soldier_TL_F", "O_medic_F", "O_soldier_F" ], "MarkerName" ], [ "PATROL_GARRISON" ] ] 
+
+
+# kleine Änderungen an verschiedensten Ecken ... nix bahnbrechendes
+
+
+
+##### V010 - 08.11.2013 #####
+
+# Einheiten Spawn verbessert / geändert
+Es können jetzt Gruppen aller Fraktionen gespawnt werden, diese kommunizieren dann auch nur innerhalb ihrer Fraktion.
+
+# T8_UnitsINIT.sqf angepasst: 
+		- ein neuer Eintrag T8_UnitsGuerDiplo (siehe Info in der INIT)
+		- andere Einträge bezüglich Kommunitaktion und Spawnen weggefallen
+
+
+# Neuer Aufbau des Gruppen Arrays! ( andere Variante funktioniert auch noch, wird aber nicht weiter verfolgt )
+
+[ 
+	[
+		ARRAY, 		- Array mit Einheiten die gespawnt werden
+		STRING,		- Marker, an dem Einheiten Spawnen und der ihr Einsatzgebiet ist
+		BOOL, 		- (optional) Einheit ist eine reine Infantrie Gruppe - lässt Einheiten aus Fahrzeugen aussteigen an Aufgaben Wegpunkten! ( true ) 
+		SIDE		- (optional) Spawn Seite:  WEST, EAST, RESISTANCE ( T8_UnitsEnemySide )
+	],
+	
+	[
+		STRING, 	- Aufgabe der gespawnten Gruppe: PATROL, OVERWATCH, DEFEND, ... 
+		STRING,		- OVERWATCH: (optional) Marker, als Positon die überwacht wird, ist dieser Marker nicht gesetzt, wird die Spawn position überwacht!
+		ARRAY, 		- PATROL_MARKER: Array mit Markern als Patrollien Wegpunkte
+		BOOL		- PATROL_MARKER:(optional) an den Patrollien Wegpunkten wird ein SAD wegpunkt durchgeführt ( true )		
+	],
+	
+	[ 
+		BOOL,		- (optional) Einheit kann um Hilfe rufen ( true )
+		BOOL		- (optional) Einheit kann zur Hilfe kommen ( true )
+	]					
+]
+
+Beispiele:
+
+// Spawnt eine Gruppe am Marker "MarkerRED", als reine Infantrie, der standard Seite, führt Patrol aufgabe aus, Kommuniziert und kann Helfen
+[ [ <UNIT ARRAY HERE>, "MarkerRED" ], [ "PATROL" ] ],
+
+// Spawnt eine Gruppe am Marker "MarkerGUR", als reine Infantrie, der Seite Independent, führt Patrol aufgabe aus, Kommuniziert und kann Helfen, reine Inf. Gruppe
+[ [ <UNIT ARRAY HERE>, "MarkerGUR", true, RESISTANCE ], [ "PATROL" ] ]
+
+// Spawnt ein Sniperteam am "SniperSpawn" Marker mit der Overwatch Aufgabe und bewacht Marker "overwatchTHIS", Kommuniziert und kann Helfen, spawn Seite = standard, reine Inf. Gruppe
+[ [ [ "O_sniper_F", "O_spotter_F" ], "SniperSpawn" ], [ "OVERWATCH", "overwatchTHIS" ] ]
+	
+// Spawnt einen Schützenpanzer am "vp" Marker, keine reine Inf Gruppe, Seite: EAST, Aufgabe PATROL_MARKER, mit den Wegpunkten vp1, vp2, vp3 ohne SAD Wegpunkt, kann nicht Kommunizieren und kann nicht Helfen
+[ [ [ "O_APC_Tracked_02_cannon_F" ], "vp", false, EAST ], [ "PATROL_MARKER", [ "vp1", "vp2", "vp3" ], false ], [ false, false ] ],
+
+----------
+
+# track.sqf für DEBUG-Mode überarbeitet / neugeschrieben / vereinfacht
+
+# OVERWATCH: generierung des Overwatch Punktes verbessert, läuft jetzt schneller durch.
+
+# etliche Kleinigkeiten angepasst ...
+
+
+
+##### V005 - 24.10.2013 #####
+
+[add][task: OVERWATCH]:	Aufgabe bei der Sich die Gruppe eine Erhöhte Position sucht von der sie Einsicht auf 
+			eine gesetzte Position (Marker) hat. Wird keine Position gefunden, die mindestens 20m erhöht ist,
+			Sichtline hat, und zwischen 250m und 550m entfernt ist, führt die Gruppe einen SAD wegpunkt auf
+			der gesetzten Position aus.	
+			Infantrie Gruppen werden automatisch auf combatmode "RED" gesetzt geraten sie in einen Kampf, dies
+			wird nach 120 sek. auf "GREEN" gesetzt, wenn sie danach wieder aus dem Kampf gelöst sind (Verhalten
+			des Wegpunktes "AWARE") setzten sie sich auf "WHITE" und bekommen wieder Order auf die Position zu
+			schauen. (läuft in einer "endlos" schleife es sei den die einheiten verlassen die Gruppe oder sterben.)
+		 		
+Aufbau des Gruppen Arrays für OVERWATCH
+
+[ 
+	ARRAY, 		- Array mit Einheiten die gespawnt werden ( array )
+	MARKER-NAME,	- Marker, an dem Einheiten Spawnen und der ihr Einsatzgebiet ist ( string )
+	AUFGABE, 	- Aufgabe der gespawnten Gruppe ( string )
+	[ 
+		BOOL,	- Einheit kann um Hilfe rufen ( bool )
+		BOOL	- Einheit kann zur Hilfe kommen ( bool )
+	], 		
+	BOOL, 		- Einheit ist eine reine Infantrie Gruppe ( bool )
+	MARKER-NAME	- ( optional : für Aufgabe OVERWATCH ) Marker, als Positon die überwacht wird, ist dieser Marker
+			nicht gesetzt, wird die Spawn position überwacht!
+]
+
+Zugehörige Datei: AT8_taskOverwatch.sqf
+
+
+
+
+
+##### V004 - 24.10.2013 #####
+
+[file] 				- AT8_taskDefend.sqf ersetzt BIN_taskDefend.sqf
+
+[remove][T8_unitsINIT.sqf]	- T8_UnitsBINfncDEBUG entfällt bis auf weiteres
+
+[add][T8_UnitsTriggerSpawn]	- neue Funktion!
+	
+z.B. in der missionEXEC.sqf:
+
+// [ _unitsArray, _marker, _distance, _condition, _actSide, _actType, _actRepeat, _onAct, _onDeAct ] call T8_UnitsTriggerSpawn
+
+[ "SpawnThisUnitsViaTrigger", "Marker06", 1234 ] call T8_UnitsTriggerSpawn;
+
+Erstellt einen Trigger über Marker06 mit einem Durchmesser von 1234, EINMALIG, ANWESEND, JEDER, Bedienung: this
+Sobald der Trigger aktiviert wird, werden die Units des Gruppen Arrays SpawnThisUnitsViaTrigger gespawnt
+
+
+[
+	_unitsArray,	- Einheiten Array als String !!! (string)
+	_marker,		- Marker, als Mittelpunkt (string)
+	_distance,		- Aktivierungs Distanz (integer)
+	_condition,		- (optional: this) Bedienung (string)
+	_actSide,		- (optional: ANY) aktivierende Seite (string)
+	_actType,		- (optional: PRESENT) Trigger Typ (string)
+	_actRepeat,		- (optional: false) Trigger wiederholend (bool)
+	_onAct,			- (optional) zusätzliches Script bei Aktivierung
+	_onDeAct		- (optional) zusätzliches Script bei Deaktivierung
+
+] call T8_UnitsTriggerSpawn;
+
+
+
+
+
+##### V003 - 21.10.2013 #####
+
+In der Demomission: T8_INIT.sqf gelöscht, weil überflüssig! -> T8_unitsINIT.sqf wird direkt aus der init.sqf ausgeführt!
+
+
+[add][task: PATROL_URBAN]:		- Aufgabe speziell zum patrolieren von Urbanen gebieten, wegpunkte befinden sich immer auf 
+								Stassen. Gut für Panzer geeignet! Radfahrzeuge neigen dazu sich die Räder platt zu fahren
+								- berücksichtigt "reine" Infantrie Gruppen variable
+
+[add][T8_UnitsCreateSpawnPos]:	- berücksichtig jetzt Strassen -> Strasse = bevorzugter Spawnpunkt, wenn in der nähe -> 
+								weniger explodierende Fahrzeuge beim spawnen (hoffentlich)
+
+[add][task: PATROL_MARKER]:		- berücksichtig jetzt Strassen beim setzen der wegpunkte für nicht "reine" Infantrie Gruppen
+
+[add][task: PATROL]:			- berücksichtigt "reine" Infantrie Gruppen Variable
+
+[add][task: PATROL_AROUND]:		- berücksichtigt "reine" Infantrie Gruppen Variable
+
+[add][task: GARRISON]:			- mit Garrison gespawnte Gruppen haben sind immer "reine" Infantrie Gruppen
+
+[fix][div.]:					- verschiedenes im script aufgeräumt, überflüssiges gelöscht, ...
+
+[plan][task: DEFEND]:			- prüfen Ob Gruppe wirklich zur Hilfe kommen kann, überarbeiten auf neue BIS_fnc_param,
+								Breakout condition ähnlich LOITER einbauen?! 
+
+[plan][task: GARRISON_PATROL]:	- Patrouille, die vom Garrison script gebrauch macht. Regelmäßig in Häuser geht, etc.
+
+
+
+##### V002 - 20.10.2013 #####
+
+Aufbau der Gruppen Definition geändert:
+
+[ 
+	ARRAY, 			- Array mit Einheiten die gespawnt werden ( array )
+	MARKER-NAME,	- Marker, an dem Einheiten Spawnen und der ihr Einsatzgebiet ist ( string )
+	AUFGABE, 		- Aufgabe der gespawnten Gruppe ( string )
+	[ 
+		BOOL,		- Einheit kann um Hilfe rufen ( bool )
+		BOOL		- Einheit kann zur Hilfe kommen ( bool )
+	], 		
+	BOOL, 			- ( optional : standart true ) Einheit ist eine reine Infantrie Gruppe ( bool )
+	ARRAY, 			- ( optional : für Aufgabe PATROL_MARKER ) Array mit Markern als Patrollien Wegpunkte
+	BOOL			- ( optional : für Aufgabe PATROL_MARKER ) an den Patrollien Wegpunkten wird ein SAD wegpunkt durchgeführt ( bool )
+]
+
+BSP:	
+
+[ [ "O_MRAP_02_HMG_F", "O_MRAP_02_HMG_F" ], "EinMarker", "PATROL_MARKER", [ true, true ], false, [ "vp1", "vp2", "vp3" ], false ]
+[ [ "O_soldier_TL_F", "O_medic_F", "O_soldier_F" ], "NochEinMarker", "PATROL", [ true, true ] ]
+
+
+Neue Subfunktionen als Ersatz für BIN_taskPatrol.sqf:
+	- AT8_taskPatrol.sqf
+	- AT8_taskPatrolAround.sqf
+
+Gruppen die nicht als reine Infantrie Gruppe gespawnt werden (false) können jetzt auch die Aufgaben PATROL und PATROL_AROUND durchführen
+ohne an ihren Wegpunkten dazu gezwungen zu sein ihre Fahrzeuge verlassen zu müssen!
