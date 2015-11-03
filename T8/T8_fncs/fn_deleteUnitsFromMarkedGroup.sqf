@@ -1,22 +1,34 @@
+diag_log format ["Calling fn_deleteUnitsFromMarkedGroup.sqf"];
 if (!isServer ) exitWith {};
 
-if ( isNil "_this" ) exitWith { if ( T8U_var_DEBUG ) then { [ "fn_deleteUnitsFromMarkedGroup.sqf", "NO DELETION: No group label given" ] spawn T8U_fnc_DebugLog; }; false };
+params ["_targetLabel", ["_targetSide", east, [east]]];
+
+if ( isNil "_targetLabel" ) exitWith { if ( T8U_var_DEBUG ) then { [ "fn_deleteUnitsFromMarkedGroup.sqf", "NO DELETION: No group label given" ] spawn T8U_fnc_DebugLog; }; false };
+
+_clearOutGroup = {
+		params ["_groupToClear","_sideToClear"];
+
+		diag_log format ["side group to clear: %1", side _groupToClear];
+		diag_log format ["_sideToClear: %1", _sideToClear];
+		if((side _groupToClear) == _sideToClear) then {
+			_groupToClear call T8U_fnc_DeleteVehicleAndCrew;
+			deleteGroup _groupToClear;
+		};
+};
 
 _clearedOutGroups = [];
 {
 	_groupLabel = _x getVariable "T8U_gvar_Label";
 	if(!isNil "_groupLabel") then {
-		if (_groupLabel == _this) then {
-			{
-				_vehicleToDelete = _x;
-				if(count (crew _vehicleToDelete) > 0) then {
-					{_vehicleToDelete deleteVehicleCrew _x} forEach crew _vehicleToDelete;
-				};
-				deleteVehicle _vehicleToDelete;
-			} forEach units _x;
+		diag_log format ["Finding groups with label: %1", _groupLabel];
+		if (_groupLabel == _targetLabel) then {
+			[_x, _targetSide] call _clearOutGroup;
 			_clearedOutGroups pushBack (groupId _x);
-			deleteGroup _x;
 		};
+	} else {
+		// we found a group not made by the T8 system they need to be cleared up regardless they would only contaminate any mission
+		[_x, _targetSide] call _clearOutGroup;
+		_clearedOutGroups pushBack (groupId _x);
 	};
 } forEach allGroups;
 

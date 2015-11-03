@@ -217,7 +217,7 @@ _error = false;
 	if ( ! _abort ) then
 	{
 		// Label group
-		_group setVariable ("T8U_gvar_Label", _groupLabel, false);
+		_group setVariable ["T8U_gvar_Label", _groupLabel, false];
 		if ( _groupSide != civilian ) then
 		{
 	//

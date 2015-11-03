@@ -25,6 +25,7 @@ _var05 = _oldGroup getVariable [ "T8U_gvar_Attacked", 	-99999 ];
 _var06 = _oldGroup getVariable [ "T8U_gvar_called",		-99999 ];
 _var07 = _oldGroup getVariable [ "T8U_gvar_DACcalled",	-99999 ];
 _var08 = _oldGroup getVariable [ "T8U_gvar_PARAcalled",	-99999 ];
+_var09 = _oldGroup getVariable [ "T8U_gvar_Label",	"T8U-GROUP" ];
 
 _oldGroup setVariable [ "T8U_gvar_Comm",		[], false ];
 _oldGroup setVariable [ "T8U_gvar_Origin",		[], false ];
@@ -43,8 +44,9 @@ _newGroup setVariable [ "T8U_gvar_Attacked",	_var05, false ];
 _newGroup setVariable [ "T8U_gvar_called",		_var06, false ];
 _newGroup setVariable [ "T8U_gvar_DACcalled",	_var07, false ];
 _newGroup setVariable [ "T8U_gvar_PARAcalled",	_var08, false ];
+_newGroup setVariable [ "T8U_gvar_Label",	_var09, false ];
 
 leader _oldGroup setVariable [ "T8_UnitsVarLeaderGroup", _newGroup, false ];
 
-if ( T8U_var_DEBUG ) then { [ "fn_groupClearWaypoints.sqf", "GROUP", [ _oldGroup, _newGroup ] ] spawn T8U_fnc_DebugLog; };
-if ( T8U_var_DEBUG ) then { [ "fn_groupClearWaypoints.sqf", "COPYIED VARS", [ _var01, _var02, _var03, _var04, _var05, _var06, _var07, _var08 ] ] spawn T8U_fnc_DebugLog; };
+if ( T8U_var_DEBUG ) then { [ "fn_groupCopyVars.sqf", "GROUP", [ _oldGroup, _newGroup ] ] spawn T8U_fnc_DebugLog; };
+if ( T8U_var_DEBUG ) then { [ "fn_groupCopyVars.sqf", "COPYIED VARS", [ _var01, _var02, _var03, _var04, _var05, _var06, _var07, _var08, _var09 ] ] spawn T8U_fnc_DebugLog; };
