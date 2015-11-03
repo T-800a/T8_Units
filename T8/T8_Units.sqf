@@ -6,7 +6,7 @@
 	File:		T8_Units.sqf
 	Author:		T-800a
 	E-Mail:		t-800a@gmx.net
-	
+
 	Functions Libary / Collector / Whatever
 
  =======================================================================================================================
@@ -60,8 +60,8 @@ if ( isnil "T8U_fnc_TriggerSpawn" ) then {				T8U_fnc_TriggerSpawn = compile pre
 if ( isnil "T8U_fnc_Zone" ) then {						T8U_fnc_Zone = compile preProcessFileLineNumbers						( T8U_dir_ROOT + T8U_dir_FNCS + "fn_zone.sqf" ); };
 if ( isnil "T8U_fnc_ZoneCreate" ) then {				T8U_fnc_ZoneCreate = compile preProcessFileLineNumbers					( T8U_dir_ROOT + T8U_dir_FNCS + "fn_zoneCreate.sqf" ); };
 if ( isnil "T8U_fnc_ZoneNotAktiv" ) then {				T8U_fnc_ZoneNotAktiv = compile preProcessFileLineNumbers				( T8U_dir_ROOT + T8U_dir_FNCS + "fn_zoneNotAktiv.sqf" ); };
-
-
+if ( isnil "T8U_fnc_DeleteGroupByLabel" ) then { T8U_fnc_DeleteGroupByLabel = compile preProcessFileLineNumbers	( T8U_dir_ROOT + T8U_dir_FNCS + "fn_deleteUnitsFromMarkedGroup.sqf" ); };
+if ( isnil "T8U_fnc_DeleteVehicleAndCrew" ) then { T8U_fnc_DeleteVehicleAndCrew = compile preProcessFileLineNumbers	( T8U_dir_ROOT + T8U_dir_FNCS + "fn_deleteVehicleAndCrew.sqf" ); };
 ///// T8 Units TASKS /////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // basic tasks
@@ -89,3 +89,11 @@ if ( isnil "T8U_supp_HALO" ) then {						T8U_supp_HALO = compile preProcessFileL
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+///// Wrapper ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+if ( isnil "T8U_rnd_SpawnContainer" ) then {
+	T8U_rnd_SpawnContainer = compile preProcessFileLineNumbers (T8U_dir_ROOT + T8U_dir_FNCS + "fn_randomSpawnContainer.sqf");
+};
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
