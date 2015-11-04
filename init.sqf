@@ -1,7 +1,7 @@
 /*
  =======================================================================================================================
 
-	File:		description.ext
+	File:		init.sqf
 
 	BASIC EXAMPLE FILE!
 
@@ -9,7 +9,4 @@
 */
 
 
-class cfgFunctions
-{
-	#include <T8\FUNCTIONS.hpp>
-};
+[] execVM "T8_missionEXEC.sqf";
