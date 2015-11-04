@@ -1,6 +1,5 @@
 ## R E A D M E - T8 Units
 
-- Script: T8 Units
 - Author(s): T-800a
 - E-Mail: t-800a@gmx.net
 
