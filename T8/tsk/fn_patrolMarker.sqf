@@ -55,6 +55,9 @@ _group setBehaviour "AWARE";
 _group setSpeedMode _speed;
 _group setFormation _formation;
 
+private [ "_wpPosArray" ];
+_wpPosArray = [];
+
 {
 	private [ "_wpPosFEP" ];
 	_wpPosFEP = [];
@@ -75,24 +78,31 @@ _group setFormation _formation;
 	} else {
 		_wpPosFEP = ( getMarkerPos _x ) findEmptyPosition [ 1 , 20, _chkV ];
 	};
-
-	[ _group, _wpPosFEP, "MOVE", "SAFE", _statement, _range, _speed, [ 5, 10, 15 ] ] call T8U_fnc_CreateWaypoint;
 	
+	_wpPosArray pushBack _wpPosFEP;
+	
+	false
+} count _markerArray;
+
+{
 	private [ "_mkr" ];
-	if ( T8U_var_DEBUG_marker ) then { _mkr = [ _wpPosFEP, "ICON", "mil_destroy_noShadow" ] call T8U_fnc_DebugMarker; };
+	
+	[ _group, _x, "MOVE", "SAFE", _statement, _range, _speed, [ 5, 10, 15 ] ] call T8U_fnc_CreateWaypoint;
+	if ( T8U_var_DEBUG_marker ) then { _mkr = [ _x, "ICON", "mil_destroy_noShadow" ] call T8U_fnc_DebugMarker; };
 	
 	if ( _doSAD ) then 
 	{
-		[ _group, _wpPosFEP, "SAD", "SAFE", _statement, _range, _speed, [ 15, 25, 35 ] ] call T8U_fnc_CreateWaypoint;
-		
+		[ _group, _x, "SAD", "SAFE", _statement, _range, _speed, [ 15, 25, 35 ] ] call T8U_fnc_CreateWaypoint;
 		if ( T8U_var_DEBUG_marker ) then { _mkr setMarkerColor "ColorRed"; };
-	};	
-} forEach _markerArray;
+	};
+	
+	false
+} count _wpPosArray;
 
 sleep 1;
 
 // Cycle in case we reach the end
-[ _group, getMarkerPos ( _markerArray select 0 ), "CYCLE", "SAFE", _statement, 100 ] call T8U_fnc_CreateWaypoint;
+[ _group, ( _wpPosArray select 0 ), "CYCLE", "SAFE", _statement, 100 ] call T8U_fnc_CreateWaypoint;
 
 if ( T8U_var_DEBUG ) then { [ "fn_patrolMarker.sqf", "Successfully Initialized", [ _group ] ] spawn T8U_fnc_DebugLog; };
 

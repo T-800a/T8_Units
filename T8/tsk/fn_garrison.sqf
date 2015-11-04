@@ -50,7 +50,7 @@ if ( side _group != CIVILIAN ) then
 	_group setSpeedMode _speedMode;
 	_group setFormation _formation;
 
-	_basePos = [ _marker ] call T8U_fnc_CreateSpawnPos;
+	_basePos = [( getMarkerPos _marker ), 400, true ] call T8U_fnc_findEmptyPos;
 
 	[ _group, _basePos, "MOVE", "SAFE", _statementGetIn, 5, "LIMITED", [ 15, 15, 15 ] ] call T8U_fnc_CreateWaypoint;
 	[ _group, _basePos, "HOLD", "SAFE", "", 5, "LIMITED" ] call T8U_fnc_CreateWaypoint;

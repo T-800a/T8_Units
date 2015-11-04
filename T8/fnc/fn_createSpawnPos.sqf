@@ -18,15 +18,12 @@ _marker		= param [ 0, "", [""]];
 
 if (( getMarkerPos _marker ) isEqualTo [0,0,0]) exitWith { if ( T8U_var_DEBUG ) then { [ "fn_createSpawnPos.sqf", "Can't create SpawnPos" ] spawn T8U_fnc_DebugLog; }; false };
 
-_areaSizeX	= ( getMarkerSize _marker ) select 0;
-_areaSizeY	= ( getMarkerSize _marker ) select 1;
-_areaSize	= ( _areaSizeX + _areaSizeY ) / 2;
-
-if ( _areaSize < 60 ) then { _areaSize = 20; } else { _areaSize = _areaSize / 3; };
-
-_wpPosFEP = [];
-_loop = true;
-_tmpAreaSize = _areaSize;
+_wpPosFEP		= [];
+_loop			= true;
+_areaSizeX		= ( getMarkerSize _marker ) select 0;
+_areaSizeY		= ( getMarkerSize _marker ) select 1;
+_areaSize		= if ((( _areaSizeX + _areaSizeY ) / 2 ) < 150 ) then { 50 } else {(( _areaSizeX + _areaSizeY ) / 2 ) / 3 };
+_tmpAreaSize	= _areaSize;
 
 while { _loop } do
 {
@@ -35,7 +32,7 @@ while { _loop } do
 	_roadObj = [ _spawnPos, 50 ] call BIS_fnc_nearestRoad;
 	if ( isNull _roadObj ) then { _roadPos = _spawnPos; } else {  _roadPos = getpos _roadObj; };
 	_wpPosFEP =  _roadPos findEmptyPosition [ 1 , 50 , "Land_VR_Block_02_F" ]; // 20x20 block ... should be enough space for a Trooper
-	if ( surfaceIsWater _roadPos OR ( count _wpPosFEP  ) < 2 ) then { _tmpAreaSize = _tmpAreaSize + 10; } else { _loop = false; };
+	if (( surfaceIsWater _roadPos OR ( count _wpPosFEP  ) < 2 ) OR ( _wpPosFEP distance ( nearestObject _wpPosFEP )) < 10 ) then { _tmpAreaSize = _tmpAreaSize + 5; } else { _loop = false; };
 };
 
 if ( T8U_var_DEBUG ) then { [ "fn_createSpawnPos.sqf", "SpawnPos", _wpPosFEP ] spawn T8U_fnc_DebugLog; };
