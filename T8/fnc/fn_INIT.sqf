@@ -18,11 +18,15 @@
 // include CONFIG FILE
 #include <..\CONFIG.hpp>
 
-__DEBUG( __FILE__, "======================================================================================", "" );
-__DEBUG( __FILE__, "T8 Units", "INIT STARTED" );
 
 // cancel execute if not server / hc
 __allowEXEC(__FILE__);
+
+
+if ( T8U_var_DEBUG_useCon ) exitWith { "debug_console" callExtension ("C"); };
+
+__DEBUG( __FILE__, "======================================================================================", "" );
+__DEBUG( __FILE__, "T8 Units", "INIT STARTED" );
 
 // Clear empty groups every 30 seconds (ignores DAC groups)
 [] spawn T8U_fnc_GroupClearEmpty;
@@ -31,6 +35,7 @@ __allowEXEC(__FILE__);
 if ( T8U_var_DEBUG ) then { [] spawn T8U_fnc_TrackAllUnits; [] spawn T8U_fnc_DebugMarkerDelete; };
 
 // Were are good to go!
+// only used for missionEXEC.sqf! 
 T8U_var_InitDONE = true;
 
 __DEBUG( __FILE__, "T8 Units", "INIT FINISHED" );
