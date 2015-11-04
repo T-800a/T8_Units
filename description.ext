@@ -1,0 +1,7 @@
+
+
+
+class cfgFunctions
+{
+	#include <T8\FUNCTIONS.hpp>
+};
