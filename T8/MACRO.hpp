@@ -14,7 +14,7 @@
 
 // uncomment to null-out DEBUG macro parsing
 // #define __DEBUG(NAME,TEXT,VAR)
-#define __DEBUG(NAME,TEXT,VAR)			[NAME,TEXT,VAR] call T8U_fnc_debugLog
+#define __DEBUG(NAME,TEXT,VAR)			if ( T8U_var_DEBUG ) then { [NAME,TEXT,VAR] call T8U_fnc_debugLog; }
 
 #define __allowEXEC(VAR)				if ( VAR call T8U_fnc_checkEXEC ) exitWith {}
 
