@@ -23,7 +23,7 @@
 #include <..\MACRO.hpp>
 
 private [	"_marker", "_infGroup", "_inside", "_useRoad", "_centerX", "_centerY", "_areaSizeX", "_areaSizeY", "_markerShape", "_maxDistance",
-			"_chkV", "_wpCount", "_angle", "_wpArray", "_markerDir", "_findPosFEP" ];
+			"_wpCount", "_angle", "_wpArray", "_markerDir", "_return" ];
 
 _marker		= param [ 0, "NO-MARKER-SET", [ "" ]];
 _infGroup	= param [ 1, true, [ true ]];
@@ -32,8 +32,6 @@ _inside		= param [ 3, true, [ true ]];
 
 if (( getMarkerPos _marker ) isEqualTo [0,0,0]) exitWith { if ( T8U_var_DEBUG ) then { [ "fn_createWaypointPositions.sqf", "NO MARKER", _this ] spawn T8U_fnc_DebugLog; }; false };
 if ( T8U_var_DEBUG ) then { [ "fn_createWaypointPositions.sqf", "EXEC", _this ] spawn T8U_fnc_DebugLog; };
-
-if ( _infGroup ) then { _chkV = "CAManBase"; } else { _chkV = "B_Truck_01_covered_F"; };
 
 _centerX	= ( getMarkerPos _marker ) select 0;
 _centerY	= ( getMarkerPos _marker ) select 1;
@@ -51,33 +49,8 @@ if ( _inside ) then { _maxDistance = _areaSizeX - ( _areaSizeX * 0.2 ); } else {
 _wpCount = 5 + ( floor ( random 4 ) ) + ( floor ( ( ( _areaSizeX + _areaSizeY ) / 2 ) / 100 ) );
 _angle = ( 360 / ( _wpCount - 1 ) );
 _wpArray = [];
+_return = [];
 
-
-// [ _wpPos, _maxDistance, _chkV, _useRoad ] call _findPosFEP;
-_findPosFEP =
-{
-	private [ "_p", "_d", "_c", "_r", "_road", "_return" ];
-	_p = _this select 0;
-	_d = _this select 1;
-	_c = _this select 2;
-	_r = _this select 3;
-	
-	_return = [];
-	_road = objNull;
-	
-	if ( _r ) then { _road = [ _p, ( _d / 4 ) ] call BIS_fnc_nearestRoad; };
-	
-	if ( !isNull _road  ) then 
-	{
-		_return = ( getpos _road );
-	} else {
-		_return = _p findEmptyPosition [ 1, 20, _c ];
-	};
-
-	if ( _return isEqualTo [0,0,0] ) then { _return = []; };
-		
-	_return
-};
 
 switch ( _markerShape ) do
 {
@@ -90,7 +63,6 @@ switch ( _markerShape ) do
 			_angleNew = count _wpArray * _angle;
 			_tmpMaxDist = ( _areaSizeX + _areaSizeY ) / 5;
 			_wpPosFEP = [];
-			_toClose = false;
 			_loop = true;
 			_n = 0;
 
@@ -98,6 +70,8 @@ switch ( _markerShape ) do
 			{
 				while { _loop } do
 				{
+					_toClose = false;
+					
 					_x = _centerX - ( _areaSizeX - 10 ) + random ( ( _areaSizeX - 10 ) * 2 );
 					_y = _centerY - ( _areaSizeY - 10 ) + random ( ( _areaSizeY - 10 ) * 2 );
 					_cX	= cos ( _markerDir ) * ( _x - _centerX ) - sin ( _markerDir ) * ( _y - _centerY ) + _centerX;
@@ -105,7 +79,7 @@ switch ( _markerShape ) do
 					_wpPos = [ _cX, _cY ];
 					_loopI = true;
 
-					_wpPosFEP = [ _wpPos, _maxDistance, _chkV, _useRoad ] call _findPosFEP;
+					_wpPosFEP = [ _wpPos, _maxDistance, _useRoad ] call T8U_fnc_findEmptyPos;
 
 					if ( count _wpArray > 1 ) then
 					{
@@ -113,7 +87,8 @@ switch ( _markerShape ) do
 							if ( count _x > 0 AND { ( _wpPos distance _x ) < ( _areaSizeX + _areaSizeY ) / 5 } ) then { _toClose = true; };
 						} forEach _wpArray;
 					};
-					if ! ( surfaceIsWater _wpPos OR { _toClose } OR { count _wpPosFEP < 2 } ) then { _loop = false; };
+					
+					if ( count _wpPosFEP > 1 AND { !surfaceIsWater _wpPos } AND { !_toClose }) then { _loop = false; };
 					_n = _n + 1; if ( _n > 100 ) then { _loop = false; };
 					_toClose = false;
 				};
@@ -129,7 +104,7 @@ switch ( _markerShape ) do
 					
 					_wpPos = [ _cX, _cY ];
 
-					_wpPosFEP = [ _wpPos, _maxDistance, _chkV, _useRoad ] call _findPosFEP;
+					_wpPosFEP = [ _wpPos, _maxDistance, _useRoad ] call T8U_fnc_findEmptyPos;
 				
 					if ( ( ( _x < _centerX - _areaSizeX OR _x > _centerX + _areaSizeX ) OR ( _y < _centerY - _areaSizeY OR _Y > _centerY + _areaSizeY ) ) AND { ! ( surfaceIsWater _wpPos ) } AND { count _wpPosFEP > 0 } ) then { _loop = false; } else { _tmpMaxDist = _tmpMaxDist + 20; };
 					if ( _tmpMaxDist > ( _areaSizeX + _areaSizeY ) * 1.15 ) then { _wpPosFEP = []; _loop = false; };
@@ -138,7 +113,7 @@ switch ( _markerShape ) do
 			
 			if ( str ( _wpPosFEP ) == str ([0.5,0.5,0]) ) then { _wpPosFEP = [] };
 			
-			_wpArray pushBack _wpPosFEP;
+			if ( _useRoad ) then { if ( isOnRoad _wpPosFEP ) then { _wpArray pushBack _wpPosFEP; }; } else { _wpArray pushBack _wpPosFEP; };			
 		};
 	};
 
@@ -156,13 +131,14 @@ switch ( _markerShape ) do
 			_tmpMaxDist = ( _areaSizeX + _areaSizeY ) / 5;
 			_wpPosFEP = [];			
 			_loop = true;
-			_toClose = false;
 			_loopI = true;
 
 			if ( _inside ) then
 			{
 				while { _loop } do
-				{				
+				{
+					_toClose = false;
+					
 					while { _loopI } do
 					{
 						private [ "_in", "_dX", "_dY" ];
@@ -184,7 +160,7 @@ switch ( _markerShape ) do
 					_wpPos = [ _cX, _cY ];
 					_loopI = true;
 
-					_wpPosFEP = [ _wpPos, _maxDistance, _chkV, _useRoad ] call _findPosFEP;
+					_wpPosFEP = [ _wpPos, _maxDistance, _useRoad ] call T8U_fnc_findEmptyPos;
 
 					if ( count _wpArray > 1 ) then
 					{
@@ -192,13 +168,13 @@ switch ( _markerShape ) do
 							if ( count _x > 0 AND { ( _wpPos distance _x ) < ( _areaSizeX + _areaSizeY ) / 5 } ) then { _toClose = true; };
 						} forEach _wpArray;
 					};
-					if ! (  count _wpPosFEP < 2 OR { _toClose } ) then { _loop = false; };
+					if ( count _wpPosFEP > 1 AND { !_toClose } ) then { _loop = false; };
 					_n = _n + 1; if ( _n > 100 ) then { _loop = false; };
-					_toClose = false;
 				};
 
 				_lastPos = _wpPosFEP;
-				_wpArray pushBack _wpPosFEP;					
+				
+				if ( _useRoad ) then { if ( isOnRoad _wpPosFEP ) then { _wpArray pushBack _wpPosFEP; }; } else { _wpArray pushBack _wpPosFEP; };
 					
 			} else {
 				
@@ -230,7 +206,7 @@ switch ( _markerShape ) do
 				
 				if ( ! surfaceIsWater _wpPos ) then 
 				{ 
-					_wpPosFEP = [ _wpPos, _maxDistance, _chkV, _useRoad ] call _findPosFEP;
+					_wpPosFEP = [ _wpPos, _maxDistance, _useRoad ] call T8U_fnc_findEmptyPos;
 					
 					_wpArray pushBack _wpPosFEP;
 				} else {
@@ -258,7 +234,7 @@ switch ( _markerShape ) do
 				_y = _centerY - ( cos _angleNew * _tmpMaxDist );
 				_wpPos = [ _x, _y ];
 
-				_wpPosFEP = [ _wpPos, _maxDistance, _chkV, _useRoad ] call _findPosFEP;
+				_wpPosFEP = [ _wpPos, _maxDistance, _useRoad ] call T8U_fnc_findEmptyPos;
 
 				if ( surfaceIsWater _wpPos OR { count _wpPosFEP < 2 } ) then
 				{
@@ -287,12 +263,11 @@ if ( 50 < random 100 ) then
 	if ( T8U_var_DEBUG ) then { [ "fn_createWaypointPositions.sqf", "SHIFTED _wpArray", [ _wpArray, count _wpArray] ] spawn T8U_fnc_DebugLog; };
 };
 
-// check if Last Element Already exists - seems to be a circle problem dunno
-private [ "_ln" ];
-_ln = _wpArray call BIS_fnc_arrayPop;
-if !( _ln in _wpArray ) then { _wpArray pushBack _ln; };
+
+_wpArray = _wpArray - [];
+{ if !( _x in _return ) then { _return pushBack _x; }; false } count _wpArray;
 
 if ( T8U_var_DEBUG ) then { [ "fn_createWaypointPositions.sqf", "FINISHED _wpArray", [ _wpArray, count _wpArray] ] spawn T8U_fnc_DebugLog; };
 
 // RETURN
-_wpArray
+_return

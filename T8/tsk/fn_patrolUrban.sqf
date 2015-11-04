@@ -72,8 +72,6 @@ _wpArray = _wpArray call BIS_fnc_arrayShuffle;
 	};
 } forEach _wpArray;
 
-if ( isNil "_cycle" OR { count _cycle < 2 }) then { _cycle = getMarkerPos _marker; };
-
 // Cycle in case we reach the end
 [ _group, _cycle, "CYCLE", "SAFE", "", 100 ] call T8U_fnc_CreateWaypoint;
 

@@ -49,6 +49,7 @@
 			addFunction(debugMarkerDelete);
 			addFunction(filterEntities);
 			addFunction(findOverwatch);
+			addFunction(findEmptyPos);
 			addFunction(firedEvent);
 			addFunction(forceNextWaypoint);
 			addFunction(garrisonBuildings);

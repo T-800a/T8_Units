@@ -51,7 +51,7 @@ _group setFormation _formation;
 [ _group, getMarkerPos _marker, "MOVE", "SAFE", "", _range, _speedMode ] call T8U_fnc_CreateWaypoint;
 
 // Create waypoints based on array of positions
-_wpArray = [ _marker, true, true ] call T8U_fnc_CreateWaypointPositions;
+_wpArray = [ _marker, true ] call T8U_fnc_CreateWaypointPositions;
 _wpArray = _wpArray call BIS_fnc_arrayShuffle;
 
 _n = 2;

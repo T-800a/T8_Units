@@ -31,6 +31,7 @@ _statementIL = format [ "if ( local this ) then { %1 };", _statement ];
 _n = count ( waypoints _group );
 _wp = _group addWaypoint [ _pos , _n ];
 
+_wp setWaypointPosition [ _pos, 1 ];
 _wp setWaypointType _wpType;
 _wp setWaypointBehaviour _combatBehave;
 _wp setWaypointCompletionRadius _compRadius;
