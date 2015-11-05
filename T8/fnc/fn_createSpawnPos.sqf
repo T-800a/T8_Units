@@ -32,7 +32,7 @@ while { _loop } do
 	_roadObj = [ _spawnPos, 50 ] call BIS_fnc_nearestRoad;
 	if ( isNull _roadObj ) then { _roadPos = _spawnPos; } else {  _roadPos = getpos _roadObj; };
 	_wpPosFEP =  _roadPos findEmptyPosition [ 1 , 50 , "Land_VR_Block_02_F" ]; // 20x20 block ... should be enough space for a Trooper
-	if (( surfaceIsWater _roadPos OR ( count _wpPosFEP  ) < 2 ) OR ( _wpPosFEP distance ( nearestObject _wpPosFEP )) < 10 ) then { _tmpAreaSize = _tmpAreaSize + 5; } else { _loop = false; };
+	if (( surfaceIsWater _roadPos OR (( count _wpPosFEP  ) < 2 ) AND {( _wpPosFEP distance ( nearestObject _wpPosFEP )) < 10 })) then { _tmpAreaSize = _tmpAreaSize + 5; } else { _loop = false; };
 };
 
 if ( T8U_var_DEBUG ) then { [ "fn_createSpawnPos.sqf", "SpawnPos", _wpPosFEP ] spawn T8U_fnc_DebugLog; };
