@@ -14,10 +14,10 @@
 
 // re-comment to null-out DEBUG macro parsing
 // #define __DEBUG(NAME,TEXT,VAR)
-// #define __DEBUGMKR(VARS)
+// #define __DEBUGMKR(NAME,TEXT,VAR)
 
-#define __DEBUG(VARS)					if ( T8U_var_DEBUG ) then { [VARS] call T8U_fnc_debugLog; }
-#define __DEBUGMKR(VARS)				if ( T8U_var_DEBUG_marker ) then { [VARS] call T8U_fnc_DebugMarker; }
+#define __DEBUG(NAME,TEXT,VAR)			if ( T8U_var_DEBUG ) then { [NAME,TEXT,VAR] call T8U_fnc_debugLog; }
+#define __DEBUGMKR(NAME,TEXT,VAR)		if ( T8U_var_DEBUG_marker ) then { [NAME,TEXT,VAR] call T8U_fnc_DebugMarker; }
 
 
 // put in function to make a check if allowed to exec on machine
