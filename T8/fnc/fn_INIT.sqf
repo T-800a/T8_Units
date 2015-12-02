@@ -23,7 +23,7 @@
 __allowEXEC(__FILE__);
 
 
-if ( T8U_var_DEBUG_useCon ) exitWith { "debug_console" callExtension ("C"); };
+// if ( T8U_var_DEBUG_useCon ) exitWith { "debug_console" callExtension ("C"); };
 
 __DEBUG( __FILE__, "======================================================================================", "" );
 __DEBUG( __FILE__, "T8 Units", "INIT STARTED" );

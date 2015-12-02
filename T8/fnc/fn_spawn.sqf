@@ -283,12 +283,6 @@ _return = [];
 				// Add a HIT event to all Units
 				_tmpUnit addEventHandler [ "Hit", { _this call T8U_fnc_HitEvent; } ];
 				
-				// EXEC a custom Function for units
-				if ( _customFNC	!= "NO-FUNC-GIVEN" ) then 
-				{
-					_tmpUnit call ( missionNamespace getVariable _customFNC );
-				};
-				
 				// enable / disable fatigue
 				_tmpUnit enableFatigue T8U_var_enableFatigue;
 
@@ -310,7 +304,7 @@ _return = [];
 			_group setCombatMode ( ( T8U_var_BehaviorSets select _presetBehavior ) select 0 );
 			
 			// move units in vehicles for non infantry groups
-			sleep 1;
+			sleep 2;
 			
 			if !( _infGroup ) then 
 			{
@@ -360,11 +354,14 @@ _return = [];
 					if (( count _freeCargo ) > 0 ) then
 					{
 						_p = _freeCargo call BIS_fnc_arrayPop;
-						_x moveInCargo [( _p select 0 ), ( _p select 1 )];
-						_x assignAsCargoIndex [( _p select 0 ), ( _p select 1 )];
+						// _x assignAsCargoIndex [( _p select 0 ), ( _p select 1 )];
+						_x assignAsCargo ( _p select 0 );
+						_x moveInCargo ( _p select 0 );
+						_x action [ "GETIN CARGO", ( _p select 0 )];
 					};
 					false
 				} count _unitsOnFoot;
+				
 				
 				_vehicles spawn 
 				{
@@ -377,7 +374,7 @@ _return = [];
 						
 						false
 					} count _this;
-				}
+				};
 			};
 
 				
@@ -391,7 +388,7 @@ _return = [];
 				
 				// add units to return array
 				_return pushBack _x;
-
+	
 			} foreach units _group;
 		};		
 	
@@ -415,7 +412,12 @@ _return = [];
 			{ _x addCuratorEditableObjects [ _units, true ]; } count allCurators;
 			if ( count _vehicles > 0 ) then { { _x addCuratorEditableObjects [ _vehicles, true ]; } count allCurators; };
 		};
+	
+	
+		// EXEC a custom Function for units
+		if ( _customFNC	!= "NO-FUNC-GIVEN" ) then {{ _x call ( missionNamespace getVariable _customFNC ); false } count ( units _group );};
 	};
+
 	
 	// no hurry ...
 	sleep 1;

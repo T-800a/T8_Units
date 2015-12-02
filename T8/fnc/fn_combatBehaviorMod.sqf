@@ -14,7 +14,7 @@
 
 private [ "_group", "_presetSkill", "_presetBehavior" ];
 
-_group = param [ 0, objNull, [objNull]];
+_group = param [ 0, grpNull, [grpNull]];
 // _units = ( units _group ) - [ ( leader _group ) ];
 
 switch ( side _group ) do

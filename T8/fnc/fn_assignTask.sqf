@@ -31,8 +31,8 @@ _groupHelper	= group _unitHelper;
 
 
 _origin			= __GetOVAR( _groupHelper, "T8U_gvar_Origin", [] );
-_type			= _origin param [ 1, false, [false]];
-_infGroup		= _origin param [ 2, "error", [""]];
+_type			= _origin param [ 1, "error", [""]];
+_infGroup		= _origin param [ 2, false, [false]];
 
 _wpArray		= [];
 
