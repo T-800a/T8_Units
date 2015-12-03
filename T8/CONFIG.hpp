@@ -1,7 +1,7 @@
 /*
  =======================================================================================================================
 
-	___ T8 Units _______________________________________________________________________________________________________
+	T8 Units Script
 	
 	Unit Spawn & Communication Script
 	
@@ -79,7 +79,7 @@ T8U_var_KilledLeaderTimeout		= 20;			// if group leader killed, x sec no communi
 T8U_var_FiredEventTimeout		= 10;			// if fired near event triggered, pause it for XX sec ... spam reduce
 T8U_var_CallForHelpTimeout		= 60;			// a group can only call one other group each x sec for help
 T8U_var_SupportTimeout			= 180;			// every X sec a group (with a SL or Officer) can call in for a Support (e.g. para drop)
-T8U_var_OvSuperiority			= 333;			// if enemy units have a overwhelming superiority of 3 : 1 they wont call for help ( checked at that moment when they call for help )
+T8U_var_OvSuperiority			= 3;			// if enemy units have a overwhelming superiority of 3 : 1 they wont call for help ( checked at that moment when they call for help )
 T8U_var_enableFatigue			= false;		// enable/disable Fatigue for all spawned units
 
 T8U_var_Presets =
