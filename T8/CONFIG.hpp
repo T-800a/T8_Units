@@ -36,17 +36,19 @@
 */
 
 // DEBUG Settings
-T8U_var_DEBUG					= false;		// general Debug 
-T8U_var_DEBUG_hints				= false;		// show Debug Hints
-T8U_var_DEBUG_marker			= false;		// create Debug Markers
-T8U_var_DEBUG_useCon			= false;		// send Debug MSGs to Killzone Kids console instead of RPT file ( http://killzonekid.com/arma-console-extension-debug_console-dll-v3-0/ )
+
+T8U_var_DEBUG			= true;
+T8U_var_DEBUG_hints		= true;
+T8U_var_DEBUG_marker	= true;
+T8U_var_DEBUG_useCon	= true;
 
 /*
-	T8U_var_DEBUG			= true;
-	T8U_var_DEBUG_hints		= true;
-	T8U_var_DEBUG_marker	= true;
-	T8U_var_DEBUG_useCon	= true;
+	T8U_var_DEBUG					= false;		// general Debug 
+	T8U_var_DEBUG_hints				= false;		// show Debug Hints
+	T8U_var_DEBUG_marker			= false;		// create Debug Markers
+	T8U_var_DEBUG_useCon			= false;		// send Debug MSGs to Killzone Kids console instead of RPT file ( http://killzonekid.com/arma-console-extension-debug_console-dll-v3-0/ )
 */
+
 
 // Options to register units with ZEUS
 // this may slow down spawning

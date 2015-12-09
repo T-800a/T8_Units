@@ -42,7 +42,7 @@ if ( side _group != CIVILIAN ) then
 {
 	_formation = [ "STAG COLUMN", "WEDGE", "VEE", "DIAMOND" ] call BIS_fnc_selectRandom;
 	_speedMode = "LIMITED";
-	_statementGetIn = format [ "[ this ] spawn T8U_fnc_GetInCover; [ this ] spawn T8U_fnc_GetOutVehicle; [ this, '%1' ] spawn T8U_fnc_GarrisonBuildings;", _marker ];
+	_statementGetIn = format [ "[ this, '%1' ] spawn T8U_fnc_GetInCover; [ this ] spawn T8U_fnc_GetOutVehicle; [ this, '%1' ] spawn T8U_fnc_GarrisonBuildings;", _marker ];
 	_statementGetOut = '[ this ] spawn T8U_fnc_GetOutCover; ( group this ) setVariable [ "T8U_gvar_garrisoning", false, false ];';
 	_behaviour = "SAFE";
 

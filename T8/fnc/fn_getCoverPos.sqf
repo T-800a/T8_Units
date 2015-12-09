@@ -15,13 +15,13 @@
 private [ "_pos", "_range", "_cObj", "_rm", "_rmR", "_cover", "_coverPos", "_watchPos", "_dir", "_cm" ];
 
 _pos		= param [ 0, [0,0,0], [[]], [2,3]];
-_range		= param [ 1, 25, [123]];
+_range		= param [ 1, 40, [123]];
 
-if ( _range < 10 ) then { _range = 10; };
+if ( _range < 40 ) then { _range = 40; };
 
 if ( T8U_var_DEBUG ) then { [ "fn_getCoverPos.sqf", "INIT", _this ] spawn T8U_fnc_DebugLog; };
 
-if ( str ( _pos ) == str ( "[0,0,0]" ) ) exitWith { false };
+if ( _pos isEqualTo [0,0,0] ) exitWith { false };
 
 _cObj = nearestObjects [ _pos, [], _range ];
 _rm = nearestObjects [ _pos, [ "HOUSE", "AllVehicles" ], _range ];

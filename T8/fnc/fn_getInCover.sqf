@@ -12,9 +12,10 @@
 
 #include <..\MACRO.hpp>
 
-private [ "_unit", "_cover", "_cObj", "_rm", "_rmR", "_coverPos", "_watchPos", "_dir", "_cm" ];
+private [ "_unit", "_marker", "_coverArray", "_cover", "_cObj", "_rm", "_rmR", "_coverPos", "_watchPos", "_dir", "_cm" ];
 
 _unit		= param [ 0, objNull, [objNull]];
+_marker		= param [ 1, "", [""]];
 
 if ( T8U_var_DEBUG ) then { [ "fn_getInCover.sqf", "INIT", _this ] spawn T8U_fnc_DebugLog; };
 
@@ -23,13 +24,19 @@ if ( isNull _unit ) exitWith { false };
 doStop _unit;
 _watchPos = getPos _unit;
 
-_cover = [ _watchPos ] call T8U_fnc_GetCoverPos;
-
-if ( T8U_var_DEBUG ) then { [ "fn_getInCover.sqf", "COVER", [ _cover ] ] spawn T8U_fnc_DebugLog; };
-
-if ( count _cover > 0 ) then 
+if !( _marker isEqualTo "" ) then 
 {
-	_cover = _cover call BIS_fnc_selectRandom;
+	_size = if ((( getMarkerSize _marker ) select 0 ) < (( getMarkerSize _marker ) select 1 )) then { ( getMarkerSize _marker ) select 0 } else { ( getMarkerSize _marker ) select 1 };
+	_coverArray = [ _watchPos, _size ] call T8U_fnc_GetCoverPos;
+} else {
+	_coverArray = [ _watchPos ] call T8U_fnc_GetCoverPos;
+};
+
+if ( T8U_var_DEBUG ) then { [ "fn_getInCover.sqf", "COVER", [ _coverArray ] ] spawn T8U_fnc_DebugLog; };
+
+if ( count _coverArray > 0 ) then 
+{
+	_cover = _coverArray call BIS_fnc_selectRandom;
 	_coverPos = getPos _cover;
 	_coverPos = [ ( _coverPos select 0 ), ( _coverPos select 1 ), 0 ];
 	
@@ -50,7 +57,7 @@ if ( side _unit == CIVILIAN ) then
 } else {
 	doStop _unit;
 	_unit setUnitPos "Middle";
-	_unit doWatch _watchPos;
+	if ( count _coverArray > 0 ) then { _unit doWatch _watchPos; };
 };
 
 if ( T8U_var_DEBUG ) then { [ "fn_getInCover.sqf", "DONE" ] spawn T8U_fnc_DebugLog; };

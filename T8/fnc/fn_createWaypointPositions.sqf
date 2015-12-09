@@ -93,9 +93,14 @@ switch ( _markerShape ) do
 					_toClose = false;
 				};
 			} else {
+
+				private [ "_areaSizeXT", "_areaSizeYT" ];
+				_areaSizeXT = _areaSizeX + T8U_var_PatAroundRange;
+				_areaSizeYT = _areaSizeY + T8U_var_PatAroundRange;
 			
 				while { _loop } do
 				{
+					
 					_x = _centerX - ( sin _angleNew * _tmpMaxDist );
 					_y = _centerY - ( cos _angleNew * _tmpMaxDist );
 
@@ -106,8 +111,8 @@ switch ( _markerShape ) do
 
 					_wpPosFEP = [ _wpPos, _maxDistance, _useRoad ] call T8U_fnc_findEmptyPos;
 				
-					if ( ( ( _x < _centerX - _areaSizeX OR _x > _centerX + _areaSizeX ) OR ( _y < _centerY - _areaSizeY OR _Y > _centerY + _areaSizeY ) ) AND { ! ( surfaceIsWater _wpPos ) } AND { count _wpPosFEP > 0 } ) then { _loop = false; } else { _tmpMaxDist = _tmpMaxDist + 20; };
-					if ( _tmpMaxDist > ( _areaSizeX + _areaSizeY ) * 1.15 ) then { _wpPosFEP = []; _loop = false; };
+					if ( ( ( _x < _centerX - _areaSizeXT OR _x > _centerX + _areaSizeXT ) OR ( _y < _centerY - _areaSizeYT OR _Y > _centerY + _areaSizeYT ) ) AND { ! ( surfaceIsWater _wpPos ) } AND { count _wpPosFEP > 0 } ) then { _loop = false; } else { _tmpMaxDist = _tmpMaxDist + 20; };
+					if ( _tmpMaxDist > ( _areaSizeXT + _areaSizeYT ) * 1.15 ) then { _wpPosFEP = []; _loop = false; };
 				};				
 			};
 			
