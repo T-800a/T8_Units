@@ -1,7 +1,7 @@
 ============================================ R E A D  M E =============================================================
 
 	Script:		T8 Units
-	Author(s):	T-800a
+	Author(s):	Hauke Sven "T-800a" Fischbach
 	E-Mail:		t-800a@gmx.net
 
 	This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.
@@ -12,5 +12,5 @@
 
 	For more information about the script and how it works, please visit:
 	
-	http://www.http://hummelhummel-ag.de/wordpress/t8-units/
+	http://www.hummelhummel-ag.de/
 

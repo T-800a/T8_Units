@@ -192,7 +192,7 @@ switch ( _markerShape ) do
 					_areaSizeXT = _areaSizeX + T8U_var_PatAroundRange;
 					_areaSizeYT = _areaSizeY + T8U_var_PatAroundRange;
 //					_in = (( _dX *_dX ) / ( _areaSizeXT * _areaSizeXT)) + (( _dY * _dY ) / ( _areaSizeYT * _areaSizeYT));
-					_out = (( _dX *_dX ) / ( _areaSizeX * _areaSizeX )) + (( _dY * _dY ) / ( _areaSizeY * _areaSizeY ));
+					_out = (( _dX *_dX ) / ( _areaSizeXT * _areaSizeXT)) + (( _dY * _dY ) / ( _areaSizeYT * _areaSizeYT));
 
 					_cX	= cos ( _markerDir ) * ( _x - _centerX ) - sin ( _markerDir ) * ( _y - _centerY ) + _centerX;
 					_cY = sin ( _markerDir ) * ( _x - _centerX ) + cos ( _markerDir ) * ( _y - _centerY ) + _centerY;
