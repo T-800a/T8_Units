@@ -22,13 +22,14 @@
 
 #include <..\MACRO.hpp>
 
-private [	"_marker", "_infGroup", "_inside", "_useRoad", "_centerX", "_centerY", "_areaSizeX", "_areaSizeY", "_markerShape", "_maxDistance",
+private [	"_marker", "_infGroup", "_inside", "_useRoad", "_PatrolAroundDis", "_centerX", "_centerY", "_areaSizeX", "_areaSizeY", "_markerShape", "_maxDistance",
 			"_wpCount", "_angle", "_wpArray", "_markerDir", "_return" ];
 
-_marker		= param [ 0, "NO-MARKER-SET", [ "" ]];
-_infGroup	= param [ 1, true, [ true ]];
-_useRoad	= param [ 2, false, [ true ]];
-_inside		= param [ 3, true, [ true ]];
+_marker				= param [ 0, "NO-MARKER-SET", [ "" ]];
+_infGroup			= param [ 1, true, [ true ]];
+_useRoad			= param [ 2, false, [ true ]];
+_inside				= param [ 3, true, [ true ]];
+_PatrolAroundDis	= param [ 4, T8U_var_PatAroundRange, [123]];
 
 if (( getMarkerPos _marker ) isEqualTo [0,0,0]) exitWith { if ( T8U_var_DEBUG ) then { [ "fn_createWaypointPositions.sqf", "NO MARKER", _this ] spawn T8U_fnc_DebugLog; }; false };
 if ( T8U_var_DEBUG ) then { [ "fn_createWaypointPositions.sqf", "EXEC", _this ] spawn T8U_fnc_DebugLog; };
@@ -44,7 +45,7 @@ _markerShape = toUpper ( markershape _marker );
 if ( _areaSizeX < 40 ) then { _areaSizeX = 40; };
 if ( _areaSizeY < 40 ) then { _areaSizeY = 40; };
 
-if ( _inside ) then { _maxDistance = _areaSizeX - ( _areaSizeX * 0.2 ); } else { _maxDistance = _areaSizeX + T8U_var_PatAroundRange; };
+if ( _inside ) then { _maxDistance = _areaSizeX - ( _areaSizeX * 0.2 ); } else { _maxDistance = _areaSizeX + _PatrolAroundDis; };
 
 _wpCount = 5 + ( floor ( random 4 ) ) + ( floor ( ( ( _areaSizeX + _areaSizeY ) / 2 ) / 100 ) );
 _angle = ( 360 / ( _wpCount - 1 ) );
@@ -95,8 +96,8 @@ switch ( _markerShape ) do
 			} else {
 
 				private [ "_areaSizeXT", "_areaSizeYT" ];
-				_areaSizeXT = _areaSizeX + T8U_var_PatAroundRange;
-				_areaSizeYT = _areaSizeY + T8U_var_PatAroundRange;
+				_areaSizeXT = _areaSizeX + _PatrolAroundDis;
+				_areaSizeYT = _areaSizeY + _PatrolAroundDis;
 			
 				while { _loop } do
 				{
@@ -111,7 +112,7 @@ switch ( _markerShape ) do
 
 					_wpPosFEP = [ _wpPos, _maxDistance, _useRoad ] call T8U_fnc_findEmptyPos;
 				
-					if ( ( ( _x < _centerX - _areaSizeXT OR _x > _centerX + _areaSizeXT ) OR ( _y < _centerY - _areaSizeYT OR _Y > _centerY + _areaSizeYT ) ) AND { ! ( surfaceIsWater _wpPos ) } AND { count _wpPosFEP > 0 } ) then { _loop = false; } else { _tmpMaxDist = _tmpMaxDist + 20; };
+					if ( ( ( _x < _centerX - _areaSizeXT OR _x > _centerX + _areaSizeXT ) OR ( _y < _centerY - _areaSizeYT OR _Y > _centerY + _areaSizeYT ) ) AND { ! ( surfaceIsWater _wpPos ) } AND { count _wpPosFEP > 0 } ) then { _loop = false; } else { _tmpMaxDist = _tmpMaxDist + 10; };
 					if ( _tmpMaxDist > ( _areaSizeXT + _areaSizeYT ) * 1.15 ) then { _wpPosFEP = []; _loop = false; };
 				};				
 			};
@@ -187,15 +188,15 @@ switch ( _markerShape ) do
 				{
 					private [ "_in", "_out", "_dX", "_dY", "_mod", "_areaSizeXT", "_areaSizeYT" ];
 
-					_mod = T8U_var_PatAroundRange;
+					_mod = _PatrolAroundDis;
 
 					_x = _centerX - ( sin _angleNew * _tmpMaxDist );
 					_y = _centerY - ( cos _angleNew * _tmpMaxDist );
 					
 					_dX = _x - _centerX;
 					_dY = _y - _centerY;
-					_areaSizeXT = _areaSizeX + T8U_var_PatAroundRange;
-					_areaSizeYT = _areaSizeY + T8U_var_PatAroundRange;
+					_areaSizeXT = _areaSizeX + _PatrolAroundDis;
+					_areaSizeYT = _areaSizeY + _PatrolAroundDis;
 //					_in = (( _dX *_dX ) / ( _areaSizeXT * _areaSizeXT)) + (( _dY * _dY ) / ( _areaSizeYT * _areaSizeYT));
 					_out = (( _dX *_dX ) / ( _areaSizeXT * _areaSizeXT)) + (( _dY * _dY ) / ( _areaSizeYT * _areaSizeYT));
 
@@ -206,7 +207,7 @@ switch ( _markerShape ) do
 						
 					if ( _out > 1 ) then { _loop = false; };  
 	
-					_tmpMaxDist = _tmpMaxDist + 20;
+					_tmpMaxDist = _tmpMaxDist + 10;
 				};
 				
 				if ( ! surfaceIsWater _wpPos ) then 

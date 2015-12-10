@@ -30,11 +30,12 @@
 
 #include <..\MACRO.hpp>
 
-private [ "_group", "_marker", "_infGroup", "_speedMode", "_formation", "_statement", "_range", "_wp", "_wpArray", "_cycle", "_behaviour" ];
+private [ "_group", "_marker", "_infGroup", "_PatrolAroundDis", "_speedMode", "_formation", "_statement", "_range", "_wp", "_wpArray", "_cycle", "_behaviour" ];
 
-_group		= param [ 0, grpNull, [grpNull]];
-_marker		= param [ 1, "NO-MARKER-SET", [""]]; 
-_infGroup	= param [ 2, true, [true]];
+_group				= param [ 0, grpNull, [grpNull]];
+_marker				= param [ 1, "NO-MARKER-SET", [""]]; 
+_infGroup			= param [ 2, true, [true]];
+_PatrolAroundDis	= param [ 3, T8U_var_PatAroundRange, [123]];
 
 if ( T8U_var_DEBUG ) then { [ "fn_patrolAround.sqf", "INIT", _this ] spawn T8U_fnc_DebugLog; };
 
@@ -58,7 +59,7 @@ _group setSpeedMode _speedMode;
 _group setFormation _formation;
 
 // Create waypoints based on array of positions
-_wpArray = [ _marker, _infGroup, false, false ] call T8U_fnc_CreateWaypointPositions;
+_wpArray = [ _marker, _infGroup, false, false, _PatrolAroundDis ] call T8U_fnc_CreateWaypointPositions;
 
 {
     private [ "_wp", "_markerName", "_markerFP" ];

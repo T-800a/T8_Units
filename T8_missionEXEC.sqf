@@ -94,15 +94,17 @@ T8U_var_SupportUnitsRESISTANCE = [];
 _SpawnThisUnits = 
 [ 
 	[ [ _groupArrayMiniPat, "Marker01", "T8u_fnc_rmNVG_TEST" ], [ "PATROL" ] ],
-	[ [ _groupArrayMiniPat, "Marker08", "T8u_fnc_rmNVG_TEST" ], [ "PATROL" ]  ],
-	[ [ _groupArrayFullPat, "Marker02" ], [ "PATROL_AROUND" ] ],
-	[ [ _groupArrayFullPat, "Marker09" ], [ "PATROL_AROUND" ] ],
+	[ [ _groupArrayFullPat, "Marker01" ], [ "PATROL_AROUND" ] ],
+	[ [ _groupArrayFullPat, "Marker02" ], [ "PATROL_AROUND", 50 ] ],
 	[ [ _groupArrayFullTeam, "Marker03" ], [ "GARRISON" ] ],
 	[ [ _groupArrayFullTeam, "Marker03_f" ], [ "GARRISON" ] ],
 	[ [ _groupArrayFireTeam, "Marker04", "T8u_fnc_rmNVG_TEST" ], [ "DEFEND" ], [ true, false, false ] ],
 	[ [ _groupArrayFullTeam, "Marker05" ], [ "LOITER" ] ],
 	[ [ _groupArrayFullTeam, "Marker06" ], [ "PATROL_GARRISON" ] ],
 	[ [ _groupArrayW_APC + _groupArrayFireTeam, "Marker07", false ], [ "PATROL_URBAN" ] ],
+	[ [ _groupArrayMiniPat, "Marker08", "T8u_fnc_rmNVG_TEST" ], [ "PATROL" ]  ],
+	[ [ _groupArrayFullPat, "Marker09" ], [ "PATROL_AROUND", 150 ] ],
+	
 	[ [ _groupArrayFullTeam, "ip" ], [ "PATROL_MARKER", [ "ip1", "ip2", "ip3" ] ] ],
 	[ [ _groupArrayIfritPat + _groupArrayFullTeam, "vp", false ], [ "PATROL_MARKER", [ "vp1", "vp2", "vp3" ], false ] ],
 	[ [ _groupArraySniperTeam, "spawnSnipers" ], [ "OVERWATCH", "overwatchTHIS" ] ],

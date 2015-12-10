@@ -29,7 +29,7 @@ _return = [];
 // -> ForEach _MasterArray
 { 
 	private [ 	"_abort", "_group", "_vehicleArray", "_posMkr", "_type", "_commArray", "_cacheArray", "_cachePos", "_PatrolMarkerArray", "_infGroup", "_groupSide", 
-				"_PatrolMarkerDoSAD", "_overwatchMarker", "_attackMarker", "_newStyleArray", "_groupArray", "_taskArray", "_cAM", "_cA0", "_cA1", "_customFNC", "_spawnPos", "_relPos" ];
+				"_PatrolMarkerDoSAD", "_PatrolAroundDis", "_overwatchMarker", "_attackMarker", "_newStyleArray", "_groupArray", "_taskArray", "_cAM", "_cA0", "_cA1", "_customFNC", "_spawnPos", "_relPos" ];
 	
 	_abort = false; // for error findings
 	
@@ -143,8 +143,9 @@ _return = [];
 			
 		case "PATROL_AROUND": 
 		{
+			_PatrolAroundDis = _taskArray param [ 1, T8U_var_PatAroundRange, [123]];
 			_group = [ _spawnPos, _groupSide, _vehicleArray, _relPos ] call BIS_fnc_spawnGroup;
-			[ _group, _posMkr, _infGroup ] spawn T8U_tsk_fnc_patrolAround;
+			[ _group, _posMkr, _infGroup, _PatrolAroundDis ] spawn T8U_tsk_fnc_patrolAround;
 		};
 			
 		case "PATROL_URBAN": 
@@ -156,7 +157,7 @@ _return = [];
 		case "PATROL_GARRISON": 
 		{
 			// Force _infGroup = false !!!
-			// _commArray = [ ( _commArray select 0 ), false ];				
+			// _commArray = [ ( _commArray select 0 ), false ];			
 			_group = [ _spawnPos, _groupSide, _vehicleArray, _relPos ] call BIS_fnc_spawnGroup;
 			[ _group, _posMkr ] spawn T8U_tsk_fnc_patrolGarrison;
 		};
