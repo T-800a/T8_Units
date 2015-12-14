@@ -31,4 +31,8 @@
 #define __SetOVAR(OBJ,VAR,VAL)			OBJ setVariable [ VAR, VAL, false ]
 #define __SetOVARG(OBJ,VAR,VAL)			OBJ setVariable [ VAR, VAL, true ]
 
+#define __PVAR(VAR,VAL)					private VAR = VAL;
+#define __PARR(VAR)						private VAR = [];
+#define __PBOT(VAR)						private VAR = true;
+#define __PBOF(VAR)						private VAR = false;
 

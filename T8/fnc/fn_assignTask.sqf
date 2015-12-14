@@ -155,7 +155,6 @@ switch ( _typeTask ) do
 
 	case "CQC_SHOT": 
 	{
-		private [ "_fpA", "_fp" ];
 		[ _groupHelper, _posToGo, "SAD", "COMBAT", _sEP, 25 ] call _wpAdd;
 	};
 	
