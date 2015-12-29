@@ -63,6 +63,9 @@ _n = 2;
 		[ _group, _x, "MOVE", "SAFE", _statementGetIn, _range, _speedMode, [ 30, 30, 30 ] ] call T8U_fnc_CreateWaypoint;
 		[ _group, _x, "TALK", "SAFE", _statementGetOut, _range, _speedMode, [ 90, 120, 150 ] ] call T8U_fnc_CreateWaypoint;
 		
+		// to regroup ?!
+		[ _group, _x, "MOVE", "SAFE", "", 10, "FULL", [ 30, 30, 30 ] ] call T8U_fnc_CreateWaypoint;
+		
 		if ( T8U_var_DEBUG_marker ) then { [ _x ] call T8U_fnc_DebugMarker; };
     };
 } forEach _wpArray;

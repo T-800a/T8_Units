@@ -57,12 +57,14 @@ _compiledArray = [];
 _unitsToDelete = [];
 
 {	// forEach -> _groups
-	private [ "_commArray", "_originArray", "_memberArray", "_groupArray", "_typeOfArray", "_vehicles" ];
+	private [ "_commArray", "_originArray", "_memberArray", "_spawnPos", "_groupArray", "_typeOfArray", "_vehicles" ];
 	
 	_commArray		= __GetOVAR( _x, "T8U_gvar_Comm", [] );
 	_originArray	= __GetOVAR( _x, "T8U_gvar_Origin", [] );
 	_memberArray	= __GetOVAR( _x, "T8U_gvar_Member", [] );
 
+	_spawnPos		= getPos ( leader _x );
+	
 	_typeOfArray	= [];
 	_vehicles		= [];
 
@@ -87,9 +89,9 @@ _unitsToDelete = [];
 			};
 		};
 	} forEach _memberArray;
-
-	// _originArray = [ _posMkr, _type, _infGroup, _taskArray ];
-	_groupArray = [ [ _typeOfArray, ( _originArray select 0 ), ( _originArray select 2 ), side _x, ( _originArray select 4 ) ], ( _originArray select 3 ),  _commArray  ];
+	
+	// _originArray = [ _markerArray, _type, _infGroup, _taskArray, _customFNC ];
+	_groupArray = [ [ _typeOfArray, ( _originArray select 0 ), ( _originArray select 2 ), side _x, ( _originArray select 4 ) ], ( _originArray select 3 ),  _commArray, [ _spawnPos ]];
 
 	_compiledArray pushBack _groupArray;
 	_unitsToDelete = _unitsToDelete + _memberArray;

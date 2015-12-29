@@ -28,7 +28,7 @@ _return = [];
 
 // -> ForEach _MasterArray
 { 
-	private [ 	"_abort", "_group", "_vehicleArray", "_posMkr", "_type", "_commArray", "_cacheArray", "_cachePos", "_PatrolMarkerArray", "_infGroup", "_groupSide", 
+	private [ 	"_abort", "_group", "_vehicleArray", "_posMkr", "_type", "_commArray", "_cacheArray", "_cachePos", "_PatrolMarkerArray", "_infGroup", "_groupSide", "_markerArray",
 				"_PatrolMarkerDoSAD", "_PatrolAroundDis", "_overwatchMarker", "_attackMarker", "_newStyleArray", "_groupArray", "_taskArray", "_cAM", "_cA0", "_cA1", "_customFNC", "_spawnPos", "_relPos" ];
 	
 	_abort = false; // for error findings
@@ -52,15 +52,24 @@ _return = [];
 	_type				= _taskArray param [ 0, "NO-TASK-GIVEN", [""]];
 	
 	_cacheArray			= _x param [ 3, [], [[]]];
-	_cachePos			= _cacheArray param [ 0, [], [[]]];
+	_cachePos			= _cacheArray param [ 0, [], [[],""]];
 	
 	_vehicleArray		= _groupArray param [ 0, [], [[]]];
-	_posMkr				= _groupArray param [ 1, "NO-POS-GIVEN", [""]];	_posMkrArray pushBack _posMkr;
+	_markerArray		= _groupArray param [ 1, false, ["",[]]];	
 	
 	_infGroup	= true;
 	_groupSide	= T8U_var_EnemySide;
 	_customFNC	= "NO-FUNC-GIVEN";
 	
+	switch ( typeName _markerArray ) do 
+	{ 
+		case "ARRAY":	{ _posMkr = _markerArray call BIS_fnc_selectRandom; };
+		case "STRING":	{ _posMkr = _markerArray; };
+		default			{ _posMkr = "NO-TASK-GIVEN"; };
+	};
+	
+	_posMkrArray pushBack _posMkr;
+		
 	if ( count _groupArray > 2 ) then 
 	{
 		switch ( typeName ( _groupArray select 2) ) do 
@@ -94,15 +103,17 @@ _return = [];
 		};
 	};
 
-
 	if ( 
 		!( count _vehicleArray > 0 ) 
 		OR { _posMkr == "NO-POS-GIVEN" } 
 		OR { _type == "NO-TASK-GIVEN" } 
-		OR { ( str ( getMarkerPos _posMkr ) ) == str ([0,0,0]) }
+		OR { ( getMarkerPos _posMkr ) isEqualTo [0,0,0] }
 	) exitWith { [ ( format [ "Something went seriously wrong! Error in Unit's spawning definition!<br /><br />Marker: %1<br />Task: %2", _posMkr, _type ] ) ] call T8U_fnc_BroadcastHint; _error = true; };
 
-	if ( count _cachePos > 0 ) then
+	
+	if (( typeName _cachePos ) isEqualTo ( typeName "STR" )) then { _cachePos = getMarkerPos _cachePos; };
+	if ( _cachePos isEqualTo [0,0,0]) then { _cachePos = _posMkr; };
+	if ( count _cachePos > 1 ) then
 	{
 		_spawnPos = [ _cachePos ] call T8U_fnc_CreateSpawnPos;
 	} else {
@@ -237,7 +248,7 @@ _return = [];
 			_presetBehavior = 0;
 			
 	// Setup Origin Array
-			_originArray = [ _posMkr, _type, _infGroup, _taskArray, _customFNC ];
+			_originArray = [ _markerArray, _type, _infGroup, _taskArray, _customFNC ];
 			
 			switch ( _groupSide ) do
 			{
