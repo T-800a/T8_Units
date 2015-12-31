@@ -17,6 +17,7 @@
 // #define __DEBUGMKR(NAME,TEXT,VAR)
 
 #define __DEBUG(NAME,TEXT,VAR)			if ( T8U_var_DEBUG ) then { [NAME,TEXT,VAR] call T8U_fnc_debugLog; }
+#define __DEBUGX(NAME,TEXT,VAR)			if ( T8U_var_DEBUG ) then { [NAME,TEXT,VAR,false] call T8U_fnc_debugLog; }
 #define __DEBUGMKR(NAME,TEXT,VAR)		if ( T8U_var_DEBUG_marker ) then { [NAME,TEXT,VAR] call T8U_fnc_DebugMarker; }
 
 

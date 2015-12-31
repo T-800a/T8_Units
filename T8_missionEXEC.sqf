@@ -96,14 +96,14 @@ _SpawnThisUnits =
 [ 
 	[ [ _groupArrayMiniPat, "Marker01", "T8u_fnc_rmNVG_TEST" ], [ "PATROL" ], [ true, true, true ], [ "Marker01_spawn" ]],
 	[ [ _groupArrayFullPat, "Marker01" ], [ "PATROL_AROUND" ], [ true, true, true ], [ getMarkerPos "Marker01_spawn" ]],
-	[ [ _groupArrayFullPat, "Marker02" ], [ "PATROL_AROUND", 50 ] ],
+	[ [ _groupArrayFullPat, [ "Marker02_01", "Marker02_02" ]], [ "PATROL_AROUND", 50 ] ],
 	[ [ _groupArrayFullTeam, "Marker03" ], [ "GARRISON" ] ],
 	[ [ _groupArrayFullTeam, "Marker03_f" ], [ "GARRISON" ] ],
 	[ [ _groupArrayFireTeam, "Marker04", "T8u_fnc_rmNVG_TEST" ], [ "DEFEND" ], [ true, false, false ] ],
 	[ [ _groupArrayFullTeam, "Marker05" ], [ "LOITER" ] ],
 	[ [ _groupArrayFullTeam, "Marker06" ], [ "PATROL_GARRISON" ] ],
 	[ [ _groupArrayW_APC + _groupArrayFireTeam, "Marker07", false ], [ "PATROL_URBAN" ] ],
-	[ [ _groupArrayMiniPat, "Marker08", "T8u_fnc_rmNVG_TEST" ], [ "PATROL" ]  ],
+	[ [ _groupArrayMiniPat, [ "Marker08_01", "Marker08_02" ], "T8u_fnc_rmNVG_TEST" ], [ "PATROL" ]  ],
 	[ [ _groupArrayFullPat, "Marker09" ], [ "PATROL_AROUND", 150 ] ],
 	
 	[ [ _groupArrayFullTeam, "ip" ], [ "PATROL_MARKER", [ "ip1", "ip2", "ip3" ] ] ],
@@ -116,7 +116,6 @@ _SpawnThisUnits =
 	
 	[ [ _groupArrayBluTeam, "MarkerBLU", WEST ], [ "PATROL" ] ],
 	[ [ _groupArrayBluTeam, "MarkerBLU", WEST ], [ "PATROL" ] ],
-	
 	[ [ _groupArrayCIV, "MarkerCIV", CIVILIAN ], [ "GARRISON" ] ]	
 ];
 

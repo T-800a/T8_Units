@@ -65,7 +65,7 @@ _return = [];
 	{ 
 		case "ARRAY":	{ _posMkr = _markerArray call BIS_fnc_selectRandom; };
 		case "STRING":	{ _posMkr = _markerArray; };
-		default			{ _posMkr = "NO-TASK-GIVEN"; };
+		default			{ _posMkr = "NO-POS-GIVEN"; };
 	};
 	
 	_posMkrArray pushBack _posMkr;
@@ -149,14 +149,14 @@ _return = [];
 		case "PATROL": 
 		{
 			_group = [ _spawnPos, _groupSide, _vehicleArray, _relPos ] call BIS_fnc_spawnGroup;
-			[ _group, _posMkr, _infGroup ] spawn T8U_tsk_fnc_patrol;				
+			[ _group, _markerArray, _infGroup ] spawn T8U_tsk_fnc_patrol;				
 		};
 			
 		case "PATROL_AROUND": 
 		{
 			_PatrolAroundDis = _taskArray param [ 1, T8U_var_PatAroundRange, [123]];
 			_group = [ _spawnPos, _groupSide, _vehicleArray, _relPos ] call BIS_fnc_spawnGroup;
-			[ _group, _posMkr, _infGroup, _PatrolAroundDis ] spawn T8U_tsk_fnc_patrolAround;
+			[ _group, _markerArray, _infGroup, _PatrolAroundDis ] spawn T8U_tsk_fnc_patrolAround;
 		};
 			
 		case "PATROL_URBAN": 
