@@ -22,7 +22,7 @@
 
 #include <..\MACRO.hpp>
 
-private [	"_marker", "_infGroup", "_inside", "_useRoad", "_PatrolAroundDis", "_centerX", "_centerY", "_areaSizeX", "_areaSizeY", "_markerShape", "_maxDistance",
+private [	"_marker", "_infGroup", "_inside", "_useRoad", "_PatrolAroundDis", "_maxRunTime", "_centerX", "_centerY", "_areaSizeX", "_areaSizeY", "_markerShape", "_maxDistance",
 			"_wpCount", "_angle", "_wpArray", "_markerDir", "_return" ];
 
 _marker				= param [ 0, "NO-MARKER-SET", [ "" ]];
@@ -32,7 +32,10 @@ _inside				= param [ 3, true, [ true ]];
 _PatrolAroundDis	= param [ 4, T8U_var_PatAroundRange, [123]];
 
 if (( getMarkerPos _marker ) isEqualTo [0,0,0]) exitWith { if ( T8U_var_DEBUG ) then { [ "fn_createWaypointPositions.sqf", "NO MARKER", _this ] spawn T8U_fnc_DebugLog; }; false };
-if ( T8U_var_DEBUG ) then { [ "fn_createWaypointPositions.sqf", "EXEC", _this ] spawn T8U_fnc_DebugLog; };
+
+__DEBUG( __FILE__, "INIT", _this );
+__DEBUG( __FILE__, "INIT > START TIME", diag_tickTime );
+_maxRunTime	= ( diag_tickTime + 10.0 );
 
 _centerX	= ( getMarkerPos _marker ) select 0;
 _centerY	= ( getMarkerPos _marker ) select 1;
@@ -125,6 +128,7 @@ switch ( _markerShape ) do
 			if ( str ( _wpPosFEP ) == str ([0.5,0.5,0]) ) then { _wpPosFEP = [] };
 			
 			if ( _useRoad ) then { if ( isOnRoad _wpPosFEP ) then { _wpArray pushBack _wpPosFEP; }; } else { _wpArray pushBack _wpPosFEP; };			
+			if ( diag_tickTime > _maxRunTime ) exitWith { __DEBUG( __FILE__, "RUN TIME VIOLATION", diag_tickTime ); };
 		};
 	};
 
@@ -224,6 +228,8 @@ switch ( _markerShape ) do
 					_wpArray pushBack [];
 				};
 			};
+			
+			if ( diag_tickTime > _maxRunTime ) exitWith { __DEBUG( __FILE__, "RUN TIME VIOLATION", diag_tickTime ); };
 		};
 	};
 
@@ -256,6 +262,8 @@ switch ( _markerShape ) do
 			};
 
 			_wpArray pushBack _wpPosFEP;
+			
+			if ( diag_tickTime > _maxRunTime ) exitWith { __DEBUG( __FILE__, "RUN TIME VIOLATION", diag_tickTime ); };
 		};
 	};
 };

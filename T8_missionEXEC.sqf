@@ -93,7 +93,8 @@ T8U_var_SupportUnitsRESISTANCE = [];
 
 // this groups of units are spawned directly at mission start
 _SpawnThisUnits = 
-[ 
+[
+/* 
 	[ [ _groupArrayMiniPat, "Marker01", "T8u_fnc_rmNVG_TEST" ], [ "PATROL" ], [ true, true, true ], [ "Marker01_spawn" ]],
 	[ [ _groupArrayFullPat, "Marker01" ], [ "PATROL_AROUND" ], [ true, true, true ], [ getMarkerPos "Marker01_spawn" ]],
 	[ [ _groupArrayFullPat, [ "Marker02_01", "Marker02_02" ]], [ "PATROL_AROUND", 50 ] ],
@@ -116,7 +117,9 @@ _SpawnThisUnits =
 	
 	[ [ _groupArrayBluTeam, "MarkerBLU", WEST ], [ "PATROL" ] ],
 	[ [ _groupArrayBluTeam, "MarkerBLU", WEST ], [ "PATROL" ] ],
-	[ [ _groupArrayCIV, "MarkerCIV", CIVILIAN ], [ "GARRISON" ] ]	
+	[ [ _groupArrayCIV, "MarkerCIV", CIVILIAN ], [ "GARRISON" ] ]
+*/
+	[ [ _groupArrayW_APC + _groupArrayFireTeam, [ "marker_urban_01", "marker_urban_02" ], false ], [ "PATROL_URBAN" ] ]
 ];
 
 [ _SpawnThisUnits ] spawn T8U_fnc_Spawn;

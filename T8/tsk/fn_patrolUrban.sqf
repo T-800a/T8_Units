@@ -70,6 +70,7 @@ if (( typeName _marker ) isEqualTo ( typeName [] )) then
 		if !(( getMarkerPos _x ) isEqualTo [0,0,0] ) then
 		{
 			_wpArrayTmp = [ _x, _infGroup, true ] call T8U_fnc_CreateWaypointPositions;
+			__DEBUG( __FILE__, "_wpArray", _wpArray );
 			if (( count _wpArrayTmp ) isEqualTo 0 ) then { _wpArrayTmp = [ _x, _infGroup ] call T8U_fnc_CreateWaypointPositions; };
 			
 			_wpArray append _wpArrayTmp;
@@ -82,6 +83,7 @@ if (( typeName _marker ) isEqualTo ( typeName [] )) then
 	
 } else {
 	_wpArray = [ _marker, _infGroup, true ] call T8U_fnc_CreateWaypointPositions;
+	__DEBUG( __FILE__, "_wpArray", _wpArray );
 	if (( count _wpArray ) isEqualTo 0 ) then { _wpArray = [ _x, _infGroup ] call T8U_fnc_CreateWaypointPositions; };
 };
 __DEBUG( __FILE__, "_wpArray", _wpArray );
