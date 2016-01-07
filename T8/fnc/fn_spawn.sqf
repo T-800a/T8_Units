@@ -162,7 +162,7 @@ _return = [];
 		case "PATROL_URBAN": 
 		{
 			_group = [ _spawnPos, _groupSide, _vehicleArray, _relPos ] call BIS_fnc_spawnGroup;
-			[ _group, _posMkr, _infGroup ] spawn T8U_tsk_fnc_patrolUrban;
+			[ _group, _markerArray, _infGroup ] spawn T8U_tsk_fnc_patrolUrban;
 		};
 
 		case "PATROL_GARRISON": 

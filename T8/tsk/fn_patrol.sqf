@@ -33,7 +33,7 @@ _group		= param [ 0, grpNull, [grpNull]];
 _marker		= param [ 1, "NO-MARKER-SET", ["",[]]]; 
 _infGroup	= param [ 2, true, [true]]; 
 
-if ( T8U_var_DEBUG ) then { [ "fn_patrol.sqf", "INIT", _this ] spawn T8U_fnc_DebugLog; };
+__DEBUG( __FILE__, "INIT", _this );
 
 if ( isNull _group ) exitWith { false };
 if (( typeName _marker ) isEqualTo ( typeName "" ) AND {( getMarkerPos _marker ) isEqualTo [0,0,0] }) exitWith { false };
@@ -56,7 +56,6 @@ _group setBehaviour "AWARE";
 _group setSpeedMode _speedMode;
 _group setFormation _formation;
 
-__DEBUGX( __FILE__, "_marker", _marker );
 
 // Create waypoints based on array of positions
 if (( typeName _marker ) isEqualTo ( typeName [] )) then
@@ -64,7 +63,7 @@ if (( typeName _marker ) isEqualTo ( typeName [] )) then
 	private _wpArrayTmp = [];
 	_wpArray = [];
 	{
-		__DEBUGX( __FILE__, "_marker > _x", _x );
+		__DEBUG( __FILE__, "_marker > _x", _x );
 		
 		if !(( getMarkerPos _x ) isEqualTo [0,0,0] ) then
 		{
@@ -74,7 +73,7 @@ if (( typeName _marker ) isEqualTo ( typeName [] )) then
 			_wpArray append _wpArrayTmp;
 		};
 		
-		__DEBUGX( __FILE__, "_wpArray", _wpArray );
+		__DEBUG( __FILE__, "_wpArray", _wpArray );
 		
 		false
 	} count _marker;
@@ -82,9 +81,8 @@ if (( typeName _marker ) isEqualTo ( typeName [] )) then
 } else {
 	_wpArray = [ _marker, _infGroup ] call T8U_fnc_CreateWaypointPositions;
 	_wpArray = _wpArray call BIS_fnc_arrayShuffle;
+	__DEBUG( __FILE__, "_wpArray", _wpArray );
 };
-
-
 
 
 {
@@ -103,7 +101,7 @@ if (( typeName _marker ) isEqualTo ( typeName [] )) then
 // Cycle in case we reach the end
 [ _group, _cycle, "CYCLE", "SAFE", "", 100 ] call T8U_fnc_CreateWaypoint;
 
-if ( T8U_var_DEBUG ) then { [ "garrison.sqf", "Successfully Initialized", [ _group ] ] spawn T8U_fnc_DebugLog; };
+__DEBUG( __FILE__, "Successfully Initialized", _group );
 
 // Return
 true

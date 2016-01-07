@@ -30,12 +30,14 @@
 private [ "_group", "_marker", "_leader", "_n", "_speedMode", "_formation", "_statementGetIn", "_statementGetOut", "_range", "_wp", "_wpArray", "_behaviour" ];
 
 _group		= param [ 0, grpNull, [grpNull]];
-_marker		= param [ 1, "NO-MARKER-SET", [""]];
+_marker		= param [ 1, "NO-MARKER-SET", ["",[]]];
 _leader		= leader _group;
 
-if ( T8U_var_DEBUG ) then { [ "fn_patrolGarrison.sqf", "INIT", _this ] spawn T8U_fnc_DebugLog; };
+__DEBUG( __FILE__, "INIT", _this );
 
-if ( isNull _group OR { str ( getMarkerPos _marker ) == str ([0,0,0]) } ) exitWith { false };
+if ( isNull _group ) exitWith { false };
+if (( typeName _marker ) isEqualTo ( typeName "" ) AND {( getMarkerPos _marker ) isEqualTo [0,0,0] }) exitWith { false };
+if (( typeName _marker ) isEqualTo ( typeName [] ) AND {( count _marker ) isEqualTo 0 }) exitWith { false };
 
 _formation = [ "STAG COLUMN", "WEDGE", "VEE", "DIAMOND" ] call BIS_fnc_selectRandom;
 _speedMode = "LIMITED";
@@ -51,8 +53,32 @@ _group setFormation _formation;
 [ _group, getMarkerPos _marker, "MOVE", "SAFE", "", _range, _speedMode ] call T8U_fnc_CreateWaypoint;
 
 // Create waypoints based on array of positions
-_wpArray = [ _marker, true ] call T8U_fnc_CreateWaypointPositions;
-_wpArray = _wpArray call BIS_fnc_arrayShuffle;
+// Create waypoints based on array of positions
+if (( typeName _marker ) isEqualTo ( typeName [] )) then
+{
+	private _wpArrayTmp = [];
+	_wpArray = [];
+	{
+		__DEBUG( __FILE__, "_marker > _x", _x );
+		
+		if !(( getMarkerPos _x ) isEqualTo [0,0,0] ) then
+		{
+			_wpArrayTmp = [ _x, _infGroup ] call T8U_fnc_CreateWaypointPositions;
+			_wpArrayTmp = _wpArrayTmp call BIS_fnc_arrayShuffle;
+		
+			_wpArray append _wpArrayTmp;
+		};
+		
+		__DEBUG( __FILE__, "_wpArray", _wpArray );
+		
+		false
+	} count _marker;
+	
+} else {
+	_wpArray = [ _marker, _infGroup ] call T8U_fnc_CreateWaypointPositions;
+	_wpArray = _wpArray call BIS_fnc_arrayShuffle;
+	__DEBUG( __FILE__, "_wpArray", _wpArray );
+};
 
 _n = 2;
 {
@@ -75,12 +101,12 @@ _n = 2;
 
 _group setCurrentWaypoint [ _group, 2 ];
 
-if ( T8U_var_DEBUG ) then { [ "fn_patrolGarrison.sqf", "Successfully Initialized", [ _group ] ] spawn T8U_fnc_DebugLog; };
+__DEBUG( __FILE__, "Successfully Initialized", _group );
 
 // Exit garrisoning when group gets new task assigned
 waitUntil { sleep 2; [ _group ] call T8U_fnc_ReleaseGroup };
 
-if ( T8U_var_DEBUG ) then { [ "fn_patrolGarrison.sqf", "TERMINATING", [ _group ] ] spawn T8U_fnc_DebugLog; };
+__DEBUG( __FILE__, "TERMINATING", _group );
 
 [ _leader ] spawn T8U_fnc_GetOutCover;
 ( group _leader ) enableAttack true;

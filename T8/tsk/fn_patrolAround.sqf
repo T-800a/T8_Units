@@ -37,7 +37,7 @@ _marker				= param [ 1, "NO-MARKER-SET", ["",[]]];
 _infGroup			= param [ 2, true, [true]];
 _PatrolAroundDis	= param [ 3, T8U_var_PatAroundRange, [123]];
 
-if ( T8U_var_DEBUG ) then { [ "fn_patrolAround.sqf", "INIT", _this ] spawn T8U_fnc_DebugLog; };
+__DEBUG( __FILE__, "INIT", _this );
 
 if ( isNull _group ) exitWith { false };
 if (( typeName _marker ) isEqualTo ( typeName "" ) AND {( getMarkerPos _marker ) isEqualTo [0,0,0] }) exitWith { false };
@@ -67,7 +67,7 @@ if (( typeName _marker ) isEqualTo ( typeName [] )) then
 	private _wpArrayTmp = [];
 	_wpArray = [];
 	{
-		__DEBUGX( __FILE__, "_marker > _x", _x );
+		__DEBUG( __FILE__, "_marker > _x", _x );
 		
 		if !(( getMarkerPos _x ) isEqualTo [0,0,0] ) then
 		{
@@ -75,13 +75,14 @@ if (( typeName _marker ) isEqualTo ( typeName [] )) then
 			_wpArray append _wpArrayTmp;
 		};
 		
-		__DEBUGX( __FILE__, "_wpArray", _wpArray );
+		__DEBUG( __FILE__, "_wpArray", _wpArray );
 		
 		false
 	} count _marker;
 	
 } else {
 	_wpArray = [ _marker, _infGroup, false, false, _PatrolAroundDis ] call T8U_fnc_CreateWaypointPositions;
+	__DEBUG( __FILE__, "_wpArray", _wpArray );
 };
 
 {
