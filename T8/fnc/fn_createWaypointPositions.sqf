@@ -47,7 +47,12 @@ if ( _areaSizeY < 40 ) then { _areaSizeY = 40; };
 
 if ( _inside ) then { _maxDistance = _areaSizeX - ( _areaSizeX * 0.2 ); } else { _maxDistance = _areaSizeX + _PatrolAroundDis; };
 
-_wpCount = 5 + ( floor ( random 4 ) ) + ( floor ( ( ( _areaSizeX + _areaSizeY ) / 2 ) / 100 ) );
+if ( _infGroup ) then
+{
+	_wpCount = 5 + ( floor ( random 4 ) ) + ( floor ( ( ( _areaSizeX + _areaSizeY ) / 2 ) / 100 ) );
+} else {
+	_wpCount = 4 + ( floor ( ( ( _areaSizeX + _areaSizeY ) / 2 ) / 100 ) );
+};
 _angle = ( 360 / ( _wpCount - 1 ) );
 _wpArray = [];
 _return = [];
