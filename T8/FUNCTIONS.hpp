@@ -48,6 +48,7 @@
 			addFunction(debugMarker);
 			addFunction(debugMarkerDelete);
 			addFunction(filterEntities);
+			addFunction(findBuildingPositions);
 			addFunction(findOverwatch);
 			addFunction(findEmptyPos);
 			addFunction(firedEvent);
