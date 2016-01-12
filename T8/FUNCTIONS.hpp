@@ -71,6 +71,7 @@
 			addFunction(moveOut);
 			addFunction(moveTo);
 			addFunction(moveToPos);
+			addFunction(occupyBuildings);
 			addFunction(onFiredEvent);
 			addFunction(onHitEvent);
 			addFunction(pauseFiredEvent);

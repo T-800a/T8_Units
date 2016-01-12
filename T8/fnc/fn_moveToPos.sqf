@@ -13,29 +13,32 @@
 
 #include <..\MACRO.hpp>
 
-private [ "_unit", "_group", "_abort", "_pos", "_stance", "_move", "_reached", "_uPos", "_dist", "_cnt", "_b", "_d" ];
+params [
+	[ "_unit", objNull, [objNull]],
+	[ "_pos", [], [[],objNull]],
+	[ "_stance", false, [true]],
+	[ "_dir", 99999, [123]],
+	[ "_watchPos", [], [[]]]
+];
 
-_unit		= _this select 0;
-_pos		= _this select 1; if ( ( typeName _pos ) != "ARRAY" ) then { _pos = ( getPosATL _pos ) };
-_stance		= param [ 2, false, [true]];
+if ( ( typeName _pos ) != "ARRAY" ) then { _pos = ( getPosATL _pos ) };
 
 _unit setUnitPos "AUTO";
 _unit setUnitPos "UP";
-_group = group _unit;
-_abort = false;
 
-_move = { doStop _unit; sleep 0.01; _unit moveTo _pos; }; call _move;
-
-_cnt = 0;
-_idleCnt = 0;
-_idle = false;
-_reached = false;
+private _group		= group _unit;
+private _abort		= false;
+private _move		= { doStop _unit; sleep 0.01; _unit moveTo _pos; }; call _move;
+private _cnt		= 0;
+private _idleCnt	= 0;
+private _idle		= false;
+private _reached	= false;
 
 while { !_reached } do
 {
-	_uPos = getPosATL _unit;
-	_dist = _uPos distance _pos;
-	_speed = speed _unit;
+	private _uPos		= getPosATL _unit;
+	private _dist		= _uPos distance _pos;
+	private _speed		= speed _unit;
 
 	if ( _group != group _unit ) exitWith { _abort = true; };
 	if ( !( alive _unit ) ) exitwith {};
@@ -57,6 +60,8 @@ while { !_reached } do
 if ( ! _abort ) then
 {
 	doStop _unit;
+	if ( _dir < 99999 ) then { _unit setDir _dir; };
+	if (( count _watchPos ) > 0 ) then { _unit doWatch _watchPos; };
 	if ( _stance AND { random 100 > 33 } ) then { _unit setUnitPos "Middle"; };
 };
 
