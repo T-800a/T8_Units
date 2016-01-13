@@ -29,8 +29,7 @@ private [ "_wpArray", "_cycle" ];
 
 params [
 	[ "_group", grpNull, [grpNull]],
-	[ "_marker", "NO-MARKER-SET", [""]],
-	[ "_infGroup", true, [true]]
+	[ "_marker", "NO-MARKER-SET", [""]]
 ];
 
 
@@ -41,7 +40,7 @@ if (( typeName _marker ) isEqualTo ( typeName "" ) AND {( getMarkerPos _marker )
 
 private _formation	= ["STAG COLUMN", "WEDGE", "ECH LEFT", "ECH RIGHT", "VEE", "DIAMOND"] call BIS_fnc_selectRandom;
 private _range		= 20;
-private _speedMode	= "LIMITED"
+private _speedMode	= "LIMITED";
 
 _group setBehaviour "AWARE";
 _group setSpeedMode _speedMode;
@@ -54,7 +53,7 @@ private _statementCycle		= "( group this ) setCurrentWaypoint [( group this ), 3
 
 
 // Create waypoints based on array of positions
-_wpArray = [ _marker, _infGroup ] call T8U_fnc_CreateWaypointPositions;
+_wpArray = [ _marker, true ] call T8U_fnc_CreateWaypointPositions;
 _wpArray = _wpArray call BIS_fnc_arrayShuffle;
 __DEBUG( __FILE__, "_wpArray", _wpArray );
 
