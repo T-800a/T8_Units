@@ -111,6 +111,7 @@
 			addFunction(garrison);
 			addFunction(loiter);
 			addFunction(overwatch);
+			addFunction(occupy);
 			addFunction(patrol);
 			addFunction(patrolAround);
 			addFunction(patrolGarrison);

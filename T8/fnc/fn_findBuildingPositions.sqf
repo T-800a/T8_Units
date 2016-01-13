@@ -7,6 +7,10 @@
 	Author:		T-800a
 	E-Mail:		t-800a@gmx.net
 	
+	Inspired by Zapat:
+	https://forums.bistudio.com/topic/159352-set-a-unit-to-look-out-of-window-function/?p=2544740
+	https://forums.bistudio.com/topic/159352-set-a-unit-to-look-out-of-window-function/?p=2545329
+	
  =======================================================================================================================
 */
 
@@ -24,7 +28,7 @@ private _returnPosArray		= [];
 private _return				= [];
 private _buildingDir		= getDir _building;
 
-if !( _building getvariable [ "occupied", false ] ) then
+if !( __GetOVAR( _building, "occupied", false )) then
 {
 	private _loop = true;
 	private _n = 0;
