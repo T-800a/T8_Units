@@ -12,8 +12,7 @@
 
 #include <..\MACRO.hpp>
 
-private [	"_group", "_oldTask", "_newTask", "_originArray", "_posMkr", "_type", "_PatrolMarkerArray", "_infGroup", "_PatrolMarkerDoSAD", "_overwatchMarker", "_overwatchMinDist",
-			"_overwatchRange", "_attackMarker", "_presetBehavior" ];
+private [	"_group", "_oldTask", "_newTask", "_originArray", "_posMkr", "_type", "_infGroup", "_presetBehavior" ];
 
 _group		= param [ 0, grpNull, [grpNull]];
 _time		= param [ 1, 10, [123]];
@@ -48,7 +47,7 @@ switch ( _type ) do
 {
 	case "ATTACK": 
 	{
-		_attackMarker	= [ _taskArray, 1, "NO-POS-GIVEN", [""] ] call BIS_fnc_param;
+		private _attackMarker = _taskArray param [ 1, "NO-POS-GIVEN", [""]];
 		if ( _attackMarker == "NO-POS-GIVEN" ) then { _attackMarker = _posMkr; };
 		[ _newGroup, _attackMarker, _infGroup ] spawn T8U_tsk_fnc_Attack;
 	};
@@ -75,14 +74,15 @@ switch ( _type ) do
 
 	case "OCCUPY": 
 	{
-		[ _newGroup, _posMkr ] spawn T8U_tsk_fnc_occupy;
+		private _immobile = _taskArray param [ 1, false, [true]];
+		[ _newGroup, _posMkr, _immobile ] spawn T8U_tsk_fnc_occupy;
 	};
 
 	case "OVERWATCH":
 	{
-		_overwatchMarker	= [ _taskArray, 1, "NO-POS-GIVEN", [""] ] call BIS_fnc_param;
-		_overwatchMinDist	= [ _taskArray, 2, 250, [ 123 ] ] call BIS_fnc_param;
-		_overwatchRange		= [ _taskArray, 3, 300, [ 123 ] ] call BIS_fnc_param;
+		private _overwatchMarker	= _taskArray param [ 1, "NO-POS-GIVEN", [""]];
+		private _overwatchMinDist	= _taskArray param [ 2, 250, [ 123 ]];
+		private _overwatchRange		= _taskArray param [ 3, 300, [ 123 ]];
 		if ( _overwatchMarker == "NO-POS-GIVEN" ) then { _overwatchMarker = _posMkr; };
 		[ _newGroup, _overwatchMarker, _overwatchMinDist, _overwatchRange, _infGroup ] spawn T8U_tsk_fnc_overwatch;
 	};
@@ -104,8 +104,8 @@ switch ( _type ) do
 
 	case "PATROL_MARKER":
 	{
-		_PatrolMarkerArray = [ _taskArray, 1, [], [[]] ] call BIS_fnc_param;
-		_PatrolMarkerDoSAD = [ _taskArray, 2, true, [true] ] call BIS_fnc_param;
+		private _PatrolMarkerArray = _taskArray param [ 1, [], [[]]];
+		private _PatrolMarkerDoSAD = _taskArray param [ 2, true, [true]];
 		[ _newGroup, _PatrolMarkerArray, _infGroup, _PatrolMarkerDoSAD ] spawn T8U_tsk_fnc_patrolMarker;
 	};
 

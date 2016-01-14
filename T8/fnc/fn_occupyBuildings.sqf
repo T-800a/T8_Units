@@ -16,7 +16,8 @@ private [ "_range", "_pos", "_units" ];
 
 params [
 	[ "_leader", objNull, 		[objNull]],
-	[ "_marker", "NO-MARKER",	["",[]],[2,3]]
+	[ "_marker", "NO-MARKER",	["",[]],[2,3]],
+	[ "_immobile", false, [true]]
 ];
 
 __DEBUG( __FILE__, "INIT", _this );
@@ -80,7 +81,7 @@ if (( count _buildingPositions ) > 0 ) then
 				private _w	= _x select 2;
 
 				_unit = _units call BIS_fnc_arrayPop;
-				[ _unit, _p, false, _d, _w ] spawn T8U_fnc_MoveToPos;
+				[ _unit, _p, false, _d, _w, _immobile ] spawn T8U_fnc_MoveToPos;
 				
 				__SetOVAR( _b, "occupied", true );
 				_buildingsUsed pushBack _b;

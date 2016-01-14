@@ -98,7 +98,7 @@ _SpawnThisUnits =
 	[ [ _groupArrayMiniPat, "Marker01", "T8u_fnc_rmNVG_TEST" ], [ "PATROL" ], [ true, true, true ], [ "Marker01_spawn" ]],
 	[ [ _groupArrayFullPat, "Marker01" ], [ "PATROL_AROUND" ], [ true, true, true ], [ getMarkerPos "Marker01_spawn" ]],
 	[ [ _groupArrayFullPat, [ "Marker02_01", "Marker02_02" ]], [ "PATROL_AROUND", 50 ] ],
-	[ [ _groupArrayFullTeam + _groupArrayFullTeam + _groupArrayFullTeam, "Marker02_02" ], [ "OCCUPY" ], [ true, false, false ]],
+	[ [ _groupArrayFullTeam + _groupArrayFullTeam + _groupArrayFullTeam, "Marker02_02" ], [ "OCCUPY", true ], [ true, false, false ]],
 	[ [ _groupArrayFullTeam, "Marker03" ], [ "OCCUPY" ] ],
 	[ [ _groupArrayFullTeam, "Marker03" ], [ "GARRISON" ] ],
 	[ [ _groupArrayFireTeam, "Marker04", "T8u_fnc_rmNVG_TEST" ], [ "DEFEND" ], [ true, false, false ] ],

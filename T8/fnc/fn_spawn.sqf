@@ -148,7 +148,7 @@ _return = [];
 	{
 		case "ATTACK": 
 		{
-			_attackMarker	= _taskArray param [ 1, "NO-POS-GIVEN", [""]];
+			_attackMarker = _taskArray param [ 1, "NO-POS-GIVEN", [""]];
 			if ( _attackMarker == "NO-POS-GIVEN" ) then { _attackMarker = _posMkr; };
 				
 			_group = [ _spawnPos , _groupSide, _vehicleArray, _relPos ] call BIS_fnc_spawnGroup;
@@ -182,7 +182,8 @@ _return = [];
 		case "OCCUPY": 
 		{
 			_group = [ _spawnPos , _groupSide, _vehicleArray, _relPos ] call BIS_fnc_spawnGroup;
-			[ _group, _posMkr ] spawn T8U_tsk_fnc_occupy;
+			private _immobile = _taskArray param [ 1, false, [true]];
+			[ _group, _posMkr, _immobile ] spawn T8U_tsk_fnc_occupy;
 		};
 
 		case "OVERWATCH": 

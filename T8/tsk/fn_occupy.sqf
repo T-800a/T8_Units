@@ -29,7 +29,8 @@ private [ "_wpArray", "_cycle" ];
 
 params [
 	[ "_group", grpNull, [grpNull]],
-	[ "_marker", "NO-MARKER-SET", [""]]
+	[ "_marker", "NO-MARKER-SET", [""]],
+	[ "_immobile", false, [true]]
 ];
 
 
@@ -47,7 +48,7 @@ _group setSpeedMode _speedMode;
 _group setFormation _formation;
 
 private _statementArrive	= "[ this ] spawn T8U_fnc_getOutVehicle;";
-private _statementOccupy	= format [ "[ this, '%1' ] spawn T8U_fnc_occupyBuildings;", _marker ];
+private _statementOccupy	= format [ "[ this, '%1', %2 ] spawn T8U_fnc_occupyBuildings;", _marker, _immobile ];
 private _statementPatrol	= "";
 private _statementCycle		= "( group this ) setCurrentWaypoint [( group this ), 3 ];";
 

@@ -18,8 +18,11 @@ params [
 	[ "_pos", [], [[],objNull]],
 	[ "_stance", false, [true]],
 	[ "_dir", 99999, [123]],
-	[ "_watchPos", [], [[]]]
+	[ "_watchPos", [], [[]]],
+	[ "_immobile", false, [true]]
 ];
+
+__DEBUG( __FILE__, "INIT", _this );
 
 if ( ( typeName _pos ) != "ARRAY" ) then { _pos = ( getPosATL _pos ) };
 
@@ -62,8 +65,11 @@ if ( ! _abort ) then
 	doStop _unit;
 	if ( _dir < 99999 ) then { _unit setDir _dir; };
 	if (( count _watchPos ) > 0 ) then { _unit doWatch _watchPos; };
+	if ( _immobile ) then { _unit disableAI "MOVE"; };
 	if ( _stance AND { random 100 > 33 } ) then { _unit setUnitPos "Middle"; };
 };
+
+__DEBUG( __FILE__, "FINISHED", _this );
 
 // Return
 true
