@@ -58,8 +58,7 @@ _wpArray = [ _marker, true ] call T8U_fnc_CreateWaypointPositions;
 _wpArray = _wpArray call BIS_fnc_arrayShuffle;
 __DEBUG( __FILE__, "_wpArray", _wpArray );
 
-private _firstWP = [ _wpArray ] call BIS_fnc_arrayShift;
-
+private _firstWP = [ _marker ] call T8U_fnc_createSpawnPos;
 [ _group, _firstWP, "MOVE", "SAFE", _statementArrive, _range, _speedMode, [ 15, 15, 15 ]] call T8U_fnc_CreateWaypoint;
 [ _group, _firstWP, "MOVE", "SAFE", _statementOccupy, _range, _speedMode, [ 15, 15, 15 ]] call T8U_fnc_CreateWaypoint;
 

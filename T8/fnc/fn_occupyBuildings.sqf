@@ -24,8 +24,10 @@ __DEBUG( __FILE__, "INIT", _this );
 if ( isNull _leader ) exitWith {[]};
 if (( typeName _marker ) isEqualTo ( typeName "STR" ) AND { _marker isEqualTo "NO-MARKER" }) exitWith {[]};
 
-private _group	= group _leader;
-private _side	= side _leader;
+private _group			= group _leader;
+private _side			= side _leader;
+private _units			= units _group;
+private _unitsRelease	= units _group;
 
 if ( typeName _marker == typeName "STR" ) then
 {
@@ -38,10 +40,6 @@ if ( typeName _marker == typeName "STR" ) then
 	_range				= 50;
 	_pos				= _marker;
 };
-
-// private _units = if ( _side isEqualTo CIVILIAN ) then { units ( group _leader )} else {( units ( group _leader )) - [ _leader ] };
-private _units = units ( group _leader );
-
 
 if ( !(( count _units ) > 0 ) OR { _pos isEqualTo [ 0, 0, 0 ] }) exitWith { _units };
 
@@ -99,6 +97,13 @@ if (( count _buildingPositions ) > 0 ) then
 
 // waiting for group to get a new task
 waitUntil { sleep 2; [( group _leader )] call T8U_fnc_ReleaseGroup };
+
+__DEBUG( __FILE__, "END OCCUPY > _immobile", _immobile );
+
+if ( _immobile ) then
+{
+	{ if !( isNull _x ) then { _x enableAI "MOVE"; }; false } count _unitsRelease;
+};
 
 // remove occupation
 { __SetOVAR( _x, "occupied", false ); false } count _buildingsUsed;
