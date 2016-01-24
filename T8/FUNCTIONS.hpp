@@ -48,6 +48,7 @@
 			addFunction(debugMarker);
 			addFunction(debugMarkerDelete);
 			addFunction(filterEntities);
+			addFunction(findBuildingPositions);
 			addFunction(findOverwatch);
 			addFunction(findEmptyPos);
 			addFunction(firedEvent);
@@ -70,6 +71,7 @@
 			addFunction(moveOut);
 			addFunction(moveTo);
 			addFunction(moveToPos);
+			addFunction(occupyBuildings);
 			addFunction(onFiredEvent);
 			addFunction(onHitEvent);
 			addFunction(pauseFiredEvent);
@@ -109,6 +111,7 @@
 			addFunction(garrison);
 			addFunction(loiter);
 			addFunction(overwatch);
+			addFunction(occupy);
 			addFunction(patrol);
 			addFunction(patrolAround);
 			addFunction(patrolGarrison);

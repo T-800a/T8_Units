@@ -12,8 +12,7 @@
 
 #include <..\MACRO.hpp>
 
-private [	"_group", "_oldTask", "_newTask", "_originArray", "_posMkr", "_type", "_PatrolMarkerArray", "_infGroup", "_PatrolMarkerDoSAD", "_overwatchMarker", "_overwatchMinDist",
-			"_overwatchRange", "_attackMarker", "_presetBehavior" ];
+private [	"_group", "_oldTask", "_newTask", "_originArray", "_posMkr", "_type", "_infGroup", "_presetBehavior" ];
 
 _group		= param [ 0, grpNull, [grpNull]];
 _time		= param [ 1, 10, [123]];
@@ -46,68 +45,74 @@ if ( T8U_var_DEBUG ) then { [ "fn_redoOriginTask.sqf", "NEW GROUP", [ _newGroup,
 
 switch ( _type ) do
 {
-		case "PATROL":
-		{
-			[ _newGroup, _posMkr, _infGroup ] spawn T8U_tsk_fnc_patrol;
-		};
+	case "ATTACK": 
+	{
+		private _attackMarker = _taskArray param [ 1, "NO-POS-GIVEN", [""]];
+		if ( _attackMarker == "NO-POS-GIVEN" ) then { _attackMarker = _posMkr; };
+		[ _newGroup, _attackMarker, _infGroup ] spawn T8U_tsk_fnc_Attack;
+	};
 
-		case "PATROL_AROUND":
-		{
-			[ _newGroup, _posMkr, _infGroup ] spawn T8U_tsk_fnc_patrolAround;
-		};
+	case "DEFEND":
+	{
+		[ _newGroup, _posMkr ] spawn T8U_tsk_fnc_defend;
+	};
 
-		case "PATROL_URBAN":
-		{
-			[ _newGroup, _posMkr, _infGroup ] spawn T8U_tsk_fnc_patrolUrban;
-		};
+	case "DEFEND_BASE":
+	{
+		[ _newGroup, _posMkr ] spawn T8U_tsk_fnc_defendBase;
+	};
 
-		case "PATROL_MARKER":
-		{
-			_PatrolMarkerArray = [ _taskArray, 1, [], [[]] ] call BIS_fnc_param;
-			_PatrolMarkerDoSAD = [ _taskArray, 2, true, [true] ] call BIS_fnc_param;
-			[ _newGroup, _PatrolMarkerArray, _infGroup, _PatrolMarkerDoSAD ] spawn T8U_tsk_fnc_patrolMarker;
-		};
+	case "GARRISON":
+	{
+		[ _newGroup, _posMkr ] spawn T8U_tsk_fnc_garrison;
+	};
 
-		case "LOITER":
-		{
-			[ _newGroup, _posMkr ] spawn T8U_tsk_fnc_loiter;
-		};
+	case "LOITER":
+	{
+		[ _newGroup, _posMkr ] spawn T8U_tsk_fnc_loiter;
+	};
 
-		case "DEFEND":
-		{
-			[ _newGroup, _posMkr ] spawn T8U_tsk_fnc_defend;
-		};
+	case "OCCUPY": 
+	{
+		private _immobile = _taskArray param [ 1, false, [true]];
+		[ _newGroup, _posMkr, _immobile ] spawn T8U_tsk_fnc_occupy;
+	};
 
-		case "DEFEND_BASE":
-		{
-			[ _newGroup, _posMkr ] spawn T8U_tsk_fnc_defendBase;
-		};
+	case "OVERWATCH":
+	{
+		private _overwatchMarker	= _taskArray param [ 1, "NO-POS-GIVEN", [""]];
+		private _overwatchMinDist	= _taskArray param [ 2, 250, [ 123 ]];
+		private _overwatchRange		= _taskArray param [ 3, 300, [ 123 ]];
+		if ( _overwatchMarker == "NO-POS-GIVEN" ) then { _overwatchMarker = _posMkr; };
+		[ _newGroup, _overwatchMarker, _overwatchMinDist, _overwatchRange, _infGroup ] spawn T8U_tsk_fnc_overwatch;
+	};
 
-		case "OVERWATCH":
-		{
-			_overwatchMarker	= [ _taskArray, 1, "NO-POS-GIVEN", [""] ] call BIS_fnc_param;
-			_overwatchMinDist	= [ _taskArray, 2, 250, [ 123 ] ] call BIS_fnc_param;
-			_overwatchRange		= [ _taskArray, 3, 300, [ 123 ] ] call BIS_fnc_param;
-			if ( _overwatchMarker == "NO-POS-GIVEN" ) then { _overwatchMarker = _posMkr; };
-			[ _newGroup, _overwatchMarker, _overwatchMinDist, _overwatchRange, _infGroup ] spawn T8U_tsk_fnc_overwatch;
-		};
-		
-		case "ATTACK": 
-		{
-			_attackMarker	= [ _taskArray, 1, "NO-POS-GIVEN", [""] ] call BIS_fnc_param;
-			if ( _attackMarker == "NO-POS-GIVEN" ) then { _attackMarker = _posMkr; };
-			[ _newGroup, _attackMarker, _infGroup ] spawn T8U_tsk_fnc_Attack;
-		};
+	case "PATROL":
+	{
+		[ _newGroup, _posMkr, _infGroup ] spawn T8U_tsk_fnc_patrol;
+	};
 
-		case "GARRISON":
-		{
-			[ _newGroup, _posMkr ] spawn T8U_tsk_fnc_garrison;
-		};
+	case "PATROL_AROUND":
+	{
+		[ _newGroup, _posMkr, _infGroup ] spawn T8U_tsk_fnc_patrolAround;
+	};
 
-		case "PATROL_GARRISON":
-		{
-			[ _newGroup, _posMkr ] spawn T8U_tsk_fnc_patrolGarrison;
-		};
+	case "PATROL_GARRISON":
+	{
+		[ _newGroup, _posMkr ] spawn T8U_tsk_fnc_patrolGarrison;
+	};
+
+	case "PATROL_MARKER":
+	{
+		private _PatrolMarkerArray = _taskArray param [ 1, [], [[]]];
+		private _PatrolMarkerDoSAD = _taskArray param [ 2, true, [true]];
+		[ _newGroup, _PatrolMarkerArray, _infGroup, _PatrolMarkerDoSAD ] spawn T8U_tsk_fnc_patrolMarker;
+	};
+
+	case "PATROL_URBAN":
+	{
+		[ _newGroup, _posMkr, _infGroup ] spawn T8U_tsk_fnc_patrolUrban;
+	};
 
 	default { private [ "_msg" ]; _msg = format [ "Your Task %1 does not exist!", _type ]; [ _msg ] call T8U_fnc_BroadcastHint; };
 };

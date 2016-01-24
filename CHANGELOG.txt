@@ -10,6 +10,14 @@
 
 =======================================================================================================================
 
+##### V061 - 25.01.2016 #####
+
+# new Task: OCCUPY
+# multi-marker support for PATROL type tasks
+# fixes in wp-positon finding
+
+
+
 ##### V060 - 10.12.2015 #####
 
 # cfgFunctions (urgh)

@@ -18,7 +18,7 @@ _group = _this select 0;
 if ( isNull _group ) exitWith { true };
 
 _task = _group getVariable [ "T8U_gvar_Assigned", "NO_TASK" ];
-_commArray = _group getVariable [ "T8U_gvar_Comm", [ false, false ] ];
+_commArray = _group getVariable [ "T8U_gvar_Comm", [ false, false, false ]];
 
 _execTask = _commArray select 1;
 

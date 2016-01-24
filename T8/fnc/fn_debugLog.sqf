@@ -47,6 +47,6 @@ reverse _f;
 
 _ftxt	= format [ "T8U >> %1 >> %2 >>>>> %3 >> %4", ( round diag_fps ), ( _f select 0 ), _t, _v ]; 
 
-if ( T8U_var_DEBUG_useCon ) exitWith { if ( _h ) then { conYellow } else { conWhite( _ftxt ); }; };
+if ( T8U_var_DEBUG_useCon ) exitWith { if ( _h ) then { conCyan( _ftxt )} else { conWhite( _ftxt ); }; };
 [ "%1", _ftxt ] call BIS_fnc_error;
 

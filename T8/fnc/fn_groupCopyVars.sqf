@@ -29,7 +29,6 @@ _var07 = _oldGroup getVariable [ "T8U_gvar_DACcalled",	-99999 ];
 _var08 = _oldGroup getVariable [ "T8U_gvar_PARAcalled",	-99999 ];
 _var09 = _oldGroup getVariable [ "T8U_gvar_Regrouped",	false ];
 
-
 _oldGroup setVariable [ "T8U_gvar_Comm",		[], false ];
 _oldGroup setVariable [ "T8U_gvar_Origin",		[], false ];
 _oldGroup setVariable [ "T8U_gvar_Assigned",	"---", false ];

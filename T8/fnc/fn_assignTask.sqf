@@ -67,7 +67,7 @@ _wpAdd =
 __SetOVAR( _groupHelper, "T8U_gvar_Assigned", _typeTask );
 
 // WAIT for garrisoned groups to properly regroup!
-if ( _type == "GARRISON" OR _type == "PATROL_GARRISON" ) then 
+if ( _type in [ "GARRISON", "PATROL_GARRISON" ]) then 
 {
 	private [ "_t", "_r" ];
 	_r = false;
@@ -81,6 +81,9 @@ if ( _type == "GARRISON" OR _type == "PATROL_GARRISON" ) then
 		if ( time > _t ) exitWith { __DEBUG( __FILE__, "isNil _r", "" ); };
 		_r
 	};
+	
+	[ leader _groupHelper ] spawn T8U_fnc_GetOutCover;
+	( _groupHelper ) enableAttack true;
 };
 
 if ( isNull _groupHelper ) exitWith { __DEBUG( __FILE__, "EXIT >> GroupNull", [] ); };
@@ -155,7 +158,6 @@ switch ( _typeTask ) do
 
 	case "CQC_SHOT": 
 	{
-		private [ "_fpA", "_fp" ];
 		[ _groupHelper, _posToGo, "SAD", "COMBAT", _sEP, 25 ] call _wpAdd;
 	};
 	

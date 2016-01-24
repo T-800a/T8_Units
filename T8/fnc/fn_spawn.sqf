@@ -28,7 +28,7 @@ _return = [];
 
 // -> ForEach _MasterArray
 { 
-	private [ 	"_abort", "_group", "_vehicleArray", "_posMkr", "_type", "_commArray", "_cacheArray", "_cachePos", "_PatrolMarkerArray", "_infGroup", "_groupSide", 
+	private [ 	"_abort", "_group", "_vehicleArray", "_posMkr", "_type", "_commArray", "_cacheArray", "_cachePos", "_PatrolMarkerArray", "_infGroup", "_groupSide", "_markerArray",
 				"_PatrolMarkerDoSAD", "_PatrolAroundDis", "_overwatchMarker", "_attackMarker", "_newStyleArray", "_groupArray", "_taskArray", "_cAM", "_cA0", "_cA1", "_customFNC", "_spawnPos", "_relPos" ];
 	
 	_abort = false; // for error findings
@@ -52,15 +52,24 @@ _return = [];
 	_type				= _taskArray param [ 0, "NO-TASK-GIVEN", [""]];
 	
 	_cacheArray			= _x param [ 3, [], [[]]];
-	_cachePos			= _cacheArray param [ 0, [], [[]]];
+	_cachePos			= _cacheArray param [ 0, [], [[],""]];
 	
 	_vehicleArray		= _groupArray param [ 0, [], [[]]];
-	_posMkr				= _groupArray param [ 1, "NO-POS-GIVEN", [""]];	_posMkrArray pushBack _posMkr;
+	_markerArray		= _groupArray param [ 1, false, ["",[]]];	
 	
 	_infGroup	= true;
 	_groupSide	= T8U_var_EnemySide;
 	_customFNC	= "NO-FUNC-GIVEN";
 	
+	switch ( typeName _markerArray ) do 
+	{ 
+		case "ARRAY":	{ _posMkr = _markerArray call BIS_fnc_selectRandom; };
+		case "STRING":	{ _posMkr = _markerArray; };
+		default			{ _posMkr = "NO-POS-GIVEN"; };
+	};
+	
+	_posMkrArray pushBack _posMkr;
+		
 	if ( count _groupArray > 2 ) then 
 	{
 		switch ( typeName ( _groupArray select 2) ) do 
@@ -94,15 +103,17 @@ _return = [];
 		};
 	};
 
-
 	if ( 
 		!( count _vehicleArray > 0 ) 
 		OR { _posMkr == "NO-POS-GIVEN" } 
 		OR { _type == "NO-TASK-GIVEN" } 
-		OR { ( str ( getMarkerPos _posMkr ) ) == str ([0,0,0]) }
+		OR { ( getMarkerPos _posMkr ) isEqualTo [0,0,0] }
 	) exitWith { [ ( format [ "Something went seriously wrong! Error in Unit's spawning definition!<br /><br />Marker: %1<br />Task: %2", _posMkr, _type ] ) ] call T8U_fnc_BroadcastHint; _error = true; };
 
-	if ( count _cachePos > 0 ) then
+	
+	if (( typeName _cachePos ) isEqualTo ( typeName "STR" )) then { _cachePos = getMarkerPos _cachePos; };
+	if ( _cachePos isEqualTo [0,0,0]) then { _cachePos = _posMkr; };
+	if ( count _cachePos > 1 ) then
 	{
 		_spawnPos = [ _cachePos ] call T8U_fnc_CreateSpawnPos;
 	} else {
@@ -134,49 +145,16 @@ _return = [];
 // ------------------ TASK SWITCH --- UNITS WILL BE SPAWNED NOW --------------------------------------------------------------
 
 	switch ( _type ) do 
-	{ 
-		case "PATROL": 
+	{
+		case "ATTACK": 
 		{
-			_group = [ _spawnPos, _groupSide, _vehicleArray, _relPos ] call BIS_fnc_spawnGroup;
-			[ _group, _posMkr, _infGroup ] spawn T8U_tsk_fnc_patrol;				
-		};
-			
-		case "PATROL_AROUND": 
-		{
-			_PatrolAroundDis = _taskArray param [ 1, T8U_var_PatAroundRange, [123]];
-			_group = [ _spawnPos, _groupSide, _vehicleArray, _relPos ] call BIS_fnc_spawnGroup;
-			[ _group, _posMkr, _infGroup, _PatrolAroundDis ] spawn T8U_tsk_fnc_patrolAround;
-		};
-			
-		case "PATROL_URBAN": 
-		{
-			_group = [ _spawnPos, _groupSide, _vehicleArray, _relPos ] call BIS_fnc_spawnGroup;
-			[ _group, _posMkr, _infGroup ] spawn T8U_tsk_fnc_patrolUrban;
-		};
-
-		case "PATROL_GARRISON": 
-		{
-			// Force _infGroup = false !!!
-			// _commArray = [ ( _commArray select 0 ), false ];			
-			_group = [ _spawnPos, _groupSide, _vehicleArray, _relPos ] call BIS_fnc_spawnGroup;
-			[ _group, _posMkr ] spawn T8U_tsk_fnc_patrolGarrison;
-		};
-			
-		case "PATROL_MARKER": 
-		{
-
-			_PatrolMarkerArray = _taskArray param [ 1, [], [[]]];
-			_PatrolMarkerDoSAD = _taskArray param [ 2, true, [true]];				
-			_group = [ _spawnPos, _groupSide, _vehicleArray, _relPos ] call BIS_fnc_spawnGroup;
-			[ _group, _PatrolMarkerArray, _infGroup, _PatrolMarkerDoSAD ] spawn T8U_tsk_fnc_patrolMarker;
-		};
-
-		case "GARRISON": 
-		{
-			_group = [ _spawnPos , _groupSide, _vehicleArray, _relPos ] call BIS_fnc_spawnGroup;
-			[ _group, _posMkr ] spawn T8U_tsk_fnc_garrison;
-		};
+			_attackMarker = _taskArray param [ 1, "NO-POS-GIVEN", [""]];
+			if ( _attackMarker == "NO-POS-GIVEN" ) then { _attackMarker = _posMkr; };
 				
+			_group = [ _spawnPos , _groupSide, _vehicleArray, _relPos ] call BIS_fnc_spawnGroup;
+			[ _group, _attackMarker, _infGroup ] spawn T8U_tsk_fnc_Attack;
+		};
+
 		case "DEFEND": 
 		{
 			_group = [ _spawnPos , _groupSide, _vehicleArray, _relPos ] call BIS_fnc_spawnGroup;
@@ -188,7 +166,26 @@ _return = [];
 			_group = [ _spawnPos , _groupSide, _vehicleArray, _relPos ] call BIS_fnc_spawnGroup;
 			[ _group, _posMkr ] spawn T8U_tsk_fnc_defendBase;
 		};
-			
+
+		case "GARRISON": 
+		{
+			_group = [ _spawnPos , _groupSide, _vehicleArray, _relPos ] call BIS_fnc_spawnGroup;
+			[ _group, _posMkr ] spawn T8U_tsk_fnc_garrison;
+		};
+
+		case "LOITER": 
+		{
+			_group = [ _spawnPos , _groupSide, _vehicleArray, _relPos ] call BIS_fnc_spawnGroup;
+			[ _group, _posMkr ] spawn T8U_tsk_fnc_loiter;
+		};
+
+		case "OCCUPY": 
+		{
+			_group = [ _spawnPos , _groupSide, _vehicleArray, _relPos ] call BIS_fnc_spawnGroup;
+			private _immobile = _taskArray param [ 1, false, [true]];
+			[ _group, _posMkr, _immobile ] spawn T8U_tsk_fnc_occupy;
+		};
+
 		case "OVERWATCH": 
 		{
 			_overwatchMarker	= _taskArray param [ 1, "NO-POS-GIVEN", [""]];
@@ -199,22 +196,43 @@ _return = [];
 			_group = [ _spawnPos , _groupSide, _vehicleArray, _relPos ] call BIS_fnc_spawnGroup;
 			[ _group, _overwatchMarker, _overwatchMinDist, _overwatchRange, _infGroup ] spawn T8U_tsk_fnc_overwatch;
 		};
-			
-		case "LOITER": 
+
+		case "PATROL": 
 		{
-			_group = [ _spawnPos , _groupSide, _vehicleArray, _relPos ] call BIS_fnc_spawnGroup;
-			[ _group, _posMkr ] spawn T8U_tsk_fnc_loiter;
+			_group = [ _spawnPos, _groupSide, _vehicleArray, _relPos ] call BIS_fnc_spawnGroup;
+			[ _group, _markerArray, _infGroup ] spawn T8U_tsk_fnc_patrol;				
 		};
-		
-		case "ATTACK": 
+
+		case "PATROL_AROUND": 
 		{
-			_attackMarker	= _taskArray param [ 1, "NO-POS-GIVEN", [""]];
-			if ( _attackMarker == "NO-POS-GIVEN" ) then { _attackMarker = _posMkr; };
-				
-			_group = [ _spawnPos , _groupSide, _vehicleArray, _relPos ] call BIS_fnc_spawnGroup;
-			[ _group, _attackMarker, _infGroup ] spawn T8U_tsk_fnc_Attack;
+			_PatrolAroundDis = _taskArray param [ 1, T8U_var_PatAroundRange, [123]];
+			_group = [ _spawnPos, _groupSide, _vehicleArray, _relPos ] call BIS_fnc_spawnGroup;
+			[ _group, _markerArray, _infGroup, _PatrolAroundDis ] spawn T8U_tsk_fnc_patrolAround;
 		};
-			
+
+		case "PATROL_GARRISON": 
+		{
+			// Force _infGroup = false !!!
+			// _commArray = [ ( _commArray select 0 ), false ];			
+			_group = [ _spawnPos, _groupSide, _vehicleArray, _relPos ] call BIS_fnc_spawnGroup;
+			[ _group, _posMkr ] spawn T8U_tsk_fnc_patrolGarrison;
+		};
+
+		case "PATROL_MARKER": 
+		{
+			_PatrolMarkerArray = _taskArray param [ 1, [], [[]]];
+			_PatrolMarkerDoSAD = _taskArray param [ 2, true, [true]];				
+			_group = [ _spawnPos, _groupSide, _vehicleArray, _relPos ] call BIS_fnc_spawnGroup;
+			[ _group, _PatrolMarkerArray, _infGroup, _PatrolMarkerDoSAD ] spawn T8U_tsk_fnc_patrolMarker;
+		};
+
+		case "PATROL_URBAN": 
+		{
+			_group = [ _spawnPos, _groupSide, _vehicleArray, _relPos ] call BIS_fnc_spawnGroup;
+			[ _group, _markerArray, _infGroup ] spawn T8U_tsk_fnc_patrolUrban;
+		};
+
+
 		default
 		{ 
 			private [ "_msg" ]; _msg = format [ "The task %1 does not exist! WTF?!<br /><br /> Call 0800 - T800A#WTFH for help. Not!", _type ]; [ _msg ] call T8U_fnc_BroadcastHint;
@@ -237,7 +255,7 @@ _return = [];
 			_presetBehavior = 0;
 			
 	// Setup Origin Array
-			_originArray = [ _posMkr, _type, _infGroup, _taskArray, _customFNC ];
+			_originArray = [ _markerArray, _type, _infGroup, _taskArray, _customFNC ];
 			
 			switch ( _groupSide ) do
 			{

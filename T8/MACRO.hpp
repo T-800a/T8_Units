@@ -17,6 +17,7 @@
 // #define __DEBUGMKR(NAME,TEXT,VAR)
 
 #define __DEBUG(NAME,TEXT,VAR)			if ( T8U_var_DEBUG ) then { [NAME,TEXT,VAR] call T8U_fnc_debugLog; }
+#define __DEBUGX(NAME,TEXT,VAR)			if ( T8U_var_DEBUG ) then { [NAME,TEXT,VAR,false] call T8U_fnc_debugLog; }
 #define __DEBUGMKR(NAME,TEXT,VAR)		if ( T8U_var_DEBUG_marker ) then { [NAME,TEXT,VAR] call T8U_fnc_DebugMarker; }
 
 
@@ -31,4 +32,8 @@
 #define __SetOVAR(OBJ,VAR,VAL)			OBJ setVariable [ VAR, VAL, false ]
 #define __SetOVARG(OBJ,VAR,VAL)			OBJ setVariable [ VAR, VAL, true ]
 
+#define __PVAR(VAR,VAL)					private VAR = VAL;
+#define __PARR(VAR)						private VAR = [];
+#define __PBOT(VAR)						private VAR = true;
+#define __PBOF(VAR)						private VAR = false;
 
