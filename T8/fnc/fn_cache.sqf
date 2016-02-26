@@ -31,10 +31,10 @@ __DEBUG( __FILE__, str( _unitsArray + "_created" ),		_created );
 __DEBUG( __FILE__, str( _unitsArray + "_creating" ),	_creating );
 __DEBUG( __FILE__, str( _unitsArray + "_active" ),		_active );
 
-if (( typeName _active )	isEqualTo  "STRING" )				exitWith	{ __DEBUG( __FILE__, "ERROR - NO CACHING", _this ); };
-if (( typeName _created )	isEqualTo  "STRING" )				exitWith	{ __DEBUG( __FILE__, "ERROR - NO CACHING", _this ); };
-if (( typeName _active )	isEqualTo "BOOL" AND { _active })	exitWith	{ __DEBUG( __FILE__, "ZONE AKTIVE - NO CACHING", _this ); };
-if (( typeName _created )	isEqualTo "BOOL" AND { !_created })	exitWith	{ __DEBUG( __FILE__, "COULD NOT CACHE", _this ); };
+if !(( typeName _active ) isEqualTo "BOOL" )	exitWith { __DEBUG( __FILE__, "ERROR - NO CACHING", _this ); };
+if !(( typeName _created ) isEqualTo "BOOL" )	exitWith { __DEBUG( __FILE__, "ERROR - NO CACHING", _this ); };
+if ( _active )		exitWith { __DEBUG( __FILE__, "ZONE AKTIVE - NO CACHING", _this ); };
+if ( !_created )	exitWith { __DEBUG( __FILE__, "COULD NOT CACHE", _this ); };
 
 if ( typeName ( missionNamespace getVariable _unitsArray ) isEqualTo "BOOL" ) exitWith { __DEBUG( __FILE__, "NO CACHING - EVERYBODY WAS DEAD LAST TIME", _this ); };
 
