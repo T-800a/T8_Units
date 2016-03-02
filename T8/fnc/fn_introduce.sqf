@@ -3,7 +3,7 @@
 
 	T8 Units Script
 	
-	Funktion:	fn_spawn.sqf
+	Funktion:	fn_introduce.sqf
 	Author:		T-800a
 	E-Mail:		t-800a@gmx.net
 
@@ -13,6 +13,27 @@
 #include <..\MACRO.hpp>
 __allowEXEC(__FILE__);
 
+__DEBUG( __FILE__, "INIT", _this );
+if ( isNull _this ) exitWith {};
+
+private _group = group _this;
+private _units = units _group;
+
+if ( __GetOVAR( _group, "T8U_gvar_Introduced", false ) ) exitWith { __DEBUG( __FILE__, "EXIT", "GROUP ALREADY INTRODUCED" ); };
+__SetOVAR( _group, "T8U_gvar_Introduced", true );
+
+
+// build comm array
+private _cA0			= __GetOVAR( _group, "T8U_introduce_comm_share", true );
+private _cA1			= __GetOVAR( _group, "T8U_introduce_comm_call", true );
+private _cA2			= __GetOVAR( _group, "T8U_introduce_comm_react", true );
+private _commArray		= [ _cA0, _cA1, _cA2 ];
+
+private _task			= __GetOVAR( _group, "T8U_introduce_task", "PATROL" );
+
+
+// only scrap below for copy pasting
+if ( true ) exitWith {};
 
 private [ "_MasterArray", "_posMkrArray", "_error", "_return" ];
 
@@ -54,7 +75,7 @@ _return = [];
 	_cacheArray			= _x param [ 3, [], [[]]];
 	_cachePos			= _cacheArray param [ 0, [], [[],""]];
 	
-	_vehicleArray		= _groupArray param [ 0, [], [[],configFile]];
+	_vehicleArray		= _groupArray param [ 0, [], [[]]];
 	_markerArray		= _groupArray param [ 1, false, ["",[]]];	
 	
 	_infGroup	= true;
@@ -104,19 +125,12 @@ _return = [];
 	};
 
 	if ( 
-		_posMkr == "NO-POS-GIVEN"
+		!( count _vehicleArray > 0 ) 
+		OR { _posMkr == "NO-POS-GIVEN" } 
 		OR { _type == "NO-TASK-GIVEN" } 
-		OR { ( getMarkerPos _posMkr ) isEqualTo [0,0,0] }) exitWith
-	{
-		[( format [ "Something went seriously wrong! Error in Unit's spawning definition!<br /><br />Marker: %1<br />Task: %2", _posMkr, _type ])] call T8U_fnc_BroadcastHint;
-		_error = true;
-	};
+		OR { ( getMarkerPos _posMkr ) isEqualTo [0,0,0] }
+	) exitWith { [ ( format [ "Something went seriously wrong! Error in Unit's spawning definition!<br /><br />Marker: %1<br />Task: %2", _posMkr, _type ] ) ] call T8U_fnc_BroadcastHint; _error = true; };
 
-	if ( typeName _vehicleArray isEqualTo "ARRAY" AND { count _vehicleArray > 0 }) exitWith 
-	{
-		[( format [ "Something went seriously wrong! Error in Unit's spawning definition!<br /><br />Marker: %1<br />Task: %2", _posMkr, _type ])] call T8U_fnc_BroadcastHint;
-		_error = true;
-	};
 	
 	if (( typeName _cachePos ) isEqualTo ( typeName "STR" )) then { _cachePos = getMarkerPos _cachePos; };
 	if ( _cachePos isEqualTo [0,0,0]) then { _cachePos = _posMkr; };

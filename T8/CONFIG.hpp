@@ -27,6 +27,8 @@
 	T8U_gvar_called			-> integer					-> time unit sent last call for help (general / set if other T8U group is called)
 	T8U_gvar_DACcalled		-> integer					-> time Group last called DAC for HELP
 	T8U_gvar_PARAcalled		-> integer					-> time Group last called for a Support (e.g. Para drop)
+	
+	T8U_gvar_Introduced		-> bool						-> set true after editor groub is introduced to T8U
 
 	This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.
 	To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-sa/4.0/ or send a letter to 
