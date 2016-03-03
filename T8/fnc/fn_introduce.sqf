@@ -18,27 +18,153 @@ if ( isNull _this ) exitWith {};
 
 private _group = _this;
 private _units = units _group;
+private _error = false;
 
 if ( __GetOVAR( _group, "T8U_gvar_Introduced", false ) ) exitWith { __DEBUG( __FILE__, "EXIT", "GROUP ALREADY INTRODUCED" ); };
 __SetOVAR( _group, "T8U_gvar_Introduced", true );
 
 
 // build comm array
-private _cA0			= __GetOVAR( _group, "T8U_introduce_comm_share", true );
-private _cA1			= __GetOVAR( _group, "T8U_introduce_comm_call", true );
-private _cA2			= __GetOVAR( _group, "T8U_introduce_comm_react", true );
-private _commArray		= [ _cA0, _cA1, _cA2 ];
+private _cA0				= __GetOVAR( _group, "T8U_introduce_comm_share", true );
+private _cA1				= __GetOVAR( _group, "T8U_introduce_comm_call", true );
+private _cA2				= __GetOVAR( _group, "T8U_introduce_comm_react", true );
+private _commArray			= [ _cA0, _cA1, _cA2 ];
 
-private _task			= __GetOVAR( _group, "T8U_introduce_task", "ERROR" );
-private _markerArray	= __GetOVAR( _group, "T8U_introduce_markerArray", [] );
-private _infGroup		= __GetOVAR( _group, "T8U_introduce_infGroup", true );
-private _function		= __GetOVAR( _group, "T8U_introduce_function", "" );
+private _task				= __GetOVAR( _group, "T8U_introduce_task", "ERROR" );
+private _markerArray		= __GetOVAR( _group, "T8U_introduce_markerArray", [] );
+private _infGroup			= __GetOVAR( _group, "T8U_introduce_infGroup", true );
+private _function			= __GetOVAR( _group, "T8U_introduce_function", "" );
+
+private _patrolAroundDis	= __GetOVAR( _group, "T8U_introduce_patrolAroundDis", T8U_var_PatAroundRange );
+private _patrolMarkerArray	= __GetOVAR( _group, "T8U_introduce_patrolMarkerArray", [] );
+private _patrolMarkerSAD	= __GetOVAR( _group, "T8U_introduce_patrolMarkerSAD", false );
+private _overwatchMinDis	= __GetOVAR( _group, "T8U_introduce_overwatchMinDis", 250 );
+private _overwatchRange		= __GetOVAR( _group, "T8U_introduce_overwatchRange", 200 );
+private _occupyImmobile		= __GetOVAR( _group, "T8U_introduce_occupyImmobile", false );
 
 __DEBUG( __FILE__, "_commArray", _commArray );
 __DEBUG( __FILE__, "_task", _task );
 __DEBUG( __FILE__, "_markerArray", _markerArray );
 __DEBUG( __FILE__, "_infGroup", _infGroup );
 __DEBUG( __FILE__, "_function", _function );
+
+__DEBUG( __FILE__, "_patrolAroundDis", _patrolAroundDis );
+__DEBUG( __FILE__, "_patrolMarkerArray", _patrolMarkerArray );
+__DEBUG( __FILE__, "_patrolMarkerSAD", _patrolMarkerSAD );
+__DEBUG( __FILE__, "_overwatchMinDis", _overwatchMinDis );
+__DEBUG( __FILE__, "_overwatchRange", _overwatchRange );
+__DEBUG( __FILE__, "_occupyImmobile", _occupyImmobile );
+
+// task error? Abort abort abort ...
+if ( _task isEqualTo "ERROR" ) exitWith
+{
+	private _msg = format [ "No task %1 was given! WTF BRU?!<br /><br /> Call 0800 - T800A#WTFH for help. Not!", _type ];
+	[ _msg ] call T8U_fnc_BroadcastHint;
+	__DEBUG( __FILE__, "_task", "ERROR: ABORT" );
+};
+
+private _taskArray = [ _task ];
+__DEBUG( __FILE__, "_taskArray", _taskArray );
+
+private [ "_posMkr" ];
+switch ( typeName _markerArray ) do 
+{ 
+	case "ARRAY":	{ _posMkr = _markerArray call BIS_fnc_selectRandom; };
+	case "STRING":	{ _posMkr = _markerArray; };
+	default			{ _posMkr = "ERROR"; };
+};
+
+switch ( _task ) do 
+{
+	case "ATTACK":
+	{
+		_taskArray pushBack _posMkr;
+		[ _group, _posMkr, _infGroup ] spawn T8U_tsk_fnc_Attack;
+	};
+
+	case "DEFEND":
+	{
+		[ _group, _posMkr ] spawn T8U_tsk_fnc_defend;
+	};
+
+	case "DEFEND_BASE": 
+	{
+		[ _group, _posMkr ] spawn T8U_tsk_fnc_defendBase;
+	};
+
+	case "GARRISON": 
+	{
+		[ _group, _posMkr ] spawn T8U_tsk_fnc_garrison;
+	};
+
+/*
+	case "LOITER": 
+	{
+		[ _group, _posMkr ] spawn T8U_tsk_fnc_loiter;
+	};
+*/
+
+	case "OCCUPY": 
+	{
+		_taskArray pushBack _occupyImmobile;
+		[ _group, _posMkr, _occupyImmobile ] spawn T8U_tsk_fnc_occupy;
+	};
+
+	case "OVERWATCH": 
+	{
+		_taskArray pushBack _posMkr;
+		_taskArray pushBack _overwatchMinDis;
+		_taskArray pushBack _overwatchRange;
+		[ _group, _posMkr, _overwatchMinDis, _overwatchRange, _infGroup ] spawn T8U_tsk_fnc_overwatch;
+	};
+
+	case "PATROL": 
+	{
+		[ _group, _markerArray, _infGroup ] spawn T8U_tsk_fnc_patrol;				
+	};
+
+	case "PATROL_AROUND": 
+	{
+		_taskArray pushBack _patrolAroundDis;
+		[ _group, _markerArray, _infGroup, _PatrolAroundDis ] spawn T8U_tsk_fnc_patrolAround;
+	};
+
+	case "PATROL_GARRISON": 
+	{
+		[ _group, _posMkr ] spawn T8U_tsk_fnc_patrolGarrison;
+	};
+
+	case "PATROL_MARKER": 
+	{
+		_taskArray pushBack _PatrolMarkerArray;
+		_taskArray pushBack _patrolMarkerSAD;				
+		[ _group, _PatrolMarkerArray, _infGroup, _patrolMarkerSAD ] spawn T8U_tsk_fnc_patrolMarker;
+	};
+
+	case "PATROL_URBAN": 
+	{
+		[ _group, _markerArray, _infGroup ] spawn T8U_tsk_fnc_patrolUrban;
+	};
+
+
+	default
+	{ 
+		private _msg = format [ "The task %1 is not valid (here)! WTF?!<br /><br /> Call 0800 - T800A#WTFH for help. Not!", _type ];
+		[ _msg ] call T8U_fnc_BroadcastHint;
+		__DEBUG( __FILE__, "_task", "UNVALID: ABORT" );
+		_error = true;
+	}; 
+};
+
+// if we haven' found a matching task: abort abort abort ...
+if ( _error ) exitWith {};
+_error = false;
+
+
+
+
+
+
 
 
 
