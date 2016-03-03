@@ -67,6 +67,7 @@
 			addFunction(groupRegroup);
 			addFunction(hitEvent);
 			addFunction(inBuilding);
+			addFunction(introduce);
 			addFunction(killedEvent);
 			addFunction(moveOut);
 			addFunction(moveTo);

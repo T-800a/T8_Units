@@ -16,7 +16,7 @@ __allowEXEC(__FILE__);
 __DEBUG( __FILE__, "INIT", _this );
 if ( isNull _this ) exitWith {};
 
-private _group = group _this;
+private _group = _this;
 private _units = units _group;
 
 if ( __GetOVAR( _group, "T8U_gvar_Introduced", false ) ) exitWith { __DEBUG( __FILE__, "EXIT", "GROUP ALREADY INTRODUCED" ); };
@@ -29,7 +29,21 @@ private _cA1			= __GetOVAR( _group, "T8U_introduce_comm_call", true );
 private _cA2			= __GetOVAR( _group, "T8U_introduce_comm_react", true );
 private _commArray		= [ _cA0, _cA1, _cA2 ];
 
-private _task			= __GetOVAR( _group, "T8U_introduce_task", "PATROL" );
+private _task			= __GetOVAR( _group, "T8U_introduce_task", "ERROR" );
+private _markerArray	= __GetOVAR( _group, "T8U_introduce_markerArray", [] );
+private _infGroup		= __GetOVAR( _group, "T8U_introduce_infGroup", true );
+private _function		= __GetOVAR( _group, "T8U_introduce_function", "" );
+
+__DEBUG( __FILE__, "_commArray", _commArray );
+__DEBUG( __FILE__, "_task", _task );
+__DEBUG( __FILE__, "_markerArray", _markerArray );
+__DEBUG( __FILE__, "_infGroup", _infGroup );
+__DEBUG( __FILE__, "_function", _function );
+
+
+
+
+
 
 
 // only scrap below for copy pasting
