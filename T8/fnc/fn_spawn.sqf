@@ -395,7 +395,7 @@ _return = [];
 					{
 						if ( isNull ( gunner _x ) ) then
 						{
-							( driver _x ) spawn { waitUntil {( behaviour _this ) isEqualTo "COMBAT" }; [ _this ] spawn T8U_fnc_GetOutVehicle; };
+							( driver _x ) spawn { waitUntil { sleep 0.5; ( behaviour _this ) isEqualTo "COMBAT" }; [ _this ] spawn T8U_fnc_GetOutVehicle; };
 						};
 						
 						false
