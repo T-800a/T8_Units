@@ -128,27 +128,31 @@ _return = [];
 	};
 	
 	_relPos = [];
-	if ( ! _infGroup ) then 
-	{ 
-		private [ "_tempRelPos" ];
-		_tempRelPos = [ [0,0], [0,9], [0,-9], [9,0], [9,9], [9,-9], [-9,0], [-9,9], [-9,-9], [18,0], [18,9], [18,-9], [-18,0], [-18,9], [-18,-9], [0,18], [9,18], [-9,18], [0,-18], [9,-18], [-9,-18], [18,18], [18,-18], [-18,18], [-18,-18] ];
-		
-		{
-			if (( count _tempRelPos  ) > 0 ) then 
-			{
-				private [ "_p" ];
-				_p = [ _tempRelPos ] call BIS_fnc_arrayShift;
-				_relPos pushBack _p;
-			} else {
-				_relPos pushBack [0,4];
-			};
+	
+	if (( typeName _vehicleArray ) isEqualTo "ARRAY" ) then 
+	{
+		if !( _infGroup ) then 
+		{ 
+			private [ "_tempRelPos" ];
+			_tempRelPos = [ [0,0], [0,9], [0,-9], [9,0], [9,9], [9,-9], [-9,0], [-9,9], [-9,-9], [18,0], [18,9], [18,-9], [-18,0], [-18,9], [-18,-9], [0,18], [9,18], [-9,18], [0,-18], [9,-18], [-9,-18], [18,18], [18,-18], [-18,18], [-18,-18] ];
 			
-			false
-		} count _vehicleArray;
-		
-		// if ( count _vehicleArray < 2 ) then { _tempRelPos = []; };
+			{
+				if (( count _tempRelPos  ) > 0 ) then 
+				{
+					private [ "_p" ];
+					_p = [ _tempRelPos ] call BIS_fnc_arrayShift;
+					_relPos pushBack _p;
+				} else {
+					_relPos pushBack [0,4];
+				};
+				
+				false
+			} count _vehicleArray;
+			
+			// if ( count _vehicleArray < 2 ) then { _tempRelPos = []; };
+		};
 	};
-
+	
 // ------------------ TASK SWITCH --- UNITS WILL BE SPAWNED NOW --------------------------------------------------------------
 
 	switch ( _type ) do 
