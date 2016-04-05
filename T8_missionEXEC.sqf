@@ -1,7 +1,7 @@
 /*
  =======================================================================================================================
 
-	___ T8 Units _______________________________________________________________________________________________________
+	T8 Units Script
 
 	File:		T8_missionEXEC.sqf
 	Author:		T-800a
@@ -17,15 +17,18 @@
  =======================================================================================================================
 */
 
-// We dont want players here
+
+// include the few macros we use ...
+#include <T8\MACRO.hpp>
+
+// wait until everything is initalized correctly
 waitUntil { !isNil "T8U_var_useHC" };
-private [ "_exit" ]; _exit = false;
-if ( T8U_var_useHC ) then { if ( isDedicated ) then { _exit = true; } else { waitUntil { !isNull player };	if ( hasInterface ) then { _exit = true; }; }; } else { if ( !isServer ) then { _exit = true; }; };
-if ( _exit ) exitWith {};
-
-
-// check if T8_Units is loaded
 waitUntil { !isNil "T8U_var_InitDONE" };
+
+// cancel execute if not server / hc
+__allowEXEC(__FILE__);
+
+
 sleep 5;
 
 //////////////////////////////////////  CUSTOM FUNCTION  //////////////////////////////////////
@@ -34,7 +37,7 @@ sleep 5;
 //			where it is defined in the groups definiton below
 //
 
-T8u_fnc_rmNVG_TEST = 
+T8U_fnc_rmNVG_TEST = 
 {
 	_this spawn
 	{
@@ -70,7 +73,7 @@ _groupArrayFullTeam = [ "O_soldier_TL_F", "O_medic_F", "O_soldier_F", "O_soldier
 _groupArrayMiniPat = [ "O_soldier_TL_F", "O_medic_F", "O_soldier_F" ];
 _groupArrayFullPat = [ "O_soldier_SL_F", "O_medic_F", "O_soldier_F", "O_soldier_TL_F", "O_soldier_F", "O_soldier_AR_F" ];
 // _groupArrayIfritPat = [ "O_MRAP_02_HMG_F", "O_MRAP_02_HMG_F" ];
-_groupArrayIfritPat = [ "O_G_Offroad_01_armed_F", "O_Truck_02_covered_F", "O_Truck_02_covered_F", "O_G_Offroad_01_armed_F" ];
+_groupArrayIfritPat = [ "O_MRAP_02_F", "O_Truck_02_transport_F" ];
 _groupArrayW_APC = [ "O_APC_WHEELED_02_RCWS_F" ];
 _groupArrayT_APC = [ "O_APC_Tracked_02_cannon_F" ];
 _groupArraySniperTeam = [ "O_sniper_F", "O_spotter_F" ];
@@ -87,21 +90,26 @@ T8U_var_SupportUnitsEAST = [ _groupArrayFireTeam, _groupArrayFireTeam ];
 T8U_var_SupportUnitsWEST = [];
 T8U_var_SupportUnitsRESISTANCE = [];
 
+
 // this groups of units are spawned directly at mission start
 _SpawnThisUnits = 
-[ 
-	[ [ _groupArrayMiniPat, "Marker01", "T8u_fnc_rmNVG_TEST" ], [ "PATROL" ] ],
-	[ [ _groupArrayMiniPat, "Marker08", "T8u_fnc_rmNVG_TEST" ], [ "PATROL" ]  ],
-	[ [ _groupArrayFullPat, "Marker02" ], [ "PATROL_AROUND" ] ],
-	[ [ _groupArrayFullPat, "Marker09" ], [ "PATROL_AROUND" ] ],
+[
+
+	[ [ _groupArrayMiniPat, "Marker01", "T8u_fnc_rmNVG_TEST" ], [ "PATROL" ], [ true, true, true ], [ "Marker01_spawn" ]],
+	[ [ _groupArrayFullPat, "Marker01" ], [ "PATROL_AROUND" ], [ true, true, true ], [ getMarkerPos "Marker01_spawn" ]],
+	[ [ _groupArrayFullPat, [ "Marker02_01", "Marker02_02" ]], [ "PATROL_AROUND", 50 ] ],
+	[ [ _groupArrayFullTeam + _groupArrayFullTeam + _groupArrayFullTeam, "Marker02_02" ], [ "OCCUPY", true ], [ true, false, false ]],
+	[ [ _groupArrayFullTeam, "Marker03" ], [ "OCCUPY" ] ],
 	[ [ _groupArrayFullTeam, "Marker03" ], [ "GARRISON" ] ],
-	[ [ _groupArrayFullTeam, "Marker03_f" ], [ "GARRISON" ] ],
 	[ [ _groupArrayFireTeam, "Marker04", "T8u_fnc_rmNVG_TEST" ], [ "DEFEND" ], [ true, false, false ] ],
 	[ [ _groupArrayFullTeam, "Marker05" ], [ "LOITER" ] ],
 	[ [ _groupArrayFullTeam, "Marker06" ], [ "PATROL_GARRISON" ] ],
-	[ [ _groupArrayW_APC, "Marker07", false ], [ "PATROL_URBAN" ] ],
+	[ [ _groupArrayW_APC + _groupArrayFireTeam, "Marker07", false ], [ "PATROL_URBAN" ] ],
+	[ [ _groupArrayMiniPat, [ "Marker08_01", "Marker08_02" ], "T8u_fnc_rmNVG_TEST" ], [ "PATROL" ]  ],
+	[ [ _groupArrayFullPat, "Marker09" ], [ "PATROL_AROUND", 150 ] ],
+	[ [ _groupArrayW_APC + _groupArrayFireTeam, [ "marker_urban_01", "marker_urban_02" ], false ], [ "PATROL_URBAN" ] ],
 	[ [ _groupArrayFullTeam, "ip" ], [ "PATROL_MARKER", [ "ip1", "ip2", "ip3" ] ] ],
-	[ [ _groupArrayIfritPat, "vp", false ], [ "PATROL_MARKER", [ "vp1", "vp2", "vp3" ], false ] ],
+	[ [ _groupArrayIfritPat + _groupArrayFullTeam, "vp", false ], [ "PATROL_MARKER", [ "vp1", "vp2", "vp3" ], false ] ],
 	[ [ _groupArraySniperTeam, "spawnSnipers" ], [ "OVERWATCH", "overwatchTHIS" ] ],
 	[ [ _groupArrayFullTeam + _groupArrayFullTeam, "MarkerRED" ], [ "DEFEND_BASE" ] ],
 
@@ -111,7 +119,7 @@ _SpawnThisUnits =
 	[ [ _groupArrayBluTeam, "MarkerBLU", WEST ], [ "PATROL" ] ],
 	[ [ _groupArrayBluTeam, "MarkerBLU", WEST ], [ "PATROL" ] ],
 	
-	[ [ _groupArrayCIV, "MarkerCIV", CIVILIAN ], [ "GARRISON" ] ]	
+	[ [ _groupArrayCIV, "MarkerCIV", CIVILIAN ], [ "GARRISON" ] ]
 ];
 
 [ _SpawnThisUnits ] spawn T8U_fnc_Spawn;
@@ -139,8 +147,8 @@ SpawnZonePU =
 
 BLUFOR_attack_01 = 
 [
-	[ [ _groupArrayBluTeam, "BLUFOR_attack_spawn_01", true, WEST ], [ "ATTACK", "Marker04" ] ],
-	[ [ _groupArrayBluTeam, "BLUFOR_attack_spawn_01", true, WEST ], [ "ATTACK", "Marker04" ] ]
+	[ [ [ "B_MRAP_01_F", "B_MRAP_01_F" ] + _groupArrayBluTeam, "BLUFOR_attack_spawn_01", false, WEST ], [ "ATTACK", "Marker04" ] ],
+	[ [ [ "B_Truck_01_transport_F" ] + _groupArrayBluTeam, "BLUFOR_attack_spawn_01", false, WEST ], [ "ATTACK", "Marker04" ] ]
 ];
 // im Radio-Trigger: [ BLUFOR_attack_01 ] spawn T8U_fnc_Spawn;
 
@@ -153,6 +161,96 @@ BLUFOR_attack_02 =
 
 
 
+testpol_01 = [ testlog_01 ] call T8U_fnc_getPolygon;
+testpol_02 = [ testlog_02 ] call T8U_fnc_getPolygon;
+testpol_03 = [ testlog_03 ] call T8U_fnc_getPolygon;
+testpol_04 = [ testlog_04 ] call T8U_fnc_getPolygon;
+
+private [ "_extreme", "_allPoints" ];
+
+_extreme = [ testpol_01 ] call T8U_fnc_findExtreme;
+hint str _extreme;
+_allPoints = [];
+
+for "_i" from 1 to 200 do 
+{
+	private [ "_pos" ];
+
+	_posX = ( _extreme select 0 select 0 ) + random (( _extreme select 1 select 0 ) - ( _extreme select 0 select 0 ));
+	_posY = ( _extreme select 0 select 1 ) + random (( _extreme select 1 select 1 ) - ( _extreme select 0 select 1 ));
+	
+	if ( [[ _posX, _posY ], testpol_01 ] call T8U_fnc_checkPolygon ) then 
+	{
+		[[ _posX, _posY ], "ICON", "mil_dot", 1, "ColorGreen" ] call T8U_fnc_DebugMarker;	
+	} else {
+		[[ _posX, _posY ], "ICON", "mil_dot", 1, "ColorRed" ] call T8U_fnc_DebugMarker;
+	};
+	
+	_allPoints pushBack [ _posX, _posY ];
+};
+
+_extreme = [ testpol_02 ] call T8U_fnc_findExtreme;
+hint str _extreme;
+_allPoints = [];
+
+for "_i" from 1 to 200 do 
+{
+	private [ "_pos" ];
+
+	_posX = ( _extreme select 0 select 0 ) + random (( _extreme select 1 select 0 ) - ( _extreme select 0 select 0 ));
+	_posY = ( _extreme select 0 select 1 ) + random (( _extreme select 1 select 1 ) - ( _extreme select 0 select 1 ));
+	
+	if ( [[ _posX, _posY ], testpol_02 ] call T8U_fnc_checkPolygon ) then 
+	{
+		[[ _posX, _posY ], "ICON", "mil_dot", 1, "ColorGreen" ] call T8U_fnc_DebugMarker;	
+	} else {
+		[[ _posX, _posY ], "ICON", "mil_dot", 1, "ColorRed" ] call T8U_fnc_DebugMarker;
+	};
+	
+	_allPoints pushBack [ _posX, _posY ];
+};
+
+_extreme = [ testpol_03 ] call T8U_fnc_findExtreme;
+hint str _extreme;
+_allPoints = [];
+
+for "_i" from 1 to 200 do 
+{
+	private [ "_pos" ];
+
+	_posX = ( _extreme select 0 select 0 ) + random (( _extreme select 1 select 0 ) - ( _extreme select 0 select 0 ));
+	_posY = ( _extreme select 0 select 1 ) + random (( _extreme select 1 select 1 ) - ( _extreme select 0 select 1 ));
+	
+	if ( [[ _posX, _posY ], testpol_03 ] call T8U_fnc_checkPolygon ) then 
+	{
+		[[ _posX, _posY ], "ICON", "mil_dot", 1, "ColorGreen" ] call T8U_fnc_DebugMarker;	
+	} else {
+		[[ _posX, _posY ], "ICON", "mil_dot", 1, "ColorRed" ] call T8U_fnc_DebugMarker;
+	};
+	
+	_allPoints pushBack [ _posX, _posY ];
+};
+
+_extreme = [ testpol_04 ] call T8U_fnc_findExtreme;
+hint str _extreme;
+_allPoints = [];
+
+for "_i" from 1 to 200 do 
+{
+	private [ "_pos" ];
+
+	_posX = ( _extreme select 0 select 0 ) + random (( _extreme select 1 select 0 ) - ( _extreme select 0 select 0 ));
+	_posY = ( _extreme select 0 select 1 ) + random (( _extreme select 1 select 1 ) - ( _extreme select 0 select 1 ));
+	
+	if ( [[ _posX, _posY ], testpol_04 ] call T8U_fnc_checkPolygon ) then 
+	{
+		[[ _posX, _posY ], "ICON", "mil_dot", 1, "ColorGreen" ] call T8U_fnc_DebugMarker;	
+	} else {
+		[[ _posX, _posY ], "ICON", "mil_dot", 1, "ColorRed" ] call T8U_fnc_DebugMarker;
+	};
+	
+	_allPoints pushBack [ _posX, _posY ];
+};
 
 
 // ------------------------------------------------ THE END ---------------------------------------------------

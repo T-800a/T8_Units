@@ -1,7 +1,7 @@
 ========================================= C H A N G E L O G ===========================================================
 
 	Script:		T8 Units
-	Author(s):	T-800a
+	Author(s):	Hauke Sven "T-800a" Fischbach
 	E-Mail:		t-800a@gmx.net
 
 	This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.
@@ -9,6 +9,29 @@
 	Creative Commons, 444 Castro Street, Suite 900, Mountain View, California, 94041, USA.
 
 =======================================================================================================================
+
+##### V061 - 25.01.2016 #####
+
+# new Task: OCCUPY
+# multi-marker support for PATROL type tasks
+# fixes in wp-positon finding
+
+
+
+##### V060 - 10.12.2015 #####
+
+# cfgFunctions (urgh)
+# param / params (urgh)
+# includes
+# macro anfänge
+# auto post init
+# besseres wegpunkte finden
+# ...
+# ...
+
+I.D.F.K.!
+
+
 
 ##### V052 - 17.10.2014 #####
 
