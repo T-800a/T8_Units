@@ -1,6 +1,6 @@
 /*
  =======================================================================================================================
-	
+
 	Script: fn_patrol.sqf
 	Author(s): T-800a
 	Inspired and partly based on code by Binesi's BIN_taskDefend/Patrole
@@ -30,8 +30,8 @@
 private [ "_group", "_marker", "_infGroup", "_speedMode", "_formation", "_statement", "_range", "_wp", "_wpArray", "_cycle", "_behaviour" ];
 
 _group		= param [ 0, grpNull, [grpNull]];
-_marker		= param [ 1, "NO-MARKER-SET", ["",[]]]; 
-_infGroup	= param [ 2, true, [true]]; 
+_marker		= param [ 1, "NO-MARKER-SET", ["",[]]];
+_infGroup	= param [ 2, true, [true]];
 
 __DEBUG( __FILE__, "INIT", _this );
 
@@ -48,7 +48,7 @@ if ( _infGroup ) then
 } else {
 	_formation = "COLUMN";
 	_statement = "if ((random 10)>5) then { group this setCurrentWaypoint [(group this), (ceil (random (count (waypoints (group this)))))];};";
-	_speedMode = "FULL";	
+	_speedMode = "FULL";
 	_range = 50;
 };
 
@@ -64,20 +64,20 @@ if (( typeName _marker ) isEqualTo ( typeName [] )) then
 	_wpArray = [];
 	{
 		__DEBUG( __FILE__, "_marker > _x", _x );
-		
+
 		if !(( getMarkerPos _x ) isEqualTo [0,0,0] ) then
 		{
 			_wpArrayTmp = [ _x, _infGroup ] call T8U_fnc_CreateWaypointPositions;
 			_wpArrayTmp = _wpArrayTmp call BIS_fnc_arrayShuffle;
-		
+
 			_wpArray append _wpArrayTmp;
 		};
-		
+
 		__DEBUG( __FILE__, "_wpArray", _wpArray );
-		
+
 		false
 	} count _marker;
-	
+
 } else {
 	_wpArray = [ _marker, _infGroup ] call T8U_fnc_CreateWaypointPositions;
 	_wpArray = _wpArray call BIS_fnc_arrayShuffle;
@@ -88,7 +88,7 @@ if (( typeName _marker ) isEqualTo ( typeName [] )) then
 {
     private [ "_wp", "_markerName", "_markerFP" ];
 
-	if ( count _x > 0 ) then 
+	if ( count _x > 0 ) then
 	{
 		[ _group, _x, "MOVE", "SAFE", _statement, _range, _speedMode, [ 0, 15, 60 ] ] call T8U_fnc_CreateWaypoint;
 
@@ -100,6 +100,9 @@ if (( typeName _marker ) isEqualTo ( typeName [] )) then
 
 // Cycle in case we reach the end
 [ _group, _cycle, "CYCLE", "SAFE", "", 100 ] call T8U_fnc_CreateWaypoint;
+
+// Teleport the group to the current waypoint so they can start their loop only if the group is first created
+[_group] call T8U_fnc_teleportGroupToCurrentWaypoint;
 
 __DEBUG( __FILE__, "Successfully Initialized", _group );
 

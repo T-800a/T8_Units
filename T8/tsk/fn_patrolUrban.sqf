@@ -31,8 +31,8 @@
 private [ "_group", "_marker", "_infGroup", "_formation", "_statement", "_range", "_wp", "_wpArray", "_cycle", "_behaviour", "_speedMode" ];
 
 _group		= param [ 0, grpNull, [grpNull]];
-_marker		= param [ 1, "NO-MARKER-SET", ["",[]]]; 
-_infGroup	= param [ 2, true, [true]]; 
+_marker		= param [ 1, "NO-MARKER-SET", ["",[]]];
+_infGroup	= param [ 2, true, [true]];
 
 __DEBUG( __FILE__, "INIT", _this );
 
@@ -66,21 +66,21 @@ if (( typeName _marker ) isEqualTo ( typeName [] )) then
 	_wpArray = [];
 	{
 		__DEBUG( __FILE__, "_marker > _x", _x );
-		
+
 		if !(( getMarkerPos _x ) isEqualTo [0,0,0] ) then
 		{
 			_wpArrayTmp = [ _x, _infGroup, true ] call T8U_fnc_CreateWaypointPositions;
 			__DEBUG( __FILE__, "_wpArray", _wpArray );
 			if (( count _wpArrayTmp ) isEqualTo 0 ) then { _wpArrayTmp = [ _x, _infGroup ] call T8U_fnc_CreateWaypointPositions; };
-			
+
 			_wpArray append _wpArrayTmp;
 		};
-		
+
 		__DEBUG( __FILE__, "_wpArray", _wpArray );
-		
+
 		false
 	} count _marker;
-	
+
 } else {
 	_wpArray = [ _marker, _infGroup, true ] call T8U_fnc_CreateWaypointPositions;
 	__DEBUG( __FILE__, "_wpArray", _wpArray );
@@ -91,18 +91,21 @@ _wpArray = _wpArray call BIS_fnc_arrayShuffle;
 
 
 {
-	if ( count _x > 0 ) then 
+	if ( count _x > 0 ) then
 	{
 		[ _group, _x, "MOVE", _behaviour, _statement, _range, _speedMode, [ 0, 15, 60 ] ] call T8U_fnc_CreateWaypoint;
 
 		_cycle = _x;
-		
+
 		if ( T8U_var_DEBUG_marker ) then { [ _x ] call T8U_fnc_DebugMarker; };
 	};
 } forEach _wpArray;
 
 // Cycle in case we reach the end
 [ _group, _cycle, "CYCLE", "SAFE", "", 100 ] call T8U_fnc_CreateWaypoint;
+
+// Teleport the group to the current waypoint so they can start their loop only if the group is first created
+[_group] call T8U_fnc_teleportGroupToCurrentWaypoint;
 
 __DEBUG( __FILE__, "Successfully Initialized", _group );
 

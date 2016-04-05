@@ -61,13 +61,13 @@ _wpPosArray = [];
 {
 	private [ "_wpPosFEP" ];
 	_wpPosFEP = [];
-	if ( ! _infGroup ) then 
+	if ( ! _infGroup ) then
 	{
 		private [ "_loop", "_wpPos", "_roadObj" ];
 		_loop = true;
 		_tmpMaxDist = 10;
-		while { _loop } do 
-		{    
+		while { _loop } do
+		{
 			_wpPos = getMarkerPos _x;
 			if ( T8U_var_DEBUG_marker ) then { [ _wpPos, "ICON", "mil_dot_noShadow" ] call T8U_fnc_DebugMarker; };
 			_roadObj = [ _wpPos ] call BIS_fnc_nearestRoad;
@@ -78,24 +78,24 @@ _wpPosArray = [];
 	} else {
 		_wpPosFEP = ( getMarkerPos _x ) findEmptyPosition [ 1 , 20, _chkV ];
 	};
-	
+
 	_wpPosArray pushBack _wpPosFEP;
-	
+
 	false
 } count _markerArray;
 
 {
 	private [ "_mkr" ];
-	
+
 	[ _group, _x, "MOVE", "SAFE", _statement, _range, _speed, [ 5, 10, 15 ] ] call T8U_fnc_CreateWaypoint;
 	if ( T8U_var_DEBUG_marker ) then { _mkr = [ _x, "ICON", "mil_destroy_noShadow" ] call T8U_fnc_DebugMarker; };
-	
-	if ( _doSAD ) then 
+
+	if ( _doSAD ) then
 	{
 		[ _group, _x, "SAD", "SAFE", _statement, _range, _speed, [ 15, 25, 35 ] ] call T8U_fnc_CreateWaypoint;
 		if ( T8U_var_DEBUG_marker ) then { _mkr setMarkerColor "ColorRed"; };
 	};
-	
+
 	false
 } count _wpPosArray;
 
@@ -103,6 +103,9 @@ sleep 1;
 
 // Cycle in case we reach the end
 [ _group, ( _wpPosArray select 0 ), "CYCLE", "SAFE", _statement, 100 ] call T8U_fnc_CreateWaypoint;
+
+// Teleport the group to the current waypoint so they can start their loop only if the group is first created
+[_group] call T8U_fnc_teleportGroupToCurrentWaypoint;
 
 if ( T8U_var_DEBUG ) then { [ "fn_patrolMarker.sqf", "Successfully Initialized", [ _group ] ] spawn T8U_fnc_DebugLog; };
 
