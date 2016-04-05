@@ -14,6 +14,7 @@
 	_this select 0: the group to which to assign the waypoints (Group)
 	_this select 1: the position on which to base the patrol (Markername / String)
 	_this select 2: (optional) is infantry group (Bool) Will force group to leave vehicle on waypoints!
+	_this select 3: (optional) formation of group (String)
 
 	Returns:
 	Boolean - success flag
@@ -32,6 +33,7 @@ private [ "_group", "_marker", "_infGroup", "_speedMode", "_formation", "_statem
 _group		= param [ 0, grpNull, [grpNull]];
 _marker		= param [ 1, "NO-MARKER-SET", ["",[]]];
 _infGroup	= param [ 2, true, [true]];
+_formation	= param [ 3, "RANDOM", [""]];
 
 __DEBUG( __FILE__, "INIT", _this );
 
@@ -41,7 +43,9 @@ if (( typeName _marker ) isEqualTo ( typeName [] ) AND {( count _marker ) isEqua
 
 if ( _infGroup ) then
 {
-	_formation = ["STAG COLUMN", "WEDGE", "ECH LEFT", "ECH RIGHT", "VEE", "DIAMOND"] call BIS_fnc_selectRandom;
+	if(_formation == "RANDOM") then {
+		_formation = ["STAG COLUMN", "WEDGE", "ECH LEFT", "ECH RIGHT", "VEE", "DIAMOND"] call BIS_fnc_selectRandom;
+	};
 	_statement = "[ this ] spawn T8U_fnc_GetOutVehicle; if ((random 10)>5) then { group this setCurrentWaypoint [(group this), (ceil (random (count (waypoints (group this)))))];};";
 	_speedMode = "LIMITED";
 	_range = 20;

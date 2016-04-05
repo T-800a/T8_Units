@@ -14,7 +14,7 @@
 	_this select 1: patrol positions ( Array with marker )
 	_this select 2: Group is a pure infantry Group -> force units to leave vehicles ( bool )
 	_this select 3: do SAD waypoint on each marker ( bool )
-	_this select 3: DEBUG ( bool )
+	_this select 4: (optional) formation of group (String)
 
 	Example(s):
 	tmp = [ group this, [ "marker01", "marker02", "marker03" ] ] execVM "fn_patrolMarker.sqf";
@@ -29,8 +29,9 @@ private [ "_group", "_markerArray", "_infGroup", "_doSAD", "_formation", "_state
 
 _group			= param [ 0, grpNull, [grpNull]];
 _markerArray	= param [ 1, [], [[]]];
-_infGroup		= param [ 2, true, [ true ]];
-_doSAD			= param [ 3, true, [ true ]];
+_infGroup		= param [ 2, true, [true]];
+_doSAD			= param [ 3, true, [true]];
+_formation		= param [ 4, "RANDOM", [""]];
 
 if ( T8U_var_DEBUG ) then { [ "fn_patrolMarker.sqf", "INIT", _this ] spawn T8U_fnc_DebugLog; };
 
@@ -38,7 +39,9 @@ if ( isNull _group OR !( count _markerArray > 0 ) ) exitWith { false };
 
 if ( _infGroup ) then
 {
-	_formation = ["STAG COLUMN", "WEDGE", "ECH LEFT", "ECH RIGHT", "VEE", "DIAMOND"] call BIS_fnc_selectRandom;
+	if(_formation == "RANDOM") then {
+		_formation = ["STAG COLUMN", "WEDGE", "ECH LEFT", "ECH RIGHT", "VEE", "DIAMOND"] call BIS_fnc_selectRandom;
+	};
 	_statement = "[ this ] spawn T8U_fnc_GetOutVehicle;";
 	_range = 20;
 	_speed = "LIMITED";

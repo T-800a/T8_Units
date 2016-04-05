@@ -14,7 +14,7 @@
 	Parameter(s):
 	_this select 0: the group to which to assign the waypoints (Group)
 	_this select 1: the position on which to base the patrol (Markername / String)
-	_this select 2: (optional) debug markers on or off (Bool)
+	_this select 2: (optional) formation of group (String)
 
 	Returns:
 	Boolean - success flag
@@ -31,6 +31,7 @@ private [ "_group", "_marker", "_leader", "_n", "_speedMode", "_formation", "_st
 
 _group		= param [ 0, grpNull, [grpNull]];
 _marker		= param [ 1, "NO-MARKER-SET", ["",[]]];
+_formation	= param [ 2, "NO-MARKER-SET", [""]];
 _leader		= leader _group;
 
 __DEBUG( __FILE__, "INIT", _this );
@@ -39,7 +40,9 @@ if ( isNull _group ) exitWith { false };
 if (( typeName _marker ) isEqualTo ( typeName "" ) AND {( getMarkerPos _marker ) isEqualTo [0,0,0] }) exitWith { false };
 if (( typeName _marker ) isEqualTo ( typeName [] ) AND {( count _marker ) isEqualTo 0 }) exitWith { false };
 
-_formation = [ "STAG COLUMN", "WEDGE", "VEE", "DIAMOND" ] call BIS_fnc_selectRandom;
+if(_formation == "RANDOM") then {
+	_formation = [ "STAG COLUMN", "WEDGE", "VEE", "DIAMOND" ] call BIS_fnc_selectRandom;
+};
 _speedMode = "LIMITED";
 
 _statementGetIn		= '[ this ] spawn T8U_fnc_GetInCover; [ this ] spawn T8U_fnc_GetOutVehicle; [ this, ( getPos this ) ] spawn T8U_fnc_GarrisonBuildings; ( group this ) enableAttack false;';
