@@ -32,13 +32,14 @@
 private [ "_group", "_marker", "_infGroup", "_originUnits", "_formation", "_statement", "_wpArray", "_selectPos", "_overwatchPos", "_wp", "_behaviour" ];
 
 _group			= param [ 0, grpNull, [grpNull]];
-_marker			= param [ 1, "NO-MARKER-SET", [""]];
+_marker			= param [ 1, "NO-MARKER-SET", ["",[]]];
 _minDist		= param [ 2, 250, [123]];
 _range			= param [ 3, 300, [123]];
 _infGroup		= param [ 4, true, [true]];
 
 if ( T8U_var_DEBUG ) then { [ "fn_overwatch.sqf", "INIT", _this ] spawn T8U_fnc_DebugLog; };
-
+if ((( typeName _marker ) isEqualTo "ARRAY" ) AND {( count _marker ) isEqualTo 0 }) exitWith { false };
+if (( typeName _marker ) isEqualTo "ARRAY" ) then { _marker = _marker call BIS_fnc_selectRandom; };
 if ( isNull _group OR { str ( getMarkerPos _marker ) == str ([0,0,0]) } ) exitWith { false };
 
 if ( _infGroup ) then

@@ -52,8 +52,10 @@
 private [ "_group", "_marker", "_pos", "_areaSizeX", "_areaSizeY", "_pos", "_range", "_units", "_unitLeader", "_unitsCount" , "_seats", "_seat", "_n", "_movePos", "_newGroup", "_wp1", "_wp2", "_behaviour" ];
 
 _group		= param [ 0, grpNull, [grpNull]];
-_marker		= param [ 1, "NO-MARKER-SET", [""]]; 
+_marker		= param [ 1, "NO-MARKER-SET", ["",[]]]; 
 
+if ((( typeName _marker ) isEqualTo "ARRAY" ) AND {( count _marker ) isEqualTo 0 }) exitWith { false };
+if (( typeName _marker ) isEqualTo "ARRAY" ) then { _marker = _marker call BIS_fnc_selectRandom; };
 if ( isNull _group OR { str ( getMarkerPos _marker ) == str ([0,0,0]) } ) exitWith { if ( T8U_var_DEBUG ) then { [ ">> %1 >>>>>>>>>> fn_loiter.sqf >> Missing Parameters", time ] call BIS_fnc_error; }; false };
 if ( T8U_var_DEBUG ) then { [ ">> %1 >>>>>>>>>> fn_loiter.sqf >> EXEC >> %2 >> %3", time, _marker ] call BIS_fnc_error; };
 

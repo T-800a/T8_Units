@@ -54,7 +54,7 @@ _return = [];
 	_cacheArray			= _x param [ 3, [], [[]]];
 	_cachePos			= _cacheArray param [ 0, [], [[],""]];
 
-	_vehicleArray		= _groupArray param [ 0, [], [[]]];
+	_vehicleArray		= _groupArray param [ 0, [], [[],configFile]];
 	_markerArray		= _groupArray param [ 1, false, ["",[]]];
 
 	_infGroup	= true;
@@ -107,9 +107,17 @@ _return = [];
 		!( count _vehicleArray > 0 )
 		OR { _posMkr == "NO-POS-GIVEN" }
 		OR { _type == "NO-TASK-GIVEN" }
-		OR { ( getMarkerPos _posMkr ) isEqualTo [0,0,0] }
-	) exitWith { [ ( format [ "Something went seriously wrong! Error in Unit's spawning definition!<br /><br />Marker: %1<br />Task: %2", _posMkr, _type ] ) ] call T8U_fnc_BroadcastHint; _error = true; };
+		OR { ( getMarkerPos _posMkr ) isEqualTo [0,0,0] }) exitWith
+	{
+		[( format [ "Something went seriously wrong! Error in Unit's spawning definition!<br /><br />Marker: %1<br />Task: %2", _posMkr, _type ])] call T8U_fnc_BroadcastHint;
+		_error = true;
+	};
 
+	if (( typeName _vehicleArray ) isEqualTo "ARRAY" AND {!( count _vehicleArray > 0 )}) exitWith 
+	{
+		[( format [ "Something went seriously wrong! Error in Unit's spawning definition!<br /><br />Marker: %1<br />Task: %2", _posMkr, _type ])] call T8U_fnc_BroadcastHint;
+		_error = true;
+	};
 
 	if (( typeName _cachePos ) isEqualTo ( typeName "STR" )) then { _cachePos = getMarkerPos _cachePos; };
 	if ( _cachePos isEqualTo [0,0,0]) then { _cachePos = _posMkr; };
@@ -121,27 +129,31 @@ _return = [];
 	};
 
 	_relPos = [];
-	if ( ! _infGroup ) then
+	
+	if (( typeName _vehicleArray ) isEqualTo "ARRAY" ) then 
 	{
-		private [ "_tempRelPos" ];
-		_tempRelPos = [ [0,0], [0,9], [0,-9], [9,0], [9,9], [9,-9], [-9,0], [-9,9], [-9,-9], [18,0], [18,9], [18,-9], [-18,0], [-18,9], [-18,-9], [0,18], [9,18], [-9,18], [0,-18], [9,-18], [-9,-18], [18,18], [18,-18], [-18,18], [-18,-18] ];
-
-		{
-			if (( count _tempRelPos  ) > 0 ) then
+		if !( _infGroup ) then 
+		{ 
+			private [ "_tempRelPos" ];
+			_tempRelPos = [ [0,0], [0,9], [0,-9], [9,0], [9,9], [9,-9], [-9,0], [-9,9], [-9,-9], [18,0], [18,9], [18,-9], [-18,0], [-18,9], [-18,-9], [0,18], [9,18], [-9,18], [0,-18], [9,-18], [-9,-18], [18,18], [18,-18], [-18,18], [-18,-18] ];
+			
 			{
-				private [ "_p" ];
-				_p = [ _tempRelPos ] call BIS_fnc_arrayShift;
-				_relPos pushBack _p;
-			} else {
-				_relPos pushBack [0,4];
-			};
-
-			false
-		} count _vehicleArray;
-
-		// if ( count _vehicleArray < 2 ) then { _tempRelPos = []; };
+				if (( count _tempRelPos  ) > 0 ) then 
+				{
+					private [ "_p" ];
+					_p = [ _tempRelPos ] call BIS_fnc_arrayShift;
+					_relPos pushBack _p;
+				} else {
+					_relPos pushBack [0,4];
+				};
+				
+				false
+			} count _vehicleArray;
+			
+			// if ( count _vehicleArray < 2 ) then { _tempRelPos = []; };
+		};
 	};
-
+	
 // ------------------ TASK SWITCH --- UNITS WILL BE SPAWNED NOW --------------------------------------------------------------
 
 	switch ( _type ) do
@@ -398,7 +410,7 @@ _return = [];
 					{
 						if ( isNull ( gunner _x ) ) then
 						{
-							( driver _x ) spawn { waitUntil {( behaviour _this ) isEqualTo "COMBAT" }; [ _this ] spawn T8U_fnc_GetOutVehicle; };
+							( driver _x ) spawn { waitUntil { sleep 0.5; ( behaviour _this ) isEqualTo "COMBAT" }; [ _this ] spawn T8U_fnc_GetOutVehicle; };
 						};
 
 						false

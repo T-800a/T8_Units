@@ -31,11 +31,13 @@ private [ 	"_group", "_marker", "_leader", "_basePos", "_speedMode", "_formation
 			"_wp", "_behaviour", "_wp" ];
 
 _group		= param [ 0, grpNull, [grpNull]];
-_marker		= param [ 1, "NO-MARKER-SET", [""]];
+_marker		= param [ 1, "NO-MARKER-SET", ["",[]]];
 _leader		= leader _group;
 
 if ( T8U_var_DEBUG ) then { [ "fn_garrison.sqf", "INIT", _this ] spawn T8U_fnc_DebugLog; };
 
+if ((( typeName _marker ) isEqualTo "ARRAY" ) AND {( count _marker ) isEqualTo 0 }) exitWith { false };
+if (( typeName _marker ) isEqualTo "ARRAY" ) then { _marker = _marker call BIS_fnc_selectRandom; };
 if ( isNull _group OR { str ( getMarkerPos _marker ) == str ([0,0,0]) } ) exitWith {};
 
 if ( side _group != CIVILIAN ) then 

@@ -28,12 +28,14 @@
 private [ "_group", "_units", "_marker", "_areaSizeX", "_areaSizeY", "_range", "_originUnits", "_formation", "_statement", "_range", "_wp", "_ocBuild" ];
 
 _group		= param [ 0, grpNull, [grpNull]];
-_marker		= param [ 1, "NO-MARKER-SET", [""]]; 
+_marker		= param [ 1, "NO-MARKER-SET", ["",[]]]; 
 
 _ocBuild = [];
 
 if ( T8U_var_DEBUG ) then { [ "fn_defendBase.sqf", "INIT", _this ] spawn T8U_fnc_DebugLog; };
 
+if ((( typeName _marker ) isEqualTo "ARRAY" ) AND {( count _marker ) isEqualTo 0 }) exitWith { false };
+if (( typeName _marker ) isEqualTo "ARRAY" ) then { _marker = _marker call BIS_fnc_selectRandom; };
 if ( isNull _group OR { str ( getMarkerPos _marker ) == str ([0,0,0]) } ) exitWith { false };
 
 _areaSizeX	= ( getMarkerSize _marker ) select 0;
