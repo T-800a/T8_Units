@@ -105,6 +105,9 @@ if (( typeName _marker ) isEqualTo ( typeName [] )) then
 // Cycle in case we reach the end
 [ _group, _cycle, "CYCLE", "SAFE", "", 100 ] call T8U_fnc_CreateWaypoint;
 
+// Select random waypoint on the patrol
+_group setCurrentWaypoint [ _group, ceil ( random ( count ( waypoints _group ) ) ) ];
+
 // Teleport the group to the current waypoint so they can start their loop only if the group is first created
 [_group] call T8U_fnc_teleportGroupToCurrentWaypoint;
 
