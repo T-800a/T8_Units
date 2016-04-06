@@ -105,7 +105,7 @@ _wpPosArray = [];
 sleep 1;
 
 // Cycle in case we reach the end
-[ _group, ( _wpPosArray select 0 ), "CYCLE", "SAFE", _statement, 100 ] call T8U_fnc_CreateWaypoint;
+[ _group, ( _wpPosArray select 0 ), "CYCLE", "SAFE", _statement, 100, _speedMode ] call T8U_fnc_CreateWaypoint;
 
 // Teleport the group to the current waypoint so they can start their loop only if the group is first created
 [_group] call T8U_fnc_teleportGroupToCurrentWaypoint;

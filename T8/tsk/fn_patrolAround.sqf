@@ -103,7 +103,7 @@ if (( typeName _marker ) isEqualTo ( typeName [] )) then
 } forEach _wpArray;
 
 // Cycle in case we reach the end
-[ _group, _cycle, "CYCLE", "SAFE", "", 100 ] call T8U_fnc_CreateWaypoint;
+[ _group, _cycle, "CYCLE", "SAFE", "", 100, _speedMode ] call T8U_fnc_CreateWaypoint;
 
 // Select random waypoint on the patrol
 _group setCurrentWaypoint [ _group, ceil ( random ( count ( waypoints _group ) ) ) ];

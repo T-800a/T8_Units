@@ -1,21 +1,34 @@
+/*
+	Will teleport any group with the variable NEWLY_CREATED true to it's current selected waypoint
+
+	USAGE: [<group>] call T8U_fnc_teleportGroupToCurrentWaypoint;
+
+	<group>: group of units
+*/
 params ["_group"];
 
-private ["_waypointPosition"];
+private ["_waypointPosition", "_veh", "_alreadyTeleportedVehicle", "_specialPlacementCondition"];
 
 if(isNil("_group")) exitWith { [ "No group given for teleport" ] call T8U_fnc_BroadcastHint; false };
 
-diag_log format ["Calling teleport group to current waypoint"];
+_alreadyTeleportedVehicle = [];
 
 if(_group getVariable ["NEWLY_CREATED", false]) then {
-	diag_log format ["Teleporting to waypoint"];
 	_currentWP = currentWaypoint _group;
-	diag_log format ["Current waypoint %1", _currentWP];
 	{
 		_waypointPosition = getWPPos [_group, _currentWP];
-		if(_x isKindOf "Man") then {
+		if(_x isKindOf "Man" && vehicle _x == _x) then {
 			_x setPos (_waypointPosition);
 		} else {
-			_x setVehiclePosition [_waypointPosition, [], 0, "NONE"];
+			_veh = vehicle _x;
+			if( !(_veh in _alreadyTeleportedVehicle)) then {
+				_specialPlacementCondition = "NONE";
+				if(_veh isKindOf "Air") then {
+					_specialPlacementCondition = "FLY";
+				};
+				_veh setVehiclePosition [_waypointPosition, [], 50, _specialPlacementCondition];
+				_alreadyTeleportedVehicle pushBack _veh;
+			};
 		};
 	} foreach units _group;
 	_group setVariable ["NEWLY_CREATED", false];
