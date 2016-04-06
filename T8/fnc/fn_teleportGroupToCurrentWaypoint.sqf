@@ -1,4 +1,6 @@
-params ["_group", "_waypointPosition"];
+params ["_group"];
+
+private ["_waypointPosition"];
 
 if(isNil("_group")) exitWith { [ "No group given for teleport" ] call T8U_fnc_BroadcastHint; false };
 
