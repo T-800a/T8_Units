@@ -88,6 +88,8 @@
 			addFunction(zoneCreate);
 			addFunction(zoneNotAktiv);
 			addFunction(teleportGroupToCurrentWaypoint);
+			addFunction(createRandomSpawnContainer);
+			addFunction(fillRandomSpawnContainer);
 
 			// polygon stuff
 			addFunction(getPolygon);

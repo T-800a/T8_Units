@@ -1,33 +1,5 @@
 params [["_type","INFANTRY"], ["_min", 0], ["_random", 0], ["_side", east]];
 
-if (isNil "FillRandomSpawnContainer") then {
-	FillRandomSpawnContainer = {
-		private ["_spawnContainer"];
-
-		params ["_opforPool", "_blueforPool", "_guerPool", "_min", "_random", "_side"];
-
-		_spawnContainer = [];
-		_selectionPool = _opforPool;
-		switch (_side) do {
-		    case west: { _selectionPool = _blueforPool; };
-		    case resistance: { _selectionPool = _guerPool; };
-		};
-
-		for [{_i = 0},{_i < _min},{_i =_i+1}] do {
-			_spawnContainer pushBack (_selectionPool call BIS_fnc_selectRandom);
-		};
-
-		if(_random != 0) then {
-			_randomPick = random _random;
-			for [{_i = 0},{_i < _randomPick},{_i =_i+1}] do {
-				_spawnContainer pushBack (_selectionPool call BIS_fnc_selectRandom);
-			};
-		};
-
-		_spawnContainer
-	};
-};
-
 _opforPool = [];
 _blueforPool = [];
 _guerPool = [];
@@ -72,4 +44,4 @@ if (_type == "AIR") then {
 	_guerPool = ["I_Plane_Fighter_03_CAS_F","I_Plane_Fighter_03_AA_F"];
 };
 
-[_opforPool, _blueforPool, _guerPool, _min, _random, _side] call FillRandomSpawnContainer
+[_opforPool, _blueforPool, _guerPool, _min, _random, _side] call T8U_fnc_fillRandomSpawnContainer
