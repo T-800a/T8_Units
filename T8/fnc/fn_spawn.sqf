@@ -113,7 +113,7 @@ _return = [];
 		_error = true;
 	};
 
-	if (( typeName _vehicleArray ) isEqualTo "ARRAY" AND {!( count _vehicleArray > 0 )}) exitWith 
+	if (( typeName _vehicleArray ) isEqualTo "ARRAY" AND {!( count _vehicleArray > 0 )}) exitWith
 	{
 		[( format [ "Something went seriously wrong! Error in Unit's spawning definition!<br /><br />Marker: %1<br />Task: %2", _posMkr, _type ])] call T8U_fnc_BroadcastHint;
 		_error = true;
@@ -129,16 +129,16 @@ _return = [];
 	};
 
 	_relPos = [];
-	
-	if (( typeName _vehicleArray ) isEqualTo "ARRAY" ) then 
+
+	if (( typeName _vehicleArray ) isEqualTo "ARRAY" ) then
 	{
-		if !( _infGroup ) then 
-		{ 
+		if !( _infGroup ) then
+		{
 			private [ "_tempRelPos" ];
 			_tempRelPos = [ [0,0], [0,9], [0,-9], [9,0], [9,9], [9,-9], [-9,0], [-9,9], [-9,-9], [18,0], [18,9], [18,-9], [-18,0], [-18,9], [-18,-9], [0,18], [9,18], [-9,18], [0,-18], [9,-18], [-9,-18], [18,18], [18,-18], [-18,18], [-18,-18] ];
-			
+
 			{
-				if (( count _tempRelPos  ) > 0 ) then 
+				if (( count _tempRelPos  ) > 0 ) then
 				{
 					private [ "_p" ];
 					_p = [ _tempRelPos ] call BIS_fnc_arrayShift;
@@ -146,14 +146,14 @@ _return = [];
 				} else {
 					_relPos pushBack [0,4];
 				};
-				
+
 				false
 			} count _vehicleArray;
-			
+
 			// if ( count _vehicleArray < 2 ) then { _tempRelPos = []; };
 		};
 	};
-	
+
 // ------------------ TASK SWITCH --- UNITS WILL BE SPAWNED NOW --------------------------------------------------------------
 
 	switch ( _type ) do
@@ -212,18 +212,20 @@ _return = [];
 		case "PATROL":
 		{
 			_formation = _taskArray param [ 1, "RANDOM", [""]];
+			_behaviour = _taskArray param [ 2, "SAFE", [""]];
 			_group = [ _spawnPos, _groupSide, _vehicleArray, _relPos ] call BIS_fnc_spawnGroup;
 			_group setVariable ["NEWLY_CREATED", true];
-			[ _group, _markerArray, _infGroup, _formation ] spawn T8U_tsk_fnc_patrol;
+			[ _group, _markerArray, _infGroup, _formation, _behaviour ] spawn T8U_tsk_fnc_patrol;
 		};
 
 		case "PATROL_AROUND":
 		{
 			_PatrolAroundDis = _taskArray param [ 1, T8U_var_PatAroundRange, [123]];
 			_formation = _taskArray param [ 2, "RANDOM", [""]];
+			_behaviour = _taskArray param [ 3, "SAFE", [""]];
 			_group = [ _spawnPos, _groupSide, _vehicleArray, _relPos ] call BIS_fnc_spawnGroup;
 			_group setVariable ["NEWLY_CREATED", true];
-			[ _group, _markerArray, _infGroup, _PatrolAroundDis, _formation ] spawn T8U_tsk_fnc_patrolAround;
+			[ _group, _markerArray, _infGroup, _PatrolAroundDis, _formation, _behaviour ] spawn T8U_tsk_fnc_patrolAround;
 		};
 
 		case "PATROL_GARRISON":
@@ -231,9 +233,10 @@ _return = [];
 			// Force _infGroup = false !!!
 			// _commArray = [ ( _commArray select 0 ), false ];
 			_formation = _taskArray param [ 1, "RANDOM", [""]];
+			_behaviour = _taskArray param [ 2, "SAFE", [""]];
 			_group = [ _spawnPos, _groupSide, _vehicleArray, _relPos ] call BIS_fnc_spawnGroup;
 			_group setVariable ["NEWLY_CREATED", true];
-			[ _group, _posMkr, _formation ] spawn T8U_tsk_fnc_patrolGarrison;
+			[ _group, _posMkr, _formation, _behaviour ] spawn T8U_tsk_fnc_patrolGarrison;
 		};
 
 		case "PATROL_MARKER":
@@ -241,17 +244,19 @@ _return = [];
 			_PatrolMarkerArray = _taskArray param [ 1, [], [[]]];
 			_PatrolMarkerDoSAD = _taskArray param [ 2, true, [true]];
 			_formation = _taskArray param [ 3, "RANDOM", [""]];
+			_behaviour = _taskArray param [ 4, "SAFE", [""]];
 			_group = [ _spawnPos, _groupSide, _vehicleArray, _relPos ] call BIS_fnc_spawnGroup;
 			_group setVariable ["NEWLY_CREATED", true];
-			[ _group, _PatrolMarkerArray, _infGroup, _PatrolMarkerDoSAD, _formation ] spawn T8U_tsk_fnc_patrolMarker;
+			[ _group, _PatrolMarkerArray, _infGroup, _PatrolMarkerDoSAD, _formation, _behaviour ] spawn T8U_tsk_fnc_patrolMarker;
 		};
 
 		case "PATROL_URBAN":
 		{
 			_formation = _taskArray param [ 1, "RANDOM", [""]];
+			_behaviour = _taskArray param [ 2, "SAFE", [""]];
 			_group = [ _spawnPos, _groupSide, _vehicleArray, _relPos ] call BIS_fnc_spawnGroup;
 			_group setVariable ["NEWLY_CREATED", true];
-			[ _group, _markerArray, _infGroup, _formation ] spawn T8U_tsk_fnc_patrolUrban;
+			[ _group, _markerArray, _infGroup, _formation, _behaviour ] spawn T8U_tsk_fnc_patrolUrban;
 		};
 
 

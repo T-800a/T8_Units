@@ -16,6 +16,7 @@
 	_this select 1: the position on which to base the patrol (Markername / String)
 	_this select 2: (optional) is infantry group (Bool) Will force group to leave vehicle on waypoints!
 	_this select 3: (optional) formation of group (String)
+	_this select 3: (optional) behaviour of group (String)
 
 	Returns:
 	Boolean - success flag
@@ -29,12 +30,13 @@
 
 #include <..\MACRO.hpp>
 
-private [ "_group", "_marker", "_infGroup", "_formation", "_statement", "_range", "_wp", "_wpArray", "_cycle", "_behaviour", "_speedMode" ];
+private [ "_group", "_marker", "_infGroup", "_formation", "_statement", "_range", "_wp", "_wpArray", "_cycle", "_speedMode" ];
 
 _group		= param [ 0, grpNull, [grpNull]];
 _marker		= param [ 1, "NO-MARKER-SET", ["",[]]];
 _infGroup	= param [ 2, true, [true]];
 _formation	= param [ 3, "RANDOM", [""]];
+_behaviour	= param [ 4, "SAFE", [""]];
 
 __DEBUG( __FILE__, "INIT", _this );
 
@@ -49,13 +51,11 @@ if ( _infGroup ) then
 	};
 	_statement = "[ this ] spawn T8U_fnc_GetOutVehicle; if ((random 10)>5) then { group this setCurrentWaypoint [(group this), (ceil (random (count (waypoints (group this)))))];};";
 	_range = 20;
-	_behaviour = "SAFE";
 	_speedMode = "LIMITED";
 } else {
 	_formation = "COLUMN";
 	_statement = "if ((random 10)>5) then { group this setCurrentWaypoint [(group this), (ceil (random (count (waypoints (group this)))))];};";
 	_range = 30;
-	_behaviour = "AWARE";
 	_speedMode = "NORMAL";
 };
 
@@ -106,7 +106,7 @@ _wpArray = _wpArray call BIS_fnc_arrayShuffle;
 } forEach _wpArray;
 
 // Cycle in case we reach the end
-[ _group, _cycle, "CYCLE", "SAFE", "", 100, _speedMode ] call T8U_fnc_CreateWaypoint;
+[ _group, _cycle, "CYCLE", _behaviour, "", 100 ] call T8U_fnc_CreateWaypoint;
 
 // Teleport the group to the current waypoint so they can start their loop only if the group is first created
 [_group] call T8U_fnc_teleportGroupToCurrentWaypoint;

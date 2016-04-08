@@ -15,6 +15,7 @@
 	_this select 0: the group to which to assign the waypoints (Group)
 	_this select 1: the position on which to base the patrol (Markername / String)
 	_this select 2: (optional) formation of group (String)
+	_this select 3: (optional) behaviour of group (String)
 
 	Returns:
 	Boolean - success flag
@@ -32,6 +33,7 @@ private [ "_group", "_marker", "_leader", "_n", "_speedMode", "_formation", "_st
 _group		= param [ 0, grpNull, [grpNull]];
 _marker		= param [ 1, "NO-MARKER-SET", ["",[]]];
 _formation	= param [ 2, "NO-MARKER-SET", [""]];
+_behaviour	= param [ 3, "SAFE", [""]];
 _leader		= leader _group;
 
 __DEBUG( __FILE__, "INIT", _this );
@@ -53,7 +55,7 @@ _group setBehaviour "AWARE";
 _group setSpeedMode _speedMode;
 _group setFormation _formation;
 
-[ _group, getMarkerPos _marker, "MOVE", "SAFE", "", _range, _speedMode ] call T8U_fnc_CreateWaypoint;
+[ _group, getMarkerPos _marker, "MOVE", _behaviour, "", _range, _speedMode ] call T8U_fnc_CreateWaypoint;
 
 // Create waypoints based on array of positions
 // Create waypoints based on array of positions
@@ -89,18 +91,18 @@ _n = 2;
 
 	if ( count _x > 0 ) then
 	{
-		[ _group, _x, "MOVE", "SAFE", _statementGetIn, _range, _speedMode, [ 30, 30, 30 ] ] call T8U_fnc_CreateWaypoint;
-		[ _group, _x, "TALK", "SAFE", _statementGetOut, _range, _speedMode, [ 90, 120, 150 ] ] call T8U_fnc_CreateWaypoint;
+		[ _group, _x, "MOVE", _behaviour, _statementGetIn, _range, _speedMode, [ 30, 30, 30 ] ] call T8U_fnc_CreateWaypoint;
+		[ _group, _x, "TALK", _behaviour, _statementGetOut, _range, _speedMode, [ 90, 120, 150 ] ] call T8U_fnc_CreateWaypoint;
 
 		// to regroup ?!
-		[ _group, _x, "MOVE", "SAFE", "", 10, "FULL", [ 30, 30, 30 ] ] call T8U_fnc_CreateWaypoint;
+		[ _group, _x, "MOVE", _behaviour, "", 10, "FULL", [ 30, 30, 30 ] ] call T8U_fnc_CreateWaypoint;
 
 		if ( T8U_var_DEBUG_marker ) then { [ _x ] call T8U_fnc_DebugMarker; };
     };
 } forEach _wpArray;
 
 // Cycle in case we reach the end
-[ _group, ( _wpArray call BIS_fnc_selectRandom ), "CYCLE", "SAFE", "", 100, _speedMode, [ 30, 30, 30 ] ] call T8U_fnc_CreateWaypoint;
+[ _group, ( _wpArray call BIS_fnc_selectRandom ), "CYCLE", _behaviour, "", 100, _speedMode, [ 30, 30, 30 ] ] call T8U_fnc_CreateWaypoint;
 
 _group setCurrentWaypoint [ _group, 2 ];
 

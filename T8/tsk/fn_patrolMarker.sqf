@@ -15,6 +15,7 @@
 	_this select 2: Group is a pure infantry Group -> force units to leave vehicles ( bool )
 	_this select 3: do SAD waypoint on each marker ( bool )
 	_this select 4: (optional) formation of group (String)
+	_this select 5: (optional) behaviour of group (String)
 
 	Example(s):
 	tmp = [ group this, [ "marker01", "marker02", "marker03" ] ] execVM "fn_patrolMarker.sqf";
@@ -25,13 +26,14 @@
 
 #include <..\MACRO.hpp>
 
-private [ "_group", "_markerArray", "_infGroup", "_doSAD", "_formation", "_statement", "_range", "_speed", "_behaviour", "_wp", "_chkV", "_behaviour" ];
+private [ "_group", "_markerArray", "_infGroup", "_doSAD", "_formation", "_statement", "_range", "_speed", "_behaviour", "_wp", "_chkV" ];
 
 _group			= param [ 0, grpNull, [grpNull]];
 _markerArray	= param [ 1, [], [[]]];
 _infGroup		= param [ 2, true, [true]];
 _doSAD			= param [ 3, true, [true]];
 _formation		= param [ 4, "RANDOM", [""]];
+_behaviour	= param [ 5, "SAFE", [""]];
 
 if ( T8U_var_DEBUG ) then { [ "fn_patrolMarker.sqf", "INIT", _this ] spawn T8U_fnc_DebugLog; };
 
@@ -90,12 +92,12 @@ _wpPosArray = [];
 {
 	private [ "_mkr" ];
 
-	[ _group, _x, "MOVE", "SAFE", _statement, _range, _speed, [ 5, 10, 15 ] ] call T8U_fnc_CreateWaypoint;
+	[ _group, _x, "MOVE", _behaviour, _statement, _range, _speed, [ 5, 10, 15 ] ] call T8U_fnc_CreateWaypoint;
 	if ( T8U_var_DEBUG_marker ) then { _mkr = [ _x, "ICON", "mil_destroy_noShadow" ] call T8U_fnc_DebugMarker; };
 
 	if ( _doSAD ) then
 	{
-		[ _group, _x, "SAD", "SAFE", _statement, _range, _speed, [ 15, 25, 35 ] ] call T8U_fnc_CreateWaypoint;
+		[ _group, _x, "SAD", _behaviour, _statement, _range, _speed, [ 15, 25, 35 ] ] call T8U_fnc_CreateWaypoint;
 		if ( T8U_var_DEBUG_marker ) then { _mkr setMarkerColor "ColorRed"; };
 	};
 
@@ -105,7 +107,7 @@ _wpPosArray = [];
 sleep 1;
 
 // Cycle in case we reach the end
-[ _group, ( _wpPosArray select 0 ), "CYCLE", "SAFE", _statement, 100, _speedMode ] call T8U_fnc_CreateWaypoint;
+[ _group, ( _wpPosArray select 0 ), "CYCLE", _behaviour, _statement, 100 ] call T8U_fnc_CreateWaypoint;
 
 // Teleport the group to the current waypoint so they can start their loop only if the group is first created
 [_group] call T8U_fnc_teleportGroupToCurrentWaypoint;
