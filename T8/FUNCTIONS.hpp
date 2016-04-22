@@ -25,17 +25,17 @@
 		class client
 		{
 			file = "T8\fnc";
-			
+
 			addFunction(hint);
 			addFunction(broadcastHint);
 		};
-		
+
 		class server
 		{
 			file = "T8\fnc";
-			
+
 			addFunctionPost(INIT);
-			
+
 			addFunction(assignTask);
 			addFunction(cache);
 			addFunction(checkEXEC);
@@ -88,7 +88,10 @@
 			addFunction(zone);
 			addFunction(zoneCreate);
 			addFunction(zoneNotAktiv);
-			
+			addFunction(teleportGroupToCurrentWaypoint);
+			addFunction(createRandomSpawnContainer);
+			addFunction(fillRandomSpawnContainer);
+
 			// polygon stuff
 			addFunction(getPolygon);
 			addFunction(drawPolygon);
@@ -98,13 +101,13 @@
 			addFunction(checkOutside);
 		};
 	};
-	
+
 	class T8U_tsk
 	{
 		class task
 		{
 			file = "T8\tsk";
-			
+
 			// basic tasks
 			addFunction(attack);
 			addFunction(defend);
@@ -133,7 +136,6 @@
 			addFunction(HALO);
 		};
 	};
-	
+
 // uncomment if not defined in description.ext
 // };
-	

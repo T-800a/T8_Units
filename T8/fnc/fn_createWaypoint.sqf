@@ -38,6 +38,7 @@ _wp setWaypointCompletionRadius _compRadius;
 _wp setWaypointStatements [ "true", _statementIL ];
 _wp setWaypointSpeed _speed;
 _wp setWaypointTimeout _timeout;
+_wp setWaypointFormation "NO_CHANGE";
 
 // Return
 true
