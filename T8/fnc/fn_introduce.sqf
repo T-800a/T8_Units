@@ -30,6 +30,9 @@ private _cA1				= __GetOVAR( _group, "T8U_introduce_comm_call", true );
 private _cA2				= __GetOVAR( _group, "T8U_introduce_comm_react", true );
 private _commArray			= [ _cA0, _cA1, _cA2 ];
 
+private _teleport			= __GetOVAR( _group, "T8U_introduce_set_teleport", false );
+private _settingsArray		= [ _teleport ];
+
 private _task				= __GetOVAR( _group, "T8U_introduce_task", "ERROR" );
 private _markerArray		= __GetOVAR( _group, "T8U_introduce_markerArray", [] );
 private _infGroup			= __GetOVAR( _group, "T8U_introduce_infGroup", true );
@@ -120,30 +123,30 @@ switch ( _task ) do
 
 	case "PATROL": 
 	{
-		[ _group, _markerArray, _infGroup ] spawn T8U_tsk_fnc_patrol;				
+		[ _group, _markerArray, _infGroup, _teleport ] spawn T8U_tsk_fnc_patrol;				
 	};
 
 	case "PATROL_AROUND": 
 	{
 		_taskArray pushBack _patrolAroundDis;
-		[ _group, _markerArray, _infGroup, _PatrolAroundDis ] spawn T8U_tsk_fnc_patrolAround;
+		[ _group, _markerArray, _infGroup, _teleport, _PatrolAroundDis ] spawn T8U_tsk_fnc_patrolAround;
 	};
 
 	case "PATROL_GARRISON": 
 	{
-		[ _group, _posMkr ] spawn T8U_tsk_fnc_patrolGarrison;
+		[ _group, _posMkr, _infGroup, _teleport ] spawn T8U_tsk_fnc_patrolGarrison;
 	};
 
 	case "PATROL_MARKER": 
 	{
 		_taskArray pushBack _markerArray;
 		_taskArray pushBack _patrolMarkerSAD;				
-		[ _group, _markerArray, _infGroup, _patrolMarkerSAD ] spawn T8U_tsk_fnc_patrolMarker;
+		[ _group, _markerArray, _infGroup, _teleport, _patrolMarkerSAD ] spawn T8U_tsk_fnc_patrolMarker;
 	};
 
 	case "PATROL_URBAN": 
 	{
-		[ _group, _markerArray, _infGroup ] spawn T8U_tsk_fnc_patrolUrban;
+		[ _group, _markerArray, _infGroup, _teleport ] spawn T8U_tsk_fnc_patrolUrban;
 	};
 
 
@@ -187,6 +190,7 @@ switch ( side _group ) do
 private _originArray = [ _markerArray, _task, _infGroup, _taskArray, _function ];
 	
 __SetOVAR( _group, "T8U_gvar_Comm", _commArray );
+__SetOVAR( _group, "T8U_gvar_Settings", _settingsArray );
 __SetOVAR( _group, "T8U_gvar_Origin", _originArray );
 __SetOVAR( _group, "T8U_gvar_Assigned", "NO_TASK" );
 __SetOVAR( _group, "T8U_gvar_Member", _units );	

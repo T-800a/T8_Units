@@ -12,7 +12,7 @@
 
 #include <..\MACRO.hpp>
 
-private [ "_oldGroup", "_newGroup", "_var01", "_var02", "_var03", "_var04", "_var05", "_var06", "_var07", "_var08", "_var09" ];
+private [ "_oldGroup", "_newGroup", "_var01", "_var02", "_var03", "_var04", "_var05", "_var06", "_var07", "_var08", "_var09", "_var10" ];
 
 _oldGroup = _this select 0;
 _newGroup = _this select 1;
@@ -28,6 +28,7 @@ _var06 = _oldGroup getVariable [ "T8U_gvar_called",		-99999 ];
 _var07 = _oldGroup getVariable [ "T8U_gvar_DACcalled",	-99999 ];
 _var08 = _oldGroup getVariable [ "T8U_gvar_PARAcalled",	-99999 ];
 _var09 = _oldGroup getVariable [ "T8U_gvar_Regrouped",	false ];
+_var10 = _oldGroup getVariable [ "T8U_gvar_Settings",	[] ];
 
 _oldGroup setVariable [ "T8U_gvar_Comm",		[], false ];
 _oldGroup setVariable [ "T8U_gvar_Origin",		[], false ];
@@ -38,6 +39,7 @@ _oldGroup setVariable [ "T8U_gvar_called",		-99999, false ];
 _oldGroup setVariable [ "T8U_gvar_DACcalled",	-99999, false ];
 _oldGroup setVariable [ "T8U_gvar_PARAcalled",	-99999, false ];
 _oldGroup setVariable [ "T8U_gvar_Regrouped",	false, false ];
+_oldGroup setVariable [ "T8U_gvar_Settings",	[], false ];
 
 _newGroup setVariable [ "T8U_gvar_Comm",		_var01, false ];
 _newGroup setVariable [ "T8U_gvar_Origin",		_var02, false ];
@@ -48,8 +50,18 @@ _newGroup setVariable [ "T8U_gvar_called",		_var06, false ];
 _newGroup setVariable [ "T8U_gvar_DACcalled",	_var07, false ];
 _newGroup setVariable [ "T8U_gvar_PARAcalled",	_var08, false ];
 _newGroup setVariable [ "T8U_gvar_Regrouped",	_var09, false ];
+_newGroup setVariable [ "T8U_gvar_Settings",	_var10, false ];
+
+__DEBUG( __FILE__, "T8U_gvar_Comm",				_var01 );
+__DEBUG( __FILE__, "T8U_gvar_Origin",			_var02 );
+__DEBUG( __FILE__, "T8U_gvar_Assigned",			_var03 );
+__DEBUG( __FILE__, "T8U_gvar_Member",			_var04 );
+__DEBUG( __FILE__, "T8U_gvar_Attacked",			_var05 );
+__DEBUG( __FILE__, "T8U_gvar_called",			_var06 );
+__DEBUG( __FILE__, "T8U_gvar_DACcalled",		_var07 );
+__DEBUG( __FILE__, "T8U_gvar_PARAcalled",		_var08 );
+__DEBUG( __FILE__, "T8U_gvar_Regrouped",		_var09 );
+__DEBUG( __FILE__, "T8U_gvar_Settings",			_var10 );
 
 leader _oldGroup setVariable [ "T8_UnitsVarLeaderGroup", _newGroup, false ];
 
-if ( T8U_var_DEBUG ) then { [ "fn_groupClearWaypoints.sqf", "GROUP", [ _oldGroup, _newGroup ] ] spawn T8U_fnc_DebugLog; };
-if ( T8U_var_DEBUG ) then { [ "fn_groupClearWaypoints.sqf", "COPYIED VARS", [ _var01, _var02, _var03, _var04, _var05, _var06, _var07, _var08 ] ] spawn T8U_fnc_DebugLog; };

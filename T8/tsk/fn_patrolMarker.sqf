@@ -31,9 +31,10 @@ private [ "_group", "_markerArray", "_infGroup", "_doSAD", "_formation", "_state
 _group			= param [ 0, grpNull, [grpNull]];
 _markerArray	= param [ 1, [], [[]]];
 _infGroup		= param [ 2, true, [true]];
-_doSAD			= param [ 3, true, [true]];
-_formation		= param [ 4, "RANDOM", [""]];
-_behaviour	= param [ 5, "SAFE", [""]];
+_teleport		= param [ 3, false, [false]];
+_doSAD			= param [ 4, true, [true]];
+_formation		= param [ 5, "RANDOM", [""]];
+_behaviour		= param [ 6, "SAFE", [""]];
 
 if ( T8U_var_DEBUG ) then { [ "fn_patrolMarker.sqf", "INIT", _this ] spawn T8U_fnc_DebugLog; };
 
@@ -109,8 +110,8 @@ sleep 1;
 // Cycle in case we reach the end
 [ _group, ( _wpPosArray select 0 ), "CYCLE", _behaviour, _statement, 100 ] call T8U_fnc_CreateWaypoint;
 
-// Teleport the group to the current waypoint so they can start their loop only if the group is first created
-[_group] call T8U_fnc_teleportGroupToCurrentWaypoint;
+// teleport the group to the current waypoint so they can start their loop, only if the group is newly created
+if ( _teleport ) then {[ _group ] call T8U_fnc_teleportGroupToCurrentWaypoint; };
 
 if ( T8U_var_DEBUG ) then { [ "fn_patrolMarker.sqf", "Successfully Initialized", [ _group ] ] spawn T8U_fnc_DebugLog; };
 

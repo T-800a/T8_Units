@@ -29,7 +29,8 @@ _return = [];
 // -> ForEach _MasterArray
 {
 	private [ 	"_abort", "_group", "_vehicleArray", "_posMkr", "_type", "_commArray", "_cacheArray", "_cachePos", "_PatrolMarkerArray", "_infGroup", "_groupSide", "_markerArray",
-				"_PatrolMarkerDoSAD", "_PatrolAroundDis", "_overwatchMarker", "_attackMarker", "_newStyleArray", "_groupArray", "_taskArray", "_cAM", "_cA0", "_cA1", "_customFNC", "_spawnPos", "_relPos" ];
+				"_PatrolMarkerDoSAD", "_PatrolAroundDis", "_overwatchMarker", "_attackMarker", "_newStyleArray", "_groupArray", "_taskArray", "_cAM", "_sAM", "_cA0", "_cA1", 
+				"_teleport", "_settingsArray",  "_customFNC", "_spawnPos", "_relPos" ];
 
 	_abort = false; // for error findings
 
@@ -42,16 +43,20 @@ _return = [];
 
 	_groupArray			= _x param [ 0, [], [[]]];
 	_taskArray			= _x param [ 1, [], [[]]];
-	_cAM				= _x param [ 2, [ true, true ], [[]]];
+	_cAM				= _x param [ 2, [], [[]]];
+	_sAM				= _x param [ 3, [], [[]]];
+	_cacheArray			= _x param [ 4, [], [[]]];
+
+	_type				= _taskArray param [ 0, "NO-TASK-GIVEN", [""]];
 
 	_cA0				= _cAM param [ 0, true, [true]];
 	_cA1				= _cAM param [ 1, true, [true]];
 	_cA2				= _cAM param [ 2, true, [true]];
 	_commArray			= [ _cA0, _cA1, _cA2 ];
 
-	_type				= _taskArray param [ 0, "NO-TASK-GIVEN", [""]];
+	_teleport			= _sAM param [ 0, false, [false]];
+	_settingsArray		= [ _teleport ];
 
-	_cacheArray			= _x param [ 3, [], [[]]];
 	_cachePos			= _cacheArray param [ 0, [], [[],""]];
 
 	_vehicleArray		= _groupArray param [ 0, [], [[],configFile]];
@@ -215,7 +220,7 @@ _return = [];
 			_behaviour = _taskArray param [ 2, "SAFE", [""]];
 			_group = [ _spawnPos, _groupSide, _vehicleArray, _relPos ] call BIS_fnc_spawnGroup;
 			_group setVariable ["NEWLY_CREATED", true];
-			[ _group, _markerArray, _infGroup, _formation, _behaviour ] spawn T8U_tsk_fnc_patrol;
+			[ _group, _markerArray, _infGroup, _teleport, _formation, _behaviour ] spawn T8U_tsk_fnc_patrol;
 		};
 
 		case "PATROL_AROUND":
@@ -225,7 +230,7 @@ _return = [];
 			_behaviour = _taskArray param [ 3, "SAFE", [""]];
 			_group = [ _spawnPos, _groupSide, _vehicleArray, _relPos ] call BIS_fnc_spawnGroup;
 			_group setVariable ["NEWLY_CREATED", true];
-			[ _group, _markerArray, _infGroup, _PatrolAroundDis, _formation, _behaviour ] spawn T8U_tsk_fnc_patrolAround;
+			[ _group, _markerArray, _infGroup, _teleport, _PatrolAroundDis, _formation, _behaviour ] spawn T8U_tsk_fnc_patrolAround;
 		};
 
 		case "PATROL_GARRISON":
@@ -236,7 +241,7 @@ _return = [];
 			_behaviour = _taskArray param [ 2, "SAFE", [""]];
 			_group = [ _spawnPos, _groupSide, _vehicleArray, _relPos ] call BIS_fnc_spawnGroup;
 			_group setVariable ["NEWLY_CREATED", true];
-			[ _group, _posMkr, _formation, _behaviour ] spawn T8U_tsk_fnc_patrolGarrison;
+			[ _group, _posMkr, _infGroup, _teleport, _formation, _behaviour ] spawn T8U_tsk_fnc_patrolGarrison;
 		};
 
 		case "PATROL_MARKER":
@@ -247,7 +252,7 @@ _return = [];
 			_behaviour = _taskArray param [ 4, "SAFE", [""]];
 			_group = [ _spawnPos, _groupSide, _vehicleArray, _relPos ] call BIS_fnc_spawnGroup;
 			_group setVariable ["NEWLY_CREATED", true];
-			[ _group, _PatrolMarkerArray, _infGroup, _PatrolMarkerDoSAD, _formation, _behaviour ] spawn T8U_tsk_fnc_patrolMarker;
+			[ _group, _PatrolMarkerArray, _infGroup, _teleport, _PatrolMarkerDoSAD, _formation, _behaviour ] spawn T8U_tsk_fnc_patrolMarker;
 		};
 
 		case "PATROL_URBAN":
@@ -256,7 +261,7 @@ _return = [];
 			_behaviour = _taskArray param [ 2, "SAFE", [""]];
 			_group = [ _spawnPos, _groupSide, _vehicleArray, _relPos ] call BIS_fnc_spawnGroup;
 			_group setVariable ["NEWLY_CREATED", true];
-			[ _group, _markerArray, _infGroup, _formation, _behaviour ] spawn T8U_tsk_fnc_patrolUrban;
+			[ _group, _markerArray, _infGroup, _teleport, _formation, _behaviour ] spawn T8U_tsk_fnc_patrolUrban;
 		};
 
 
@@ -308,6 +313,7 @@ _return = [];
 			if ( T8U_var_DEBUG ) then { [ "fn_spawn.sqf", "UNITS", units _group ] spawn T8U_fnc_DebugLog; };
 
 			_group setVariable [ "T8U_gvar_Comm", _commArray, false ];
+			_group setVariable [ "T8U_gvar_Settings", _settingsArray, false ];
 			_group setVariable [ "T8U_gvar_Origin", _originArray, false ];
 			_group setVariable [ "T8U_gvar_Assigned", "NO_TASK", false ];
 			_group setVariable [ "T8U_gvar_Member", ( units _group ), false ];

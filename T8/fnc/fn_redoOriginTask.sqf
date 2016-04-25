@@ -12,36 +12,43 @@
 
 #include <..\MACRO.hpp>
 
-private [	"_group", "_oldTask", "_newTask", "_originArray", "_posMkr", "_type", "_infGroup", "_presetBehavior" ];
+private [	"_group", "_oldTask", "_newTask", "_originArray", "_settingsArray", "_posMkr", "_type", "_infGroup", "_teleport", "_presetBehavior" ];
 
 _group		= param [ 0, grpNull, [grpNull]];
 _time		= param [ 1, 10, [123]];
-_oldTask	= _group getVariable [ "T8U_gvar_Assigned", "NO_TASK" ];
+_oldTask	= _group getVariable [ "T8U_gvar_Assigned", "ERROR" ];
 
-if ( T8U_var_DEBUG ) then { [ "fn_redoOriginTask.sqf", "INIT", _this ] spawn T8U_fnc_DebugLog; };
+__DEBUG( __FILE__, "INIT", _this );
 if ( isNull _group ) exitWith { false };
+if ( _oldTask isEqualTo "ERROR" ) exitWith { false };
 
-if ( T8U_var_DEBUG ) then { [ "fn_redoOriginTask.sqf", "SLEEP", [ _group ] ] spawn T8U_fnc_DebugLog; };
-
+__DEBUG( __FILE__, "SLEEP", _group );
 sleep ( _time + T8U_var_TaskReturnTime );
 
-if ( T8U_var_DEBUG ) then { [ "fn_redoOriginTask.sqf", "EXEC", [ _group ] ] spawn T8U_fnc_DebugLog; };
+__DEBUG( __FILE__, "EXEC", _group );
+if ( isNil "_group" ) exitWith { false };
+if ( isNull _group ) exitWith { false };
 
-if ( isNil "_group" OR { isNull _group } ) exitWith { false };
-_newTask = _group getVariable [ "T8U_gvar_Assigned", "NO_TASK" ];
-if ( _oldTask != _newTask ) exitWith { if ( T8U_var_DEBUG ) then { [ "fn_redoOriginTask.sqf", "EXIT - TASK CHANGED", [ _group ] ] spawn T8U_fnc_DebugLog; }; };
+_newTask = _group getVariable [ "T8U_gvar_Assigned", "ERROR" ];
+if ( _oldTask isEqualTo "ERROR" ) exitWith { false };
+
+if !( _oldTask isEqualTo _newTask ) exitWith { __DEBUG( __FILE__, "EXIT - TASK CHANGED", _group ); };
 
 _newGroup = [ _group ] call T8U_fnc_GroupClearWaypoints;
-_originArray = _newGroup getVariable [ "T8U_gvar_Origin", [] ],
 
-if ( count _originArray < 1 ) exitWith { if ( T8U_var_DEBUG ) then { [ "fn_redoOriginTask.sqf", "EXIT - ORIGIN ARRAY EMPTY", [ _group ] ] spawn T8U_fnc_DebugLog; }; };
+_originArray		= _newGroup getVariable [ "T8U_gvar_Origin", []];
+_settingsArray		= _newGroup getVariable [ "T8U_gvar_Settings", []];
+
+if ( count _originArray < 1 ) exitWith { __DEBUG( __FILE__, "EXIT - ORIGIN ARRAY EMPTY", _group ); };
 
 _posMkr			= _originArray select 0;
 _type			= _originArray select 1;
 _infGroup		= _originArray select 2;
 _taskArray		= _originArray select 3;
 
-if ( T8U_var_DEBUG ) then { [ "fn_redoOriginTask.sqf", "NEW GROUP", [ _newGroup, _originArray ] ] spawn T8U_fnc_DebugLog; };
+_teleport		= _settingsArray param [ 0, false, [false]];
+
+__DEBUG( __FILE__, "NEW GROUP", [ _newGroup, _originArray ] );
 
 switch ( _type ) do
 {
@@ -89,29 +96,29 @@ switch ( _type ) do
 
 	case "PATROL":
 	{
-		[ _newGroup, _posMkr, _infGroup ] spawn T8U_tsk_fnc_patrol;
+		[ _newGroup, _posMkr, _infGroup, _teleport ] spawn T8U_tsk_fnc_patrol;
 	};
 
 	case "PATROL_AROUND":
 	{
-		[ _newGroup, _posMkr, _infGroup ] spawn T8U_tsk_fnc_patrolAround;
+		[ _newGroup, _posMkr, _infGroup, _teleport ] spawn T8U_tsk_fnc_patrolAround;
 	};
 
 	case "PATROL_GARRISON":
 	{
-		[ _newGroup, _posMkr ] spawn T8U_tsk_fnc_patrolGarrison;
+		[ _newGroup, _posMkr, _infGroup, _teleport ] spawn T8U_tsk_fnc_patrolGarrison;
 	};
 
 	case "PATROL_MARKER":
 	{
 		private _PatrolMarkerArray = _taskArray param [ 1, [], [[]]];
 		private _PatrolMarkerDoSAD = _taskArray param [ 2, true, [true]];
-		[ _newGroup, _PatrolMarkerArray, _infGroup, _PatrolMarkerDoSAD ] spawn T8U_tsk_fnc_patrolMarker;
+		[ _newGroup, _PatrolMarkerArray, _infGroup, _teleport, _PatrolMarkerDoSAD ] spawn T8U_tsk_fnc_patrolMarker;
 	};
 
 	case "PATROL_URBAN":
 	{
-		[ _newGroup, _posMkr, _infGroup ] spawn T8U_tsk_fnc_patrolUrban;
+		[ _newGroup, _posMkr, _infGroup, _teleport ] spawn T8U_tsk_fnc_patrolUrban;
 	};
 
 	default { private [ "_msg" ]; _msg = format [ "Your Task %1 does not exist!", _type ]; [ _msg ] call T8U_fnc_BroadcastHint; };

@@ -21,13 +21,14 @@ _group		= group _target;
 _units		= units _target;
 _ptargets	= [];
 
-if ( T8U_var_DEBUG ) then { [ "fn_onHitEvent.sqf", "INIT", _this ] spawn T8U_fnc_DebugLog; };
-if ( isNull _group ) exitWith { if ( T8U_var_DEBUG ) then { [ "fn_onHitEvent.sqf", "ABORT", _this ] spawn T8U_fnc_DebugLog; }; };
+__DEBUG( __FILE__, "INIT", _this );
+
+if ( isNull _group ) exitWith { __DEBUG( __FILE__, "INIT", "ABORT" ); };
 
 _targets = ( leader _group ) nearTargets 750;
 { if ( ( _x select 3 ) > 0 ) then { _ptargets pushBack ( _x select 4 ); }; false } count _targets;
 
-if ( T8U_var_DEBUG ) then { [ "fn_onHitEvent.sqf", "PROCESSED TARGETS:", [ _ptargets, ( _target findNearestEnemy _target ) ] ] spawn T8U_fnc_DebugLog; };
+__DEBUG( __FILE__, "PROCESSED TARGETS:", [ _ptargets, ( _target findNearestEnemy _target ) ]);
 
 // if ( ( count _ptargets ) < 1 ) then
 if (( _target findNearestEnemy _target ) isEqualTo objNull ) then

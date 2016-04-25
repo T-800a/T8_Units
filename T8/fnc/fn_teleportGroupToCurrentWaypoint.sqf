@@ -1,28 +1,40 @@
 /*
+ =======================================================================================================================
+
+	T8 Units Script
+
+	Funktion:	fn_assignTask.sqf
+	Author:		Celludriel, (T-800a)
+	E-Mail:		t-800a@gmx.net
+	
 	Will teleport any group with the variable NEWLY_CREATED true to it's current selected waypoint
-
+	
 	USAGE: [<group>] call T8U_fnc_teleportGroupToCurrentWaypoint;
-
 	<group>: group of units
+
+ =======================================================================================================================
 */
-params ["_group"];
 
-private ["_waypointPosition", "_veh", "_alreadyTeleportedVehicle", "_specialPlacementCondition"];
+#include <..\MACRO.hpp>
 
-if(isNil("_group")) exitWith { [ "No group given for teleport" ] call T8U_fnc_BroadcastHint; false };
+params [[ "_group", grpNull, [grpNull]]];
 
-_alreadyTeleportedVehicle = [];
+__DEBUG( __FILE__, "INIT", _this );
+
+if( isNull _group ) exitWith { __DEBUG( __FILE__, "ABORT", _this ); false };
+
+private _alreadyTeleportedVehicle = [];
 
 if(_group getVariable ["NEWLY_CREATED", false]) then {
 	_currentWP = currentWaypoint _group;
 	{
-		_waypointPosition = getWPPos [_group, _currentWP];
+		private _waypointPosition = getWPPos [_group, _currentWP];
 		if(_x isKindOf "Man" && vehicle _x == _x) then {
 			_x setPos (_waypointPosition);
 		} else {
-			_veh = vehicle _x;
+			private _veh = vehicle _x;
 			if( !(_veh in _alreadyTeleportedVehicle)) then {
-				_specialPlacementCondition = "NONE";
+				private _specialPlacementCondition = "NONE";
 				if(_veh isKindOf "Air") then {
 					_specialPlacementCondition = "FLY";
 				};
@@ -33,3 +45,5 @@ if(_group getVariable ["NEWLY_CREATED", false]) then {
 	} foreach units _group;
 	_group setVariable ["NEWLY_CREATED", false];
 };
+
+__DEBUG( __FILE__, "GROUP TELEPORTED", _this );

@@ -34,8 +34,9 @@ private [ "_group", "_marker", "_infGroup", "_speedMode", "_formation", "_statem
 _group		= param [ 0, grpNull, [grpNull]];
 _marker		= param [ 1, "NO-MARKER-SET", ["",[]]];
 _infGroup	= param [ 2, true, [true]];
-_formation	= param [ 3, "RANDOM", [""]];
-_behaviour	= param [ 4, "SAFE", [""]];
+_teleport	= param [ 3, false, [false]];
+_formation	= param [ 4, "RANDOM", [""]];
+_behaviour	= param [ 5, "SAFE", [""]];
 
 __DEBUG( __FILE__, "INIT", _this );
 
@@ -107,8 +108,8 @@ if (( typeName _marker ) isEqualTo ( typeName [] )) then
 // Cycle in case we reach the end
 [ _group, _cycle, "CYCLE", _behaviour, "", 100 ] call T8U_fnc_CreateWaypoint;
 
-// Teleport the group to the current waypoint so they can start their loop only if the group is first created
-[_group] call T8U_fnc_teleportGroupToCurrentWaypoint;
+// teleport the group to the current waypoint so they can start their loop, only if the group is newly created
+if ( _teleport ) then {[ _group ] call T8U_fnc_teleportGroupToCurrentWaypoint; };
 
 __DEBUG( __FILE__, "Successfully Initialized", _group );
 

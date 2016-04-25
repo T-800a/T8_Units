@@ -37,9 +37,12 @@ private [ "_group", "_marker", "_infGroup", "_PatrolAroundDis", "_speedMode", "_
 _group				= param [ 0, grpNull, [grpNull]];
 _marker				= param [ 1, "NO-MARKER-SET", ["",[]]];
 _infGroup			= param [ 2, true, [true]];
-_PatrolAroundDis	= param [ 3, T8U_var_PatAroundRange, [123]];
-_formation			= param [ 4, "RANDOM", [""]];
-_behaviour			= param [ 5, "SAFE", [""]];
+_teleport			= param [ 3, false, [false]];
+_PatrolAroundDis	= param [ 4, T8U_var_PatAroundRange, [123]];
+_formation			= param [ 5, "RANDOM", [""]];
+_behaviour			= param [ 6, "SAFE", [""]];
+
+
 
 __DEBUG( __FILE__, "INIT", _this );
 
@@ -110,8 +113,8 @@ if (( typeName _marker ) isEqualTo ( typeName [] )) then
 // Select random waypoint on the patrol
 _group setCurrentWaypoint [ _group, ceil ( random ( count ( waypoints _group ) ) ) ];
 
-// Teleport the group to the current waypoint so they can start their loop only if the group is first created
-[_group] call T8U_fnc_teleportGroupToCurrentWaypoint;
+// teleport the group to the current waypoint so they can start their loop, only if the group is newly created
+if ( _teleport ) then {[ _group ] call T8U_fnc_teleportGroupToCurrentWaypoint; };
 
 if ( T8U_var_DEBUG ) then { [ "fn_patrolAround.sqf", "Successfully Initialized", [ _group ] ] spawn T8U_fnc_DebugLog; };
 

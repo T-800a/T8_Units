@@ -32,8 +32,10 @@ private [ "_group", "_marker", "_leader", "_n", "_speedMode", "_formation", "_st
 
 _group		= param [ 0, grpNull, [grpNull]];
 _marker		= param [ 1, "NO-MARKER-SET", ["",[]]];
-_formation	= param [ 2, "NO-MARKER-SET", [""]];
-_behaviour	= param [ 3, "SAFE", [""]];
+_infGroup	= param [ 2, true, [true]];
+_teleport	= param [ 3, false, [false]];
+_formation	= param [ 4, "RANDOM", [""]];
+_behaviour	= param [ 5, "SAFE", [""]];
 _leader		= leader _group;
 
 __DEBUG( __FILE__, "INIT", _this );
@@ -106,8 +108,8 @@ _n = 2;
 
 _group setCurrentWaypoint [ _group, 2 ];
 
-// Teleport the group to the current waypoint so they can start their loop only if the group is first created
-[_group] call T8U_fnc_teleportGroupToCurrentWaypoint;
+// teleport the group to the current waypoint so they can start their loop, only if the group is newly created
+if ( _teleport ) then {[ _group ] call T8U_fnc_teleportGroupToCurrentWaypoint; };
 
 __DEBUG( __FILE__, "Successfully Initialized", _group );
 

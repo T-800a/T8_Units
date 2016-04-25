@@ -1,7 +1,7 @@
 ========================================= C H A N G E L O G ===========================================================
 
 	Script:		T8 Units
-	Author(s):	Hauke Sven "T-800a" Fischbach
+	Author(s):	T-800a, Celludriel
 	E-Mail:		t-800a@gmx.net
 
 	This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.

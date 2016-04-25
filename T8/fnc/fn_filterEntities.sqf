@@ -19,15 +19,14 @@ private [ "_unit", "_range", "_array", "_friendly", "_base", "_parray", "_return
 _unit		= param [ 0, objNull, [objNull]];
 _range		= param [ 1, 1000, [123]];
 _friendly	= param [ 2, false, [true]];
-
-if ( T8U_var_DEBUG ) then { [ "fn_filterEntities.sqf", "INIT", _this ] spawn T8U_fnc_DebugLog; };
-if ( isNull _unit ) exitWith { if ( T8U_var_DEBUG ) then { [ "fn_filterEntities.sqf", "INPUT ERROR" ] spawn T8U_fnc_DebugLog; }; };
-
-_array = _unit nearEntities [ [ "CAManBase", "LandVehicle" ], _range ];
-
-_base 		= side _unit;
 _parray		= [];
 _return		= [];
+
+// __DEBUG( __FILE__,  "INIT", _this );
+if ( isNull _unit ) exitWith { __DEBUG( __FILE__, "INIT", "INPUT ERROR" ); _return };
+
+_array	= _unit nearEntities [[ "CAManBase", "LandVehicle" ], _range ];
+_base	= side _unit;
 
 {
 	private [ "_e" ];
@@ -92,7 +91,7 @@ switch ( _groupSide ) do
 	};
 };
 
-if ( T8U_var_DEBUG ) then { [ "fn_filterEntities.sqf", "FILTERED", _return ] spawn T8U_fnc_DebugLog; };
-
 // Return
+if !(( typeName _return ) isEqualTo "ARRAY" ) then { _return = []; };
+// __DEBUG( __FILE__,  "FILTERED", _return );
 _return

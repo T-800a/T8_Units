@@ -38,7 +38,8 @@ if ( alive ( leader _group ) ) then
 	leader _group addEventHandler [ "FiredNear", { [ _this ] call T8U_fnc_FiredEvent; } ];
 	leader _group addEventHandler [ "Killed", { [ _this ] spawn T8U_fnc_KilledEvent; } ];
 	
-	[ _group ] spawn T8U_fnc_OnFiredEvent;
+	// not going to happen anymore -> fn_handleGroups does this now
+	// [ _group ] spawn T8U_fnc_OnFiredEvent;
 
 	if ( T8U_var_DEBUG ) then { [ "fn_killedEvent.sqf", "New Leader:", [ ( leader _group ), _group ] ] spawn T8U_fnc_DebugLog; };
 	
