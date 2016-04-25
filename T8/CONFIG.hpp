@@ -27,6 +27,7 @@
 	T8U_gvar_called			-> integer					-> time unit sent last call for help (general / set if other T8U group is called)
 	T8U_gvar_DACcalled		-> integer					-> time Group last called DAC for HELP
 	T8U_gvar_PARAcalled		-> integer					-> time Group last called for a Support (e.g. Para drop)
+	T8U_gvar_ignoreGroup	-> bool						-> set by group handle if it shall ignore group (for quicker execution after 'first check')
 	
 	T8U_gvar_Introduced		-> bool						-> set true after editor groub is introduced to T8U
 

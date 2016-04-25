@@ -342,7 +342,8 @@ _return = [];
 
 			if ( T8U_var_DEBUG_marker ) then { [ _group  ] spawn T8U_fnc_Track; };
 
-			[ _group ] spawn T8U_fnc_OnFiredEvent;
+			// not going to happen anymore -> fn_handleGroups does this now
+			// [ _group ] spawn T8U_fnc_OnFiredEvent;
 
 			if ( T8U_var_AllowCBM ) then { [ _group ] spawn T8U_fnc_CombatBehaviorMod; };
 

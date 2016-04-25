@@ -215,7 +215,9 @@ if !(( side _group ) isEqualTo civilian ) then
 		false
 	} count _units;
 
-	[ _group ] spawn T8U_fnc_OnFiredEvent;
+	// not going to happen anymore -> fn_handleGroups does this now
+	// [ _group ] spawn T8U_fnc_OnFiredEvent;
+	
 	leader _group addEventHandler [ "FiredNear",	{[ _this ] call T8U_fnc_FiredEvent; }];
 	leader _group addEventHandler [ "Killed",		{[ _this ] spawn T8U_fnc_KilledEvent; }];
 

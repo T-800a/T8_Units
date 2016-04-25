@@ -184,9 +184,12 @@ switch ( _typeTask ) do
 
 __SetOVAR( _groupHelper, "T8U_gvar_Assigned", _typeTask );
 
+// not going to happen anymore -> fn_handleGroups does this now
+// [ _group ] spawn T8U_fnc_OnFiredEvent;
+
 leader _groupHelper addEventHandler ["FiredNear", { [ _this ] call T8U_fnc_FiredEvent; }];
 leader _groupHelper addEventHandler ["Killed", { [ _this ] spawn T8U_fnc_KilledEvent; }];
-[ _groupHelper ] spawn T8U_fnc_OnFiredEvent;
+
 if ( T8U_var_AllowCBM ) then { [ _groupHelper ] spawn T8U_fnc_CombatBehaviorMod; };
 
 _groupHelper

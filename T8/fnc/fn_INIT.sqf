@@ -34,6 +34,10 @@ __DEBUG( __FILE__, "T8 Units", "INIT STARTED" );
 // Per Unit Tracking on Debug ( only in SP editor or when User = Server ) / Delete DebugMarker (check every 30s for ones older than 180s)
 if ( T8U_var_DEBUG ) then { [] spawn T8U_fnc_TrackAllUnits; [] spawn T8U_fnc_DebugMarkerDelete; };
 
+// start our group handling / communication management
+[] spawn T8U_fnc_handleGroups;
+
+
 // Were are good to go!
 // only used for missionEXEC.sqf! 
 T8U_var_InitDONE = true;

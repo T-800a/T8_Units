@@ -65,6 +65,7 @@
 			addFunction(groupClearWaypoints);
 			addFunction(groupCopyVars);
 			addFunction(groupRegroup);
+			addFunction(handleGroups);
 			addFunction(hitEvent);
 			addFunction(inBuilding);
 			addFunction(introduce);

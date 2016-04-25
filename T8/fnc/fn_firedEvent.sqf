@@ -29,13 +29,23 @@ _distance		= _eventArray select 2;
 _weapon			= _eventArray select 3;
 _muzzle			= _eventArray select 4;
 
-[ _unit ] call T8U_fnc_PauseFiredEvent;
-	
-if ( alive _unit ) then 
-{
-	( group _unit ) setVariable [ "T8U_gvar_FiredEvent", [ _unit, _shooter, _distance, _weapon, _muzzle ], false ];
-	[ _unit ] spawn T8U_fnc_RestartFiredEvent;
-	
-	if ( T8U_var_DEBUG ) then { [ "fn_firedEvent.sqf", "EVENT EXEC", _eventArray ] spawn T8U_fnc_DebugLog; };
-	
-} else { if ( T8U_var_DEBUG ) then { [ "fn_firedEvent.sqf", "UNIT DEAD", _eventArray ] spawn T8U_fnc_DebugLog; }; };
+// avoid spam ...
+// __DEBUG( __FILE__, "EVENT EXEC", [ _unit, _shooter, _distance, _weapon, _muzzle, time ] );
+
+// set the variable
+( group _unit ) setVariable [ "T8U_gvar_FiredEvent", [ _unit, _shooter, _distance, _weapon, _muzzle, time ], false ];
+
+
+// old stuff with pausing etc.
+/*
+	[ _unit ] call T8U_fnc_PauseFiredEvent;
+		
+	if ( alive _unit ) then 
+	{
+		( group _unit ) setVariable [ "T8U_gvar_FiredEvent", [ _unit, _shooter, _distance, _weapon, _muzzle ], false ];
+		[ _unit ] spawn T8U_fnc_RestartFiredEvent;
+		
+		if ( T8U_var_DEBUG ) then { [ "fn_firedEvent.sqf", "EVENT EXEC", _eventArray ] spawn T8U_fnc_DebugLog; };
+		
+	} else { if ( T8U_var_DEBUG ) then { [ "fn_firedEvent.sqf", "UNIT DEAD", _eventArray ] spawn T8U_fnc_DebugLog; }; };
+*/
