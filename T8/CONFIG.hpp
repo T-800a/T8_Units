@@ -88,6 +88,39 @@ class cfgT8Units
 		//   2 : RESISTANCE friendly to EAST
 		//   3 : RESISTANCE enemy of both; 
 		diplomacy			= 1;
+		
+		// if group is in overwhelming superiority of XXX over their enemies, they wont call for help
+		superiority			= 3;
+		
+		// the group leader shares info about known enemies to friendly units within XXX meter
+		// knowsAbout > 1
+		range_reveal		= 500;
+		
+		// group leader searches for help within XXX meter
+		range_helpCall		= 1500;
+		
+		// a group can only call one other group each XXX seconds for help
+		timeout_helpCall	= 60;
+		
+		// every XXX seconds a group can call in for a Support (e.g. para drop)
+		// if the group has a squad leader or officer as their group leader
+		timeout_support		= 180;
+		
+		// when the group is finished with their current task they return to their origin task after XXX seconds
+		timeout_taskReturn	= 30;
+		
+		// units in zones are cached after XXX seconds when zone is deactivated
+		timeout_caching		= 15;
+		
+		// zone radius + XXX meter is the distance in which units will patrol around a zone (waypoint positions affected)
+		range_PatrolAround	= 50;
+		
+		// enable fatigue for ALL spawned units
+		enable_fatigue		= false;
+		
+
+		// a group will go RED when in combat, then go GREEN after some time ( T8_UnitsEngageAtWillTime ), and then return to T8U_fnc_SpawnCombatMode
+		enable_CBM			= true;
 	};
 	
 	
@@ -100,7 +133,41 @@ class cfgT8Units
 		// timeout for a group until it can sent the next "call for help"
 		timeout				= 180;			
 	};
-	
+
+
+	// if you want a randomized selection of units you can use the following function in your units array:
+	//    [ "OPF_F", "infantry", 5, 3 ] call T8U_fnc_createUnitContainer
+	// units selected by this function are defined below
+	// if you add your custom selections (as example for different mods), please share them with me!
+	class randomUnitContainer
+	{
+		class OPF_F
+		{
+			infantry[]		= { "O_G_Soldier_F","O_G_Soldier_lite_F","O_G_Soldier_SL_F","O_G_Soldier_TL_F","O_G_Soldier_AR_F","O_G_medic_F","O_G_engineer_F","O_G_Soldier_exp_F","O_G_Soldier_GL_F","O_G_Soldier_M_F","O_G_Soldier_LAT_F","O_G_Soldier_A_F","O_G_officer_F","O_Soldier_F","O_officer_F","O_Soldier_lite_F","O_Soldier_GL_F","O_Soldier_AR_F","O_Soldier_SL_F", "O_Soldier_TL_F","O_soldier_M_F","O_Soldier_LAT_F","O_medic_F","O_soldier_repair_F","O_soldier_exp_F","O_Soldier_A_F","O_Soldier_AT_F","O_Soldier_AA_F","O_engineer_F","O_Sharpshooter_F","O_HeavyGunner_F","O_G_Sharpshooter_F","O_recon_F","O_recon_M_F","O_recon_LAT_F","O_recon_medic_F","O_recon_exp_F","O_recon_JTAC_F", "O_recon_TL_F","O_Pathfinder_F","O_sniper_F","O_ghillie_lsh_F","O_ghillie_sard_F","O_ghillie_ard_F" };
+			vehicles[]		= { "O_APC_Tracked_02_cannon_F","O_APC_Tracked_02_AA_F","O_MBT_02_cannon_F","O_MRAP_02_hmg_F","O_MRAP_02_gmg_F","O_G_Offroad_01_armed_F","O_APC_Wheeled_02_rcws_F" };
+			artillery[]		= { "O_MBT_02_arty_F" };
+			helicopter[]	= { "O_Heli_Light_02_F","O_Heli_Light_02_v2_F","O_Heli_Attack_02_F","O_Heli_Attack_02_black_F" };
+			air[]			= { "O_Plane_CAS_02_F" };
+		};
+
+		class BLU_F
+		{
+			infantry[]		= { "B_Soldier_F","B_Soldier_02_f","B_Soldier_03_f","B_Soldier_04_f","B_Soldier_05_f","B_Soldier_lite_F","B_Soldier_GL_F","B_soldier_AR_F","B_Soldier_SL_F","B_Soldier_TL_F","B_soldier_M_F","B_soldier_LAT_F","B_medic_F","B_soldier_repair_F","B_soldier_exp_F","B_Soldier_A_F","B_soldier_AT_F","B_soldier_AA_F","B_engineer_F","B_officer_F","B_soldier_PG_F","B_recon_F","B_recon_LAT_F","B_recon_exp_F","B_recon_medic_F","B_recon_TL_F","B_recon_M_F","B_recon_JTAC_F","B_spotter_F","B_sniper_F","B_support_MG_F","B_support_GMG_F","B_support_Mort_F","B_support_AMG_F","B_support_AMort_F","B_ghillie_lsh_F","B_ghillie_sard_F","B_ghillie_ard_F","B_Sharpshooter_F","B_Recon_Sharpshooter_F","B_HeavyGunner_F","B_G_Sharpshooter_F" };
+			vehicles[]		= { "B_APC_Tracked_01_AA_F","B_MBT_01_cannon_F","B_MBT_01_cannon_F","B_MRAP_01_gmg_F","B_MRAP_01_hmg_F","B_G_Offroad_01_armed_F","B_APC_Wheeled_01_cannon_F","B_MBT_01_TUSK_F" };
+			artillery[]		= { "B_MBT_01_mlrs_F","B_MBT_01_arty_F" };
+			helicopter[]	= { "B_Heli_Light_01_armed_F","B_Heli_Attack_01_F" };
+			air[]			= { "B_Plane_CAS_01_F" };
+		};
+
+		class IND_F
+		{
+			infantry[]		= { "I_G_Soldier_F","I_G_Soldier_lite_F","I_G_Soldier_SL_F","I_G_Soldier_TL_F","I_G_Soldier_AR_F","  	I_G_medic_F","I_G_engineer_F","I_G_Soldier_exp_F","I_G_Soldier_GL_F","I_G_Soldier_M_F","I_G_Soldier_LAT_F","I_G_Soldier_A_F","I_G_officer_F","I_Soldier_02_F","I_Soldier_03_F","I_Soldier_04_F","I_soldier_F","  	I_Soldier_lite_F","I_Soldier_A_F","I_Soldier_GL_F","I_Soldier_AR_F","I_Soldier_SL_F","I_Soldier_TL_F","I_Soldier_M_F","I_Soldier_LAT_F","I_Soldier_AT_F","I_Soldier_AA_F","I_medic_F","I_Soldier_repair_F","I_Soldier_exp_F","I_engineer_F","I_officer_F","I_Spotter_F","I_Sniper_F","I_Soldier_AAR_F","I_Soldier_AAT_F","I_Soldier_AAA_F","I_support_MG_F","I_support_GMG_F","I_support_Mort_F","I_support_AMG_F","I_support_AMort_F"," I_ghillie_lsh_F","I_ghillie_sard_F","I_ghillie_ard_F","I_G_Sharpshooter_F" };
+			vehicles[]		= { "I_APC_tracked_03_cannon_F","I_MBT_03_cannon_F","I_G_Offroad_01_armed_F","I_MRAP_03_hmg_F","I_MRAP_03_gmg_F","I_APC_Wheeled_03_cannon_F" };
+			artillery[]		= { "I_MBT_03_cannon_F" };
+			helicopter[]	= { "I_Heli_light_03_F" };
+			air[]			= { "I_Plane_Fighter_03_CAS_F","I_Plane_Fighter_03_AA_F" };
+		};
+	};
 };
 
 
@@ -108,23 +175,6 @@ class cfgT8Units
 
 
 /*
-
-
-
-// Units will go RED when in combat, then go GREEN after some time ( T8_UnitsEngageAtWillTime ), and then return to T8U_fnc_SpawnCombatMode
-T8U_var_AllowCBM				= true;
-
-T8U_var_TaskReturnTime			= 30;			// when SAD WP is finished group will redo origin task after x sec
-T8U_var_CacheTime				= 15;			// units in Zones are cached after X seconds when zone is left
-T8U_var_DirectCallRange			= 1500;			// group leader searches for help within XXX m
-T8U_var_RevealRange				= 500;			// group leader shares info of enemies he "knowsabout > 1" to friendly units within XXX m
-T8U_var_PatAroundRange			= 50;			// zone radius + T8U_var_PatAroundRange (e.g. 40 m) is the distance where units will patrol around zones.
-T8U_var_KilledLeaderTimeout		= 20;			// if group leader killed, x sec no communication > then check for new group leader who can communicate
-T8U_var_FiredEventTimeout		= 10;			// if fired near event triggered, pause it for XX sec ... spam reduce
-T8U_var_CallForHelpTimeout		= 60;			// a group can only call one other group each x sec for help
-T8U_var_SupportTimeout			= 180;			// every X sec a group (with a SL or Officer) can call in for a Support (e.g. para drop)
-T8U_var_OvSuperiority			= 3;			// if enemy units have a overwhelming superiority of 3 : 1 they wont call for help ( checked at that moment when they call for help )
-T8U_var_enableFatigue			= false;		// enable/disable Fatigue for all spawned units
 
 T8U_var_Presets =
 [

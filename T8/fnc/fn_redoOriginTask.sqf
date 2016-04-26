@@ -126,12 +126,13 @@ switch ( _type ) do
 
 _newGroup setVariable [ "T8U_gvar_Assigned", "NO_TASK", false ];
 
-leader _newGroup addEventHandler [ "FiredNear",		{[ _this ] call T8U_fnc_FiredEvent; }];
-leader _newGroup addEventHandler [ "Killed",		{[ _this ] spawn T8U_fnc_KilledEvent; }];
 
 // not going to happen anymore -> fn_handleGroups does this now
 // [ _group ] spawn T8U_fnc_OnFiredEvent;
-			
+// leader _newGroup addEventHandler [ "FiredNear",		{[ _this ] call T8U_fnc_FiredEvent; }];
+// leader _newGroup addEventHandler [ "Killed",		{[ _this ] spawn T8U_fnc_KilledEvent; }];
+
+
 if ( T8U_var_AllowCBM ) then { [ _newGroup ] spawn T8U_fnc_CombatBehaviorMod; };
 
 switch ( side _newGroup ) do

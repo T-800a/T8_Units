@@ -42,6 +42,7 @@
 			addFunction(combatBehaviorMod);
 			addFunction(createFlankingPos);
 			addFunction(createSpawnPos);
+			addFunction(createUnitContainer);
 			addFunction(createWaypoint);
 			addFunction(createWaypointPositions);
 			addFunction(debugLog);
@@ -69,7 +70,7 @@
 			addFunction(hitEvent);
 			addFunction(inBuilding);
 			addFunction(introduce);
-			addFunction(killedEvent);
+		//	addFunction(killedEvent);		// no longer needed
 			addFunction(loadConfig);
 			addFunction(moveOut);
 			addFunction(moveTo);
@@ -91,8 +92,7 @@
 			addFunction(zoneCreate);
 			addFunction(zoneNotAktiv);
 			addFunction(teleportGroupToCurrentWaypoint);
-			addFunction(createRandomSpawnContainer);
-			addFunction(fillRandomSpawnContainer);
+			
 
 			// polygon stuff
 			addFunction(getPolygon);

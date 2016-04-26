@@ -33,7 +33,7 @@ private _cfg = switch ( true ) do
 };
 __DEBUG( "INIT", "_cfg", _cfg );
 
-if ( isNil "_cfg" ) then { [ "WARNING!<br /><br />You are missing a configfile.<br /><br />Please check your description.ext if you have included the T8 Units config." ] call T8U_fnc_BroadcastHint; };
+if ( isNil "_cfg" ) then { [ "WARNING!<br /><br />You are missing a configfile.<br /><br />Please check your description.ext maybe you did not included the T8 Units config." ] call T8U_fnc_BroadcastHint; };
 
 T8U_var_DEBUG = switch ( getNumber ( _cfg >> "debug" >> "enable" )) do
 {
@@ -107,23 +107,56 @@ __DEBUG( "INIT", "T8U_var_EnemySide", T8U_var_EnemySide );
 T8U_var_GuerDiplo = if ( isClass _cfg ) then { getNumber ( _cfg >> "main" >> "diplomacy" ) } else { 1 };
 __DEBUG( "INIT", "T8U_var_GuerDiplo", T8U_var_GuerDiplo );
 
+T8U_var_OvSuperiority = if ( isClass _cfg ) then { getNumber ( _cfg >> "main" >> "superiority" ) } else { 3 };
+__DEBUG( "INIT", "T8U_var_OvSuperiority", T8U_var_OvSuperiority );
+
+T8U_var_RevealRange = if ( isClass _cfg ) then { getNumber ( _cfg >> "main" >> "range_reveal" ) } else { 500 };
+__DEBUG( "INIT", "T8U_var_RevealRange", T8U_var_RevealRange );
+
+T8U_var_DirectCallRange = if ( isClass _cfg ) then { getNumber ( _cfg >> "main" >> "range_helpCall" ) } else { 1500 };
+__DEBUG( "INIT", "T8U_var_DirectCallRange", T8U_var_DirectCallRange );
+
+T8U_var_CallForHelpTimeout = if ( isClass _cfg ) then { getNumber ( _cfg >> "main" >> "timeout_helpCall" ) } else { 60 };
+__DEBUG( "INIT", "T8U_var_CallForHelpTimeout", T8U_var_CallForHelpTimeout );
+
+T8U_var_SupportTimeout = if ( isClass _cfg ) then { getNumber ( _cfg >> "main" >> "timeout_support" ) } else { 180 };
+__DEBUG( "INIT", "T8U_var_SupportTimeout", T8U_var_SupportTimeout );
+
+T8U_var_TaskReturnTime = if ( isClass _cfg ) then { getNumber ( _cfg >> "main" >> "timeout_taskReturn" ) } else { 30 };
+__DEBUG( "INIT", "T8U_var_TaskReturnTime", T8U_var_TaskReturnTime );
+
+T8U_var_CacheTime = if ( isClass _cfg ) then { getNumber ( _cfg >> "main" >> "timeout_caching" ) } else { 15 };
+__DEBUG( "INIT", "T8U_var_CacheTime", T8U_var_CacheTime );
+
+T8U_var_PatAroundRange = if ( isClass _cfg ) then { getNumber ( _cfg >> "main" >> "range_PatrolAround" ) } else { 50 };
+__DEBUG( "INIT", "T8U_var_PatAroundRange", T8U_var_PatAroundRange );
+
+T8U_var_enableFatigue = switch ( getNumber ( _cfg >> "main" >> "enable_fatigue" )) do
+{
+	case 1 :	{ false };
+	case 2 :	{ true };
+	default		{ false };
+};
+__DEBUG( "INIT", "T8U_var_enableFatigue", T8U_var_enableFatigue );
 
 
 
-// Units will go RED when in combat, then go GREEN after some time ( T8_UnitsEngageAtWillTime ), and then return to T8U_fnc_SpawnCombatMode
-T8U_var_AllowCBM				= true;
+T8U_var_AllowCBM = switch ( getNumber ( _cfg >> "main" >> "enable_CBM" )) do
+{
+	case 1 :	{ false };
+	case 2 :	{ true };
+	default		{ false };
+};
+__DEBUG( "INIT", "T8U_var_AllowCBM", T8U_var_AllowCBM );
 
-T8U_var_TaskReturnTime			= 30;			// when SAD WP is finished group will redo origin task after x sec
-T8U_var_CacheTime				= 15;			// units in Zones are cached after X seconds when zone is left
-T8U_var_DirectCallRange			= 1500;			// group leader searches for help within XXX m
-T8U_var_RevealRange				= 500;			// group leader shares info of enemies he "knowsabout > 1" to friendly units within XXX m
-T8U_var_PatAroundRange			= 50;			// zone radius + T8U_var_PatAroundRange (e.g. 40 m) is the distance where units will patrol around zones.
-T8U_var_KilledLeaderTimeout		= 20;			// if group leader killed, x sec no communication > then check for new group leader who can communicate
-T8U_var_FiredEventTimeout		= 10;			// if fired near event triggered, pause it for XX sec ... spam reduce
-T8U_var_CallForHelpTimeout		= 60;			// a group can only call one other group each x sec for help
-T8U_var_SupportTimeout			= 180;			// every X sec a group (with a SL or Officer) can call in for a Support (e.g. para drop)
-T8U_var_OvSuperiority			= 3;			// if enemy units have a overwhelming superiority of 3 : 1 they wont call for help ( checked at that moment when they call for help )
-T8U_var_enableFatigue			= false;		// enable/disable Fatigue for all spawned units
+
+// outdated XOR obsolete
+T8U_var_KilledLeaderTimeout		= 20;
+T8U_var_FiredEventTimeout		= 10;
+
+
+
+
 
 T8U_var_Presets =
 [

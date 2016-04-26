@@ -326,11 +326,13 @@ _return = [];
 			// Set the skill for the Group
 			// -> forEach units _group
 			{
-				private [ "_tmpUnit" ];
-				_tmpUnit = _x;
+				private _tmpUnit = _x;
+
 				{
 					_tmpUnit setskill [ ( _x select 0 ), ( _x select 1 ) ];
-				} forEach ( T8U_var_SkillSets select _presetSkill );
+					
+					false
+				} count ( T8U_var_SkillSets select _presetSkill );
 
 				// Add a HIT event to all Units
 				_tmpUnit addEventHandler [ "Hit", { _this call T8U_fnc_HitEvent; } ];
@@ -341,15 +343,16 @@ _return = [];
 				// add units to return array
 				_return pushBack _tmpUnit;
 
-			} foreach units _group;
-
-			leader _group addEventHandler [ "FiredNear", { [ _this ] call T8U_fnc_FiredEvent; } ];
-			leader _group addEventHandler [ "Killed", { [ _this ] spawn T8U_fnc_KilledEvent; } ];
+				false
+			} count units _group;
 
 			if ( T8U_var_DEBUG_marker ) then { [ _group  ] spawn T8U_fnc_Track; };
 
 			// not going to happen anymore -> fn_handleGroups does this now
 			// [ _group ] spawn T8U_fnc_OnFiredEvent;
+			// leader _group addEventHandler [ "FiredNear", { [ _this ] call T8U_fnc_FiredEvent; } ];
+			// leader _group addEventHandler [ "Killed", { [ _this ] spawn T8U_fnc_KilledEvent; } ];
+
 
 			if ( T8U_var_AllowCBM ) then { [ _group ] spawn T8U_fnc_CombatBehaviorMod; };
 

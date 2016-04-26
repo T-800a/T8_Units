@@ -27,27 +27,39 @@ while { time > 0 } do
 	{
 	// count allGroups
 		private _group = _x;
-		
+
 		if !( __GetOVAR( _group, "T8U_gvar_ignoreGroup", false )) then
 		{
-			private _skip		= false;
-			
-			private _unit		= leader _group;
-			private _units		= units _group;
-			private _groupSide	= side _group;
-			private _task		= __GetOVAR( _group, "T8U_gvar_Assigned", "ERROR" );
-			
+			private _skip			= false;
+			private _unit			= leader _group;
+			private _units			= units _group;
+			private _groupSide		= side _group;
+			private _knownEnemies	= [];
+			private _task			= __GetOVAR( _group, "T8U_gvar_Assigned", "ERROR" );
+
 			if ( isNull _group )					then { _skip = true; __DEBUGY( __FILE__, "GROUP", "SKIP: _countGroup", _group ); };
 			if ( side _group isEqualTo CIVILIAN )	then { _skip = true; __SetOVAR( _group, "T8U_gvar_ignoreGroup", true ); __DEBUGY( __FILE__, "GROUP", "SKIP: CIVILIAN", _group ); };
 			if ( _task isEqualTo "ERROR" )			then { _skip = true; __SetOVAR( _group, "T8U_gvar_ignoreGroup", true ); __DEBUGY( __FILE__, "GROUP", "SKIP: NO T8U GROUP", _group ); };
-			
-			// get enemies known to group (leader)
-			private _knownEnemies = [];
-			
+
+
+
 			if ( !_skip ) then
 			{
+				// check if group leader has the FiredNear event handler, if not add it.
+				if ( __GetOVAR( _unit, "T8U_gvar_addEvenHandler", true )) then
+				{
+					__SetOVAR( _unit, "T8U_gvar_addEvenHandler", false );
+					__SetOVAR( _group, "T8_UnitsVarLeaderGroup", _unit );
+					if ( alive _unit ) then
+					{
+						__DEBUGY( __FILE__, "GROUP", "FIRED NEAR EVENT ADDED", _group );
+						_unit addEventHandler [ "FiredNear", {[ _this ] call T8U_fnc_FiredEvent; }];
+					};
+				};
+
+				// get enemies known to group (leader)
 				private _nearEntitiesArray	= [ _unit ] call T8U_fnc_FilterEntities;
-						
+
 				{
 					if ( ( _unit knowsAbout _x ) > 1 AND { side _x != _groupSide } AND { alive _x } ) then
 					{
@@ -60,11 +72,11 @@ while { time > 0 } do
 
 			private _countGroup	= count ( units _group );
 			private _countEnemy = count _knownEnemies;
-			
+
 			// skip if not enough known enemies or group members
 			if ( _countGroup < 1 )	then { _skip = true; __DEBUGY( __FILE__, "GROUP", "SKIP: GROUP EMPTY", _group ); };
 			if ( _countEnemy < 1 )	then { _skip = true; __DEBUGY( __FILE__, "GROUP", "SKIP: NO ENEMIES", _group ); };
-			
+
 			// do all the communication and handling
 			if ( !_skip ) then
 			{
