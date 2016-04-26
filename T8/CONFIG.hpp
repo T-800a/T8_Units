@@ -38,13 +38,13 @@
  =======================================================================================================================
 */
 
-#define false	0
-#define true	1
+#define false			1
+#define true			2
 
-#define EAST	0
-#define WEST	1
-#define INDEP	2
-#define CIV		3
+#define EAST			0
+#define WEST			1
+#define RESISTANCE		2
+#define CIVILIAN		3
 
 
 class cfgT8Units

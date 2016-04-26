@@ -60,11 +60,10 @@ while { time > 0 } do
 
 			private _countGroup	= count ( units _group );
 			private _countEnemy = count _knownEnemies;
-			__DEBUGY( __FILE__, "GROUP _countEnemy", _countEnemy, _group );
 			
 			// skip if not enough known enemies or group members
-			if ( _countGroup < 1 )	then { _skip = true; __DEBUGY( __FILE__, "GROUP", "SKIP: _countGroup", _group ); };
-			if ( _countEnemy < 1 )	then { _skip = true; __DEBUGY( __FILE__, "GROUP", "SKIP: _countEnemy", _group ); };
+			if ( _countGroup < 1 )	then { _skip = true; __DEBUGY( __FILE__, "GROUP", "SKIP: GROUP EMPTY", _group ); };
+			if ( _countEnemy < 1 )	then { _skip = true; __DEBUGY( __FILE__, "GROUP", "SKIP: NO ENEMIES", _group ); };
 			
 			// do all the communication and handling
 			if ( !_skip ) then
@@ -82,7 +81,7 @@ while { time > 0 } do
 				
 				if ( isNull _unit )				then { _skip = true; __DEBUGY( __FILE__, "GROUP", "SKIP: leader Null", _group ); };
 				if ( !alive _unit )				then { _skip = true; __DEBUGY( __FILE__, "GROUP", "SKIP: leader DEAD", _group ); };
-				if ( time > ( _time + 60 ))		then { _skip = true; __DEBUGY( __FILE__, "GROUP", "SKIP: TIMEOUT", _group ); };
+				if ( time > ( _time + 90 ))		then { _skip = true; __DEBUGY( __FILE__, "GROUP", "SKIP: leader TIMEOUT (no shots near leader last 90s)", _group ); };
 				
 				if ( !_skip ) then
 				{

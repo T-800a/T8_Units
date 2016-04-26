@@ -10,6 +10,8 @@
  =======================================================================================================================
 */
 
+#include <..\MACRO.hpp>
+
 __DEBUG( "INIT", "T8 Units", "CONFIG LOADING STARTED" );
 
 // _myNumber = getNumber (missionConfigFile >> "myMissionConfig" >> "mySetup" >> "myNumber");
@@ -31,77 +33,78 @@ private _cfg = switch ( true ) do
 };
 __DEBUG( "INIT", "_cfg", _cfg );
 
+if ( isNil "_cfg" ) then { [ "WARNING!<br /><br />You are missing a configfile.<br /><br />Please check your description.ext if you have included the T8 Units config." ] call T8U_fnc_BroadcastHint; };
 
 T8U_var_DEBUG = switch ( getNumber ( _cfg >> "debug" >> "enable" )) do
 {
-	case 0 :	{ false };
-	case 1 :	{ true };
+	case 1 :	{ false };
+	case 2 :	{ true };
 	default		{ true };
 };
 __DEBUG( "INIT", "T8U_var_DEBUG", T8U_var_DEBUG );
 
 T8U_var_DEBUG_hints = switch ( getNumber ( _cfg >> "debug" >> "allow_hints" )) do
 {
-	case 0 :	{ false };
-	case 1 :	{ true };
+	case 1 :	{ false };
+	case 2 :	{ true };
 	default		{ true };
 };
 __DEBUG( "INIT", "T8U_var_DEBUG_hints", T8U_var_DEBUG_hints );
 
 T8U_var_DEBUG_marker = switch ( getNumber ( _cfg >> "debug" >> "allow_marker" )) do
 {
-	case 0 :	{ false };
-	case 1 :	{ true };
+	case 1 :	{ false };
+	case 2 :	{ true };
 	default		{ true };
 };
 __DEBUG( "INIT", "T8U_var_DEBUG_marker", T8U_var_DEBUG_marker );
 
 T8U_var_DEBUG_useCon = switch ( getNumber ( _cfg >> "debug" >> "allow_console" )) do
 {
-	case 0 :	{ false };
-	case 1 :	{ true };
+	case 1 :	{ false };
+	case 2 :	{ true };
 	default		{ true };
 };
 __DEBUG( "INIT", "T8U_var_DEBUG_useCon", T8U_var_DEBUG_useCon );
 
 T8U_var_AllowDAC = switch ( getNumber ( _cfg >> "dac" >> "enable" )) do
 {
-	case 0 :	{ false };
-	case 1 :	{ true };
+	case 1 :	{ false };
+	case 2 :	{ true };
 	default		{ false };
 };
 __DEBUG( "INIT", "T8U_var_AllowDAC", T8U_var_AllowDAC );
 
-T8U_var_DACtimeout = if ( isNil "_cfg" ) then { 180 } else { getNumber ( _cfg >> "dac" >> "timeout" ) };
+T8U_var_DACtimeout = if ( isClass _cfg ) then { getNumber ( _cfg >> "dac" >> "timeout" ) } else { 180 };
 __DEBUG( "INIT", "T8U_var_DACtimeout", T8U_var_DACtimeout );
 
 T8U_var_useHC = switch ( getNumber ( _cfg >> "main" >> "use_HeadlessClient" )) do
 {
-	case 0 :	{ false };
-	case 1 :	{ true };
+	case 1 :	{ false };
+	case 2 :	{ true };
 	default		{ false };
 };
 __DEBUG( "INIT", "T8U_var_useHC", T8U_var_useHC );
 
 T8U_var_AllowZEUS = switch ( getNumber ( _cfg >> "main" >> "allow_ZEUS" )) do
 {
-	case 0 :	{ false };
-	case 1 :	{ true };
+	case 1 :	{ false };
+	case 2 :	{ true };
 	default		{ true };
 };
 __DEBUG( "INIT", "T8U_var_AllowZEUS", T8U_var_AllowZEUS );
 
 T8U_var_EnemySide = switch ( getNumber ( _cfg >> "main" >> "enemySide" )) do
 {
-	case 0 :	{ EAST };
-	case 1 :	{ WEST };
-	case 2 :	{ RESISTANCE };
-	case 3 :	{ CIVILIAN };
+	case 1 :	{ EAST };
+	case 2 :	{ WEST };
+	case 3 :	{ RESISTANCE };
+	case 4 :	{ CIVILIAN };
 	default		{ EAST };
 };
 __DEBUG( "INIT", "T8U_var_EnemySide", T8U_var_EnemySide );
 
-T8U_var_GuerDiplo = if ( isNil "_cfg" ) then { 1 } else { getNumber ( _cfg >> "main" >> "diplomacy" ) };
+T8U_var_GuerDiplo = if ( isClass _cfg ) then { getNumber ( _cfg >> "main" >> "diplomacy" ) } else { 1 };
 __DEBUG( "INIT", "T8U_var_GuerDiplo", T8U_var_GuerDiplo );
 
 

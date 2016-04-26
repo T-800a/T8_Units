@@ -15,13 +15,6 @@
 // include the few macros we use ...
 #include <..\MACRO.hpp>
 
-// include CONFIG FILE
-// 
-// #include <..\CONFIG.hpp>
-
-// cancel execute if not server / hc
-__allowEXEC(__FILE__);
-
 
 __DEBUGCLEAR();
 __DEBUG( "INIT", "======================================================================================", "" );
@@ -30,6 +23,10 @@ __DEBUG( "INIT", "T8 Units", "INIT STARTED" );
 
 // loading main configuration from missionConfigFile / configFile 
 [] call T8U_fnc_loadConfig;
+
+
+// cancel execute if not server / hc
+__allowEXEC(__FILE__);
 
 
 if ( T8U_var_DEBUG ) then 
