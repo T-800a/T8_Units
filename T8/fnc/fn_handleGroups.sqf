@@ -18,7 +18,9 @@ __allowEXEC(__FILE__);
 
 waitUntil { time > 1 };
 
-__DEBUG( __FILE__, "INIT", "" );
+__DEBUG( __FILE__, "+----------------------------------------------------------", "" );
+__DEBUG( __FILE__, "| T8 Units", "GROUP HANDLE STARTED" );
+__DEBUG( __FILE__, "+----------------------------------------------------------", "" );
 
 while { time > 0 } do
 {
@@ -116,7 +118,7 @@ while { time > 0 } do
 							if ( T8U_var_CommanderEnable ) then
 							{
 
-					// Share Info with Commander ... maybe in 2016 or so :x
+					// Share Info with Commander ... maybe in 2020 or so :x
 					//
 					// NYI
 					//
@@ -233,7 +235,7 @@ while { time > 0 } do
 					if ( T8U_var_CommanderEnable ) then
 					{
 
-					// Do Something if Commander is enabled ... maybe in 2016 or so :x
+					// Do Something if Commander is enabled ... maybe in 2020 or so :x
 					//
 					// NYI
 					//
@@ -295,3 +297,8 @@ while { time > 0 } do
 	
 	sleep 5;
 };
+
+
+__DEBUG( __FILE__, "+----------------------------------------------------------", "" );
+__DEBUG( __FILE__, "| T8 Units", "GROUP HANDLE ENDED" );
+__DEBUG( __FILE__, "+----------------------------------------------------------", "" );

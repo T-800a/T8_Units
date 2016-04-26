@@ -3,111 +3,107 @@
 
 	T8 Units Script
 	
-	Unit Spawn & Communication Script
-	
-	File:		CONFIG.hpp
+	File:		fn_loadConfig.sqf
 	Author:		T-800a
 	E-Mail:		t-800a@gmx.net
 	
-	init.sqf: 	[] execVM "T8_UnitINIT.sqf";
-				[] execVM "T8_missionEXEC.sqf";
-
-
-	check  "T8_missionEXEC.sqf" to start spawning stuff...
-		
-	// Some information about variables saved to groups
-
-	T8U_gvar_Comm 			-> [ bool, bool, bool ]		-> shares info, can be called, can react when attacked
-	T8U_gvar_Origin			-> array					-> originTask: Marker, originTask: Order, ... 
-	T8U_gvar_Assigned		-> string					-> has Task Assigned: NO_TASK, CQC_SHOT, DC_ASSIST, ...
-	T8U_gvar_Member			-> array					-> array of the origin units who are spawned
-	T8U_gvar_Regrouped		-> bool						-> for GARRISON, PATROL_GARRISON: is set true when after group is released from task, now they can do their new task
-	T8U_gvar_FiredEvent		-> array					-> Array filled by Fired Event
-	T8U_gvar_Attacked		-> integer					-> time units of the group were last HIT ... if 'first time' force prone (0 targets) / suppressing fire (1++ targets)
-	T8U_gvar_called			-> integer					-> time unit sent last call for help (general / set if other T8U group is called)
-	T8U_gvar_DACcalled		-> integer					-> time Group last called DAC for HELP
-	T8U_gvar_PARAcalled		-> integer					-> time Group last called for a Support (e.g. Para drop)
-	T8U_gvar_ignoreGroup	-> bool						-> set by group handle if it shall ignore group (for quicker execution after 'first check')
-	
-	T8U_gvar_Introduced		-> bool						-> set true after editor groub is introduced to T8U
-
-	This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.
-	To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-sa/4.0/ or send a letter to 
-	Creative Commons, 444 Castro Street, Suite 900, Mountain View, California, 94041, USA.
-
  =======================================================================================================================
 */
 
-#define false	0
-#define true	1
+__DEBUG( "INIT", "T8 Units", "CONFIG LOADING STARTED" );
 
-#define EAST	0
-#define WEST	1
-#define INDEP	2
-#define CIV		3
+// _myNumber = getNumber (missionConfigFile >> "myMissionConfig" >> "mySetup" >> "myNumber");
+// _myArray = getArray (missionConfigFile >> "myMissionConfig" >> "mySetup" >> "myArray");
+// _myText = getText (missionConfigFile >> "myMissionConfig" >> "mySetup" >> "myText");
 
+private _CFalloc	= isClass ( configFile >> "cfgT8Units" );
+private _CFMalloc	= isClass ( missionConfigFile >> "cfgT8Units" );
 
-class cfgT8Units
+__DEBUG( "INIT", "_CFalloc", _CFalloc );
+__DEBUG( "INIT", "_CFMalloc", _CFMalloc );
+
+private _cfg = switch ( true ) do
 {
-	// DEBUG Settings
-	class debug
-	{
-		// general debug switch
-		enable				= true;
-
-		// show debug Hints
-		allow_hints			= true;
-
-		// create debug markers
-		allow_marker		= true;
-
-		// send debug messages to Killzone Kids console instead of RPT file
-		// http://killzonekid.com/arma-console-extension-debug_console-dll-v3-0/
-		allow_console		= true;	
-	};
-
-	// MAIN configuration
-	class main
-	{
-		// run the script on headless client and not on the Server
-		// !! WARNING: this is untested !!
-		use_HeadlessClient	= false;
-
-		// option to register units with ZEUS
-		// this may slow down spawning
-		// will registers spawned units with "allCurators"
-		allow_ZEUS			= true;
-
-		// standard side for spawned units
-		enemySide			= EAST;
-
-		// RESISTANCE diplomacy 'switch'
-		// for finding enemies and allies when calling for help - check with your mission settings
-		//   0 : RESISTANCE neutral
-		//   1 : RESISTANCE friendly to WEST
-		//   2 : RESISTANCE friendly to EAST
-		//   3 : RESISTANCE enemy of both; 
-		diplomacy			= 1;
-	};
-	
-	
-	// options to work with DAC by Silola
-	class dac
-	{
-		// allow T8U to send a "call for help" to DAC
-		enable				= false;
-		
-		// timeout for a group until it can sent the next "call for help"
-		timeout				= 180;			
-	};
-	
+	case ( _CFalloc AND _CFMalloc ):	{ missionConfigFile >> "cfgT8Units"; };
+	case ( _CFalloc AND !_CFMalloc ):	{ configFile >> "cfgT8Units"; };
+	case ( !_CFalloc AND _CFMalloc ):	{ missionConfigFile >> "cfgT8Units"; };
+	default								{ nil };
 };
+__DEBUG( "INIT", "_cfg", _cfg );
 
 
+T8U_var_DEBUG = switch ( getNumber ( _cfg >> "debug" >> "enable" )) do
+{
+	case 0 :	{ false };
+	case 1 :	{ true };
+	default		{ true };
+};
+__DEBUG( "INIT", "T8U_var_DEBUG", T8U_var_DEBUG );
 
+T8U_var_DEBUG_hints = switch ( getNumber ( _cfg >> "debug" >> "allow_hints" )) do
+{
+	case 0 :	{ false };
+	case 1 :	{ true };
+	default		{ true };
+};
+__DEBUG( "INIT", "T8U_var_DEBUG_hints", T8U_var_DEBUG_hints );
 
+T8U_var_DEBUG_marker = switch ( getNumber ( _cfg >> "debug" >> "allow_marker" )) do
+{
+	case 0 :	{ false };
+	case 1 :	{ true };
+	default		{ true };
+};
+__DEBUG( "INIT", "T8U_var_DEBUG_marker", T8U_var_DEBUG_marker );
 
-/*
+T8U_var_DEBUG_useCon = switch ( getNumber ( _cfg >> "debug" >> "allow_console" )) do
+{
+	case 0 :	{ false };
+	case 1 :	{ true };
+	default		{ true };
+};
+__DEBUG( "INIT", "T8U_var_DEBUG_useCon", T8U_var_DEBUG_useCon );
+
+T8U_var_AllowDAC = switch ( getNumber ( _cfg >> "dac" >> "enable" )) do
+{
+	case 0 :	{ false };
+	case 1 :	{ true };
+	default		{ false };
+};
+__DEBUG( "INIT", "T8U_var_AllowDAC", T8U_var_AllowDAC );
+
+T8U_var_DACtimeout = if ( isNil "_cfg" ) then { 180 } else { getNumber ( _cfg >> "dac" >> "timeout" ) };
+__DEBUG( "INIT", "T8U_var_DACtimeout", T8U_var_DACtimeout );
+
+T8U_var_useHC = switch ( getNumber ( _cfg >> "main" >> "use_HeadlessClient" )) do
+{
+	case 0 :	{ false };
+	case 1 :	{ true };
+	default		{ false };
+};
+__DEBUG( "INIT", "T8U_var_useHC", T8U_var_useHC );
+
+T8U_var_AllowZEUS = switch ( getNumber ( _cfg >> "main" >> "allow_ZEUS" )) do
+{
+	case 0 :	{ false };
+	case 1 :	{ true };
+	default		{ true };
+};
+__DEBUG( "INIT", "T8U_var_AllowZEUS", T8U_var_AllowZEUS );
+
+T8U_var_EnemySide = switch ( getNumber ( _cfg >> "main" >> "enemySide" )) do
+{
+	case 0 :	{ EAST };
+	case 1 :	{ WEST };
+	case 2 :	{ RESISTANCE };
+	case 3 :	{ CIVILIAN };
+	default		{ EAST };
+};
+__DEBUG( "INIT", "T8U_var_EnemySide", T8U_var_EnemySide );
+
+T8U_var_GuerDiplo = if ( isNil "_cfg" ) then { 1 } else { getNumber ( _cfg >> "main" >> "diplomacy" ) };
+__DEBUG( "INIT", "T8U_var_GuerDiplo", T8U_var_GuerDiplo );
+
 
 
 
@@ -220,7 +216,7 @@ T8U_var_DebugMarkerCache = [];
 T8U_var_CommanderEnable = false;
 
 
-*/
+
 
 
 

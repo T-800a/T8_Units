@@ -70,6 +70,7 @@
 			addFunction(inBuilding);
 			addFunction(introduce);
 			addFunction(killedEvent);
+			addFunction(loadConfig);
 			addFunction(moveOut);
 			addFunction(moveTo);
 			addFunction(moveToPos);
