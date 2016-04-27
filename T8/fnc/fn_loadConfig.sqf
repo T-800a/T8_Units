@@ -139,6 +139,11 @@ T8U_var_enableFatigue = switch ( getNumber ( _cfg >> "main" >> "enable_fatigue" 
 };
 __DEBUG( "INIT", "T8U_var_enableFatigue", T8U_var_enableFatigue );
 
+T8U_var_ReinforceVehicle = if ( isClass _cfg ) then { getArray ( _cfg >> "main" >> "reinforcementVehicles" ) } else { [ "APC_Tracked_01_base_F", "APC_Tracked_02_base_F", "Wheeled_APC_F", "Truck_01_base_F", "Truck_02_base_F", "MRAP_01_base_F", "MRAP_02_base_F", "MRAP_03_base_F", "C_Offroad_01_F", "I_G_Offroad_01_F"] };
+__DEBUG( "INIT", "T8U_var_ReinforceVehicle", T8U_var_ReinforceVehicle );
+
+T8U_var_SuppressingUnits = if ( isClass _cfg ) then { getArray ( _cfg >> "main" >> "suppressingUnits" ) } else { [ "B_soldier_AR_F", "B_G_soldier_AR_F", "O_soldier_AR_F", "O_soldierU_AR_F", "O_G_soldier_AR_F", "I_soldier_AR_F", "I_G_soldier_AR_F" ] };
+__DEBUG( "INIT", "T8U_var_SuppressingUnits", T8U_var_SuppressingUnits );
 
 
 T8U_var_AllowCBM = switch ( getNumber ( _cfg >> "main" >> "enable_CBM" )) do
@@ -150,110 +155,102 @@ T8U_var_AllowCBM = switch ( getNumber ( _cfg >> "main" >> "enable_CBM" )) do
 __DEBUG( "INIT", "T8U_var_AllowCBM", T8U_var_AllowCBM );
 
 
-// outdated XOR obsolete
-T8U_var_KilledLeaderTimeout		= 20;
-T8U_var_FiredEventTimeout		= 10;
-
-
-
-
-
-T8U_var_Presets =
-[
-//	[ --index from T8U_var_SkillSets--, --index from T8U_var_BehaviorSets-- ],
-	[ 2, 1 ],		// 0 for WEST
-	[ 1, 0 ],		// 1 for EAST
-	[ 1, 2 ]		// 2 for RESISTANCE
-];
-
-T8U_var_SkillSets = 
-[
-// 0 - militia ( untrained )
-	[
-		[ "aimingAccuracy",		0.20 ],
-		[ "aimingShake",		0.15 ],
-		[ "aimingSpeed",		0.20 ],
-		[ "spotDistance",		0.75 ],
-		[ "spotTime",			0.70 ],
-		[ "courage",			0.30 ],
-		[ "reloadSpeed",		0.20 ],
-		[ "commanding",			0.50 ],
-		[ "general",			0.50 ]
-	],
+if ( isClass _cfg ) then 
+{
+	T8U_var_Presets = [[ 0, 0 ], [ 1, 1 ], [ 2, 2 ]];
 	
-// 1 - regular forces
-	[
-		[ "aimingAccuracy",		0.30 ],
-		[ "aimingShake",		0.25 ],
-		[ "aimingSpeed",		0.30 ],
-		[ "spotDistance",		0.85 ],
-		[ "spotTime",			0.75 ],
-		[ "courage",			0.50 ],
-		[ "reloadSpeed",		0.40 ],
-		[ "commanding",			0.70 ],
-		[ "general",			0.70 ]
-	],
-
-// 2 - special forces
-	[
-		[ "aimingAccuracy",		0.45 ],
-		[ "aimingShake",		0.40 ],
-		[ "aimingSpeed",		0.50 ],
-		[ "spotDistance",		0.95 ],
-		[ "spotTime",			0.90 ],
-		[ "courage",			0.70 ],
-		[ "reloadSpeed",		0.60 ],
-		[ "commanding",			0.90 ],
-		[ "general",			0.90 ]
-	]
-];
-
-T8U_var_BehaviorSets = 
-[
-// 0 - aggressive
-	[
-		"YELLOW",				// spawn Combat-Mode
-		"RED",					// max. Combat-Mode when unit behaviour changes to COMBAT
-		"WHITE",				// Combat-Mode after some time in max. Combat-Mode
-		180						// time the group stays in max. Combat-Mode
-	],
-
-// 1 - defensive
-	[
-		"GREEN",
-		"YELLOW",
-		"GREEN",
-		90
-	],
+	private _BLU = [];
+	private _RED = [];
+	private _GRN = [];
 	
-// 2 - medicore
+	private _BLUc = "true" configClasses ( _cfg >> "behaviorAndSkills" >> "west" >> "skills" );
+	private _REDc = "true" configClasses ( _cfg >> "behaviorAndSkills" >> "east" >> "skills" );
+	private _GRNc = "true" configClasses ( _cfg >> "behaviorAndSkills" >> "indep" >> "skills" );
+	
+	{
+		_BLU pushback [ configName _x, ( getNumber ( _x >> "value" ))];
+		false
+	} count _BLUc;
+	
+	{
+		_RED pushback [ configName _x, ( getNumber ( _x >> "value" ))];
+		false
+	} count _REDc;
+	
+	{
+		_GRN pushback [ configName _x, ( getNumber ( _x >> "value" ))];
+		false
+	} count _GRNc;
+	
+	T8U_var_SkillSets = [ _BLU, _RED, _GRN ];
+	T8U_var_BehaviorSets = [( getArray ( _cfg >>  "behaviorAndSkills" >> "west" >> "behaivior" )), ( getArray ( _cfg >>  "behaviorAndSkills" >> "east" >> "behaivior" )), ( getArray ( _cfg >>  "behaviorAndSkills" >> "indep" >> "behaivior" ))];
+
+} else {
+
+	// backup settings
+	T8U_var_Presets = [[ 2, 1 ], [ 1, 0 ], [ 1, 2 ]];
+	T8U_var_BehaviorSets = [[ "YELLOW", "RED", "WHITE", 180	], [ "GREEN", "YELLOW", "GREEN", 90 ], [ "GREEN", "RED", "GREEN", 120 ]];
+	T8U_var_SkillSets = 
 	[
-		"GREEN",
-		"RED",
-		"GREEN",
-		120
-	]
-];
+		[
+			[ "aimingAccuracy",		0.20 ],
+			[ "aimingShake",		0.15 ],
+			[ "aimingSpeed",		0.20 ],
+			[ "spotDistance",		0.75 ],
+			[ "spotTime",			0.70 ],
+			[ "courage",			0.30 ],
+			[ "reloadSpeed",		0.20 ],
+			[ "commanding",			0.50 ],
+			[ "general",			0.50 ]
+		],
 
-// Vehicles a group can use to travel greater distance (when they are called for help) 
-//		if you want to allow vehicles from other Add-ons, add them here
-T8U_var_ReinforceVehicle = [	"APC_Tracked_01_base_F", "APC_Tracked_02_base_F", "Wheeled_APC_F", "Truck_01_base_F", "Truck_02_base_F", "MRAP_01_base_F",
-								"MRAP_02_base_F", "MRAP_03_base_F", "C_Offroad_01_F", "I_G_Offroad_01_F" ];
+		[
+			[ "aimingAccuracy",		0.30 ],
+			[ "aimingShake",		0.25 ],
+			[ "aimingSpeed",		0.30 ],
+			[ "spotDistance",		0.85 ],
+			[ "spotTime",			0.75 ],
+			[ "courage",			0.50 ],
+			[ "reloadSpeed",		0.40 ],
+			[ "commanding",			0.70 ],
+			[ "general",			0.70 ]
+		],
 
-T8U_var_SuppressingUnits = [	"B_soldier_AR_F", "B_G_soldier_AR_F", "O_soldier_AR_F", "O_soldierU_AR_F", "O_G_soldier_AR_F", "I_soldier_AR_F", "I_G_soldier_AR_F" ];
+		[
+			[ "aimingAccuracy",		0.45 ],
+			[ "aimingShake",		0.40 ],
+			[ "aimingSpeed",		0.50 ],
+			[ "spotDistance",		0.95 ],
+			[ "spotTime",			0.90 ],
+			[ "courage",			0.70 ],
+			[ "reloadSpeed",		0.60 ],
+			[ "commanding",			0.90 ],
+			[ "general",			0.90 ]
+		]
+	];
+};
+
+__DEBUG( "INIT", "T8U_var_Presets", T8U_var_Presets );
+__DEBUG( "INIT", "T8U_var_BehaviorSets", T8U_var_BehaviorSets );
+__DEBUG( "INIT", "T8U_var_SkillSets", T8U_var_SkillSets );
+
+
+
+
+////////// DO NOT CHANGE ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 // debug marker delteion queue
 T8U_var_DebugMarkerCache = [];
 
 
-
-///// NOT IN USE ///// DO NOT CHANGE ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // not implemented ( if it ever will!?)... if you set this true it will disable calling for help and reaction to combat of the groups
 T8U_var_CommanderEnable = false;
 
 
-
-
+// outdated XOR obsolete
+T8U_var_KilledLeaderTimeout		= 20;
+T8U_var_FiredEventTimeout		= 10;
 
 
 

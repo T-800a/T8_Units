@@ -118,6 +118,19 @@ class cfgT8Units
 		// enable fatigue for ALL spawned units
 		enable_fatigue		= false;
 		
+		// vehicles a group can use to travel greater distance (when they are called for help) 
+		//		if you want to allow vehicles from other Add-ons, add them here
+		reinforcementVehicles[] =
+		{
+			"APC_Tracked_01_base_F", "APC_Tracked_02_base_F", "Wheeled_APC_F", "Truck_01_base_F", "Truck_02_base_F", "MRAP_01_base_F",
+			"MRAP_02_base_F", "MRAP_03_base_F", "C_Offroad_01_F", "I_G_Offroad_01_F"
+		};
+
+		// units that can lay down suppressive fire
+		suppressingUnits[] = 
+		{
+			"B_soldier_AR_F", "B_G_soldier_AR_F", "O_soldier_AR_F", "O_soldierU_AR_F", "O_G_soldier_AR_F", "I_soldier_AR_F", "I_G_soldier_AR_F"
+		};
 
 		// a group will go RED when in combat, then go GREEN after some time ( T8_UnitsEngageAtWillTime ), and then return to T8U_fnc_SpawnCombatMode
 		enable_CBM			= true;
@@ -168,109 +181,115 @@ class cfgT8Units
 			air[]			= { "I_Plane_Fighter_03_CAS_F","I_Plane_Fighter_03_AA_F" };
 		};
 	};
-};
-
-
-
-
-
+	
+	class behaviorAndSkills
+	{
 /*
-
-T8U_var_Presets =
-[
-//	[ --index from T8U_var_SkillSets--, --index from T8U_var_BehaviorSets-- ],
-	[ 2, 1 ],		// 0 for WEST
-	[ 1, 0 ],		// 1 for EAST
-	[ 1, 2 ]		// 2 for RESISTANCE
-];
-
-T8U_var_SkillSets = 
-[
-// 0 - militia ( untrained )
-	[
-		[ "aimingAccuracy",		0.20 ],
-		[ "aimingShake",		0.15 ],
-		[ "aimingSpeed",		0.20 ],
-		[ "spotDistance",		0.75 ],
-		[ "spotTime",			0.70 ],
-		[ "courage",			0.30 ],
-		[ "reloadSpeed",		0.20 ],
-		[ "commanding",			0.50 ],
-		[ "general",			0.50 ]
-	],
+		# Skill Examples
+		# militia ( untrained )
+			aimingAccuracy	= 0.20;
+			aimingShake		= 0.15;
+			aimingSpeed		= 0.20;
+			spotDistance	= 0.75;
+			spotTime		= 0.70;
+			courage			= 0.30;
+			reloadSpeed		= 0.20;
+			commanding		= 0.50;
+			general			= 0.50;
 	
-// 1 - regular forces
-	[
-		[ "aimingAccuracy",		0.30 ],
-		[ "aimingShake",		0.25 ],
-		[ "aimingSpeed",		0.30 ],
-		[ "spotDistance",		0.85 ],
-		[ "spotTime",			0.75 ],
-		[ "courage",			0.50 ],
-		[ "reloadSpeed",		0.40 ],
-		[ "commanding",			0.70 ],
-		[ "general",			0.70 ]
-	],
+		# regular forces
+			aimingAccuracy	= 0.30;
+			aimingShake		= 0.25;
+			aimingSpeed		= 0.30;
+			spotDistance	= 0.85;
+			spotTime		= 0.75;
+			courage			= 0.50;
+			reloadSpeed		= 0.40;
+			commanding		= 0.70;
+			general			= 0.70;
 
-// 2 - special forces
-	[
-		[ "aimingAccuracy",		0.45 ],
-		[ "aimingShake",		0.40 ],
-		[ "aimingSpeed",		0.50 ],
-		[ "spotDistance",		0.95 ],
-		[ "spotTime",			0.90 ],
-		[ "courage",			0.70 ],
-		[ "reloadSpeed",		0.60 ],
-		[ "commanding",			0.90 ],
-		[ "general",			0.90 ]
-	]
-];
+		# special forces
+			aimingAccuracy	= 0.45;
+			aimingShake		= 0.40;
+			aimingSpeed		= 0.50;
+			spotDistance	= 0.95;
+			spotTime		= 0.90;
+			courage			= 0.70;
+			reloadSpeed		= 0.60;
+			commanding		= 0.90;
+			general			= 0.90;
 
-T8U_var_BehaviorSets = 
-[
-// 0 - aggressive
-	[
-		"YELLOW",				// spawn Combat-Mode
-		"RED",					// max. Combat-Mode when unit behaviour changes to COMBAT
-		"WHITE",				// Combat-Mode after some time in max. Combat-Mode
-		180						// time the group stays in max. Combat-Mode
-	],
+		# Behaivior Examples
+		# aggressive
+			behaivior[] =
+			{
+				"YELLOW",	// spawn Combat-Mode
+				"RED",		// max. Combat-Mode when unit behaviour changes to COMBAT
+				"WHITE",	// Combat-Mode after some time in max. Combat-Mode
+				180			// time the group stays in max. Combat-Mode
+			};
 
-// 1 - defensive
-	[
-		"GREEN",
-		"YELLOW",
-		"GREEN",
-		90
-	],
+		# defensive
+			behaivior[] = { "GREEN", "YELLOW", "GREEN", 90 };
 	
-// 2 - medicore
-	[
-		"GREEN",
-		"RED",
-		"GREEN",
-		120
-	]
-];
-
-// Vehicles a group can use to travel greater distance (when they are called for help) 
-//		if you want to allow vehicles from other Add-ons, add them here
-T8U_var_ReinforceVehicle = [	"APC_Tracked_01_base_F", "APC_Tracked_02_base_F", "Wheeled_APC_F", "Truck_01_base_F", "Truck_02_base_F", "MRAP_01_base_F",
-								"MRAP_02_base_F", "MRAP_03_base_F", "C_Offroad_01_F", "I_G_Offroad_01_F" ];
-
-T8U_var_SuppressingUnits = [	"B_soldier_AR_F", "B_G_soldier_AR_F", "O_soldier_AR_F", "O_soldierU_AR_F", "O_G_soldier_AR_F", "I_soldier_AR_F", "I_G_soldier_AR_F" ];
-
-// debug marker delteion queue
-T8U_var_DebugMarkerCache = [];
-
-
-
-///// NOT IN USE ///// DO NOT CHANGE ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// not implemented ( if it ever will!?)... if you set this true it will disable calling for help and reaction to combat of the groups
-T8U_var_CommanderEnable = false;
-
-
-*/
+		# medicore
+			behaivior[] = { "GREEN", "RED", "GREEN", 120 };
+*/	
+		class west
+		{
+			class skills
+			{
+				class aimingAccuracy	{ value	= 0.45; };
+				class aimingShake		{ value	= 0.40; };
+				class aimingSpeed		{ value	= 0.50; };
+				class spotDistance		{ value	= 0.95; };
+				class spotTime			{ value	= 0.90; };
+				class courage			{ value	= 0.70; };
+				class reloadSpeed		{ value	= 0.60; };
+				class commanding		{ value	= 0.90; };
+				class general			{ value	= 0.90; };
+			};
+			
+			behaivior[] = { "GREEN", "YELLOW", "GREEN", 90 };
+		};
+		
+		class east
+		{
+			class skills
+			{
+				class aimingAccuracy	{ value	= 0.30; };
+				class aimingShake		{ value	= 0.25; };
+				class aimingSpeed		{ value	= 0.30; };
+				class spotDistance		{ value	= 0.85; };
+				class spotTime			{ value	= 0.75; };
+				class courage			{ value	= 0.50; };
+				class reloadSpeed		{ value	= 0.40; };
+				class commanding		{ value	= 0.70; };
+				class general			{ value	= 0.70; };
+			};
+			
+			behaivior[] = { "YELLOW", "RED", "WHITE", 180 };
+		};
+		
+		class indep
+		{
+			class skills
+			{
+				class aimingAccuracy	{ value	= 0.30; };
+				class aimingShake		{ value	= 0.25; };
+				class aimingSpeed		{ value	= 0.30; };
+				class spotDistance		{ value	= 0.85; };
+				class spotTime			{ value	= 0.75; };
+				class courage			{ value	= 0.50; };
+				class reloadSpeed		{ value	= 0.40; };
+				class commanding		{ value	= 0.70; };
+				class general			{ value	= 0.70; };
+			};
+			
+			behaivior[] = { "GREEN", "RED", "GREEN", 120 };
+		};
+	};
+};
 
 
 
