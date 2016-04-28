@@ -12,13 +12,13 @@
 
 #include <..\MACRO.hpp>
 
-private [ "_target", "_shooter", "_group", "_units", "_targets", "_ptargets" ];
+params [
+	[ "_target",	objNull, [objNull]],
+	[ "_shooter",	objNull, [objNull]]
+];
 
-_target		= _this select 0;
-_shooter	= _this select 1;
-_group		= group _target;
-
-_units		= units _target;
+private _group	= group _target;
+private _units	= units _group;
 
 __DEBUG( __FILE__, "INIT", _this );
 
@@ -37,7 +37,9 @@ if ( alive ( leader _group ) AND { !isNull _shooter }) then
 {
 	{
 		if ( ( typeOf _x ) in T8U_var_SuppressingUnits ) then { _x suppressFor ( 10 + ( random 10 )); };
-	} count ( units _group );
+		
+		false
+	} count _units;
 	__DEBUG( __FILE__, "SUPPRESS", _group );
 };
 
