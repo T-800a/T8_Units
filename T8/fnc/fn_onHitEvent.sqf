@@ -24,15 +24,19 @@ __DEBUG( __FILE__, "INIT", _this );
 
 if ( isNull _group ) exitWith { __DEBUG( __FILE__, "INIT", "ABORT" ); };
 
-
-if ( alive _target AND {( _target findNearestEnemy _target ) isEqualTo objNull }) then
+// throw a smoke
+if ( alive _target AND {( __GetOVAR( _target, "T8U_ovar_lastSmoke", -120 )) < ( time - 30 )}) then
 {
+	__SetOVAR( _target, "T8U_ovar_lastSmoke", time );
+	
 	sleep 1.5;
-	[ _target, _shooter, "CREATE" ] spawn T8U_fnc_SmokeScreen;
-	__DEBUG( __FILE__, "THROWSMOKE", _group );
+	
+	[ _target, _shooter, "THROW" ] spawn T8U_fnc_SmokeScreen;
+	__DEBUG( __FILE__, "THROWSMOKE", _target );
 
 };
 
+// order supressive fire
 if ( alive ( leader _group ) AND { !isNull _shooter }) then
 {
 	{

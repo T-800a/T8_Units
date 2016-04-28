@@ -30,6 +30,10 @@
 	T8U_gvar_ignoreGroup	-> bool						-> set by group handle if it shall ignore group (for quicker execution after 'first check')
 	
 	T8U_gvar_Introduced		-> bool						-> set true after editor groub is introduced to T8U
+	
+	T8U_ovar_lastSmoke
+	T8U_gvar_behaviourSet
+	T8U_gvar_lastBehaviour
 
 	This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.
 	To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-sa/4.0/ or send a letter to 

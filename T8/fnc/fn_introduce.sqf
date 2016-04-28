@@ -223,8 +223,8 @@ if !(( side _group ) isEqualTo civilian ) then
 	// [ _group ] spawn T8U_fnc_OnFiredEvent;
 	// leader _group addEventHandler [ "FiredNear",	{[ _this ] call T8U_fnc_FiredEvent; }];
 	// leader _group addEventHandler [ "Killed",		{[ _this ] spawn T8U_fnc_KilledEvent; }];
-
-	if ( T8U_var_AllowCBM ) then { [ _group ] spawn T8U_fnc_CombatBehaviorMod; };
+	// if ( T8U_var_AllowCBM ) then { [ _group ] spawn T8U_fnc_CombatBehaviorMod; };
+	
 	if ( T8U_var_DEBUG_marker ) then { [ _group  ] spawn T8U_fnc_Track; };	
 
 

@@ -31,10 +31,12 @@ while { time > 0 } do
 		if !( __GetOVAR( _group, "T8U_gvar_ignoreGroup", false )) then
 		{
 			private _skip			= false;
+			private _skipCBM		= true;
 			private _unit			= leader _group;
 			private _units			= units _group;
 			private _groupSide		= side _group;
 			private _knownEnemies	= [];
+			private _nearFriendlies	= [];
 			private _task			= __GetOVAR( _group, "T8U_gvar_Assigned", "ERROR" );
 
 			if ( isNull _group )					then { _skip = true; __DEBUGY( __FILE__, "GROUP", "SKIP: _countGroup", _group ); };
@@ -57,8 +59,11 @@ while { time > 0 } do
 					};
 				};
 
-				// get enemies known to group (leader)
-				private _nearEntitiesArray	= [ _unit ] call T8U_fnc_FilterEntities;
+				// near enemies known to group (leader)
+				private _nearEnemies	= [ _unit ] call T8U_fnc_FilterEntities;
+				
+				// get near friendlies
+				_nearFriendlies	= [ _unit, 500, true ] call T8U_fnc_FilterEntities;
 
 				{
 					if ( ( _unit knowsAbout _x ) > 1 AND { side _x != _groupSide } AND { alive _x } ) then
@@ -67,15 +72,19 @@ while { time > 0 } do
 					};
 
 					false
-				} count _nearEntitiesArray;
+				} count _nearEnemies;
+				
+				// check if CBM is allowed
+				if ( T8U_var_AllowCBM ) then { _skipCBM = false; };
 			};
 
 			private _countGroup	= count ( units _group );
-			private _countEnemy = count _knownEnemies;
+			private _countFriendlies = count _nearFriendlies;
+			private _countEnemies = count _knownEnemies;
 
 			// skip if not enough known enemies or group members
 			if ( _countGroup < 1 )	then { _skip = true; __DEBUGY( __FILE__, "GROUP", "SKIP: GROUP EMPTY", _group ); };
-			if ( _countEnemy < 1 )	then { _skip = true; __DEBUGY( __FILE__, "GROUP", "SKIP: NO ENEMIES", _group ); };
+			if ( _countEnemies < 1 )	then { _skip = true; __DEBUGY( __FILE__, "GROUP", "SKIP: NO ENEMIES", _group ); };
 
 			// do all the communication and handling
 			if ( !_skip ) then
@@ -113,10 +122,12 @@ while { time > 0 } do
 							false
 						} count _knownEnemies;
 					};
-					
-					__DEBUGY( __FILE__, "_shareInfo", _shareInfo, _group );
-					__DEBUGY( __FILE__, "_knownEnemies", _knownEnemies, _group );
-					__DEBUGY( __FILE__, "_countGroup/_countEnemy", _countGroup/_countEnemy, _group );
+
+
+					__DEBUGY( __FILE__, "_SHARE INFO", _shareInfo, _group );
+					__DEBUGY( __FILE__, "____ENEMIES", _countEnemies, _group );
+					__DEBUGY( __FILE__, "_FRIENDLIES", _countFriendlies, _group );
+					__DEBUGY( __FILE__, "SUPERIORITY", _countFriendlies/_countEnemies, _group );
 					
 
 
@@ -124,7 +135,7 @@ while { time > 0 } do
 
 					if ( _shareInfo AND { __GetOVAR( _group, "T8U_gvar_called", -99999 ) < ( time - T8U_var_CallForHelpTimeout ) } ) then
 					{
-						if ( ( _countGroup / _countEnemy ) > 0 AND { ( _countGroup / _countEnemy ) < T8U_var_OvSuperiority } ) then
+						if ( ( _countFriendlies / _countEnemies ) > 0 AND { ( _countFriendlies / _countEnemies ) < T8U_var_OvSuperiority } ) then
 						{
 							if ( T8U_var_CommanderEnable ) then
 							{
@@ -177,11 +188,11 @@ while { time > 0 } do
 								private _rmVeh				= [];
 								private _groups				= [];
 								private _unitsInGroup		=  units _group;
-								private _nearEntitiesArray	= [ _unit, T8U_var_DirectCallRange, true ] call T8U_fnc_FilterEntities;
+								private _nearEnemies	= [ _unit, T8U_var_DirectCallRange, true ] call T8U_fnc_FilterEntities;
 
-								_nearEntitiesArray = _nearEntitiesArray - _unitsInGroup;
+								_nearEnemies = _nearEnemies - _unitsInGroup;
 
-								{ if !( group _x in _groups ) then { _groups pushBack ( group _x ); }; false } count _nearEntitiesArray;					
+								{ if !( group _x in _groups ) then { _groups pushBack ( group _x ); }; false } count _nearEnemies;					
 								
 								__DEBUGY( __FILE__, "D-CALL GROUPS AVAILABLE", [_unit,_groups], _group );
 								
@@ -270,7 +281,7 @@ while { time > 0 } do
 								};
 							};
 
-							if ( count _knownEnemies > 0 AND { ( _countGroup / _countEnemy ) > T8U_var_OvSuperiority } AND { _curTask in [ "NO_TASK" ] } ) then
+							if ( count _knownEnemies > 0 AND { ( _countFriendlies / _countEnemies ) > T8U_var_OvSuperiority } AND { _curTask in [ "NO_TASK" ] } ) then
 							{
 								if ( !isNil "_target" AND { alive _unit } ) then 
 								{
@@ -283,7 +294,7 @@ while { time > 0 } do
 							};
 							
 							//  AND { _curTask in [ "NO_TASK", "FLANK_ATTACK", "CQC_SHOT" ] }
-							if ( count _knownEnemies > 0 AND { ( _countGroup / _countEnemy ) < T8U_var_OvSuperiority } AND { !( _curTask in [ "HOLD_POS" ] )}) then
+							if ( count _knownEnemies > 0 AND { ( _countFriendlies / _countEnemies ) < T8U_var_OvSuperiority } AND { !( _curTask in [ "HOLD_POS" ] )}) then
 							{
 								if ( !isNil "_target" AND { alive _unit } ) then 
 								{
@@ -300,6 +311,13 @@ while { time > 0 } do
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 				};
 			};
+
+
+
+			// apply CMB changes
+			if ( !_skipCBM ) then {[ _group ] call T8U_fnc_CombatBehaviorMod; };
+
+
 		} else {
 			__DEBUGY( __FILE__, "GROUP", "IGNORED", _group );
 		};

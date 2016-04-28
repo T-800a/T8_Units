@@ -12,57 +12,62 @@
 
 #include <..\MACRO.hpp>
 
-private [ "_group", "_presetSkill", "_presetBehavior" ];
+params [[ "_group", grpNull, [grpNull]]];
 
-_group = param [ 0, grpNull, [grpNull]];
-// _units = ( units _group ) - [ ( leader _group ) ];
+if ( isNull _group ) exitWith {};
+private _ba = [ 0, time ];
 
-switch ( side _group ) do
+private _behaviourSet	= __GetOVAR( _group, "T8U_gvar_behaviourSet", false );
+private _lastBehaviour	= __GetOVAR( _group, "T8U_gvar_lastBehaviour", _ba );
+
+if (( typeName _behaviourSet ) isEqualTo "BOOL" ) then
 {
-	case WEST:
+	switch ( side _group ) do
 	{
-		_presetSkill	= ( T8U_var_Presets select 0 ) select 0;
-		_presetBehavior = ( T8U_var_Presets select 0 ) select 1;
+		case WEST:			{ _behaviourSet = ( T8U_var_Presets select 0 ) select 1; };
+		case EAST:			{ _behaviourSet = ( T8U_var_Presets select 1 ) select 1; };
+		case RESISTANCE:	{ _behaviourSet = ( T8U_var_Presets select 2 ) select 1; };
 	};
 	
-	case EAST:
-	{
-		_presetSkill	= ( T8U_var_Presets select 1 ) select 0;
-		_presetBehavior = ( T8U_var_Presets select 1 ) select 1;				
-	};
+	__SetOVAR( _group, "T8U_gvar_behaviourSet", _behaviourSet );
 	
-	case RESISTANCE:
-	{
-		_presetSkill	= ( T8U_var_Presets select 2 ) select 0;
-		_presetBehavior = ( T8U_var_Presets select 2 ) select 1;				
-	};
+	__DEBUG( __FILE__, "INIT", _this );
+	__DEBUG( __FILE__, "_behaviourSet", _behaviourSet );
+	__DEBUG( __FILE__, "_lastBehaviour", _lastBehaviour );
+	
 };
 
-
-
-///// MAIN LOOP //////////
-
-while { sleep 5; ( count ( units _group ) ) > 0 } do
+if (( behaviour ( leader _group )) in [ "CARELESS", "SAFE" ]) exitWith
 {
-	if ( T8U_var_DEBUG ) then { [ "fn_combatBehaviorMod.sqf", "STARTED", [ _group ] ] spawn T8U_fnc_DebugLog; };
-
-	waitUntil { sleep 5; if ( isNull _group OR { count ( units _group ) < 1 } ) exitWith {}; ( behaviour ( leader _group ) ) == "COMBAT" };
-	if ( isNull _group OR { count ( units _group ) < 1 } ) exitWith {};
-	
-	if ( T8U_var_DEBUG ) then { [ "fn_combatBehaviorMod.sqf", "COMBAT", [ _group, ( ( T8U_var_BehaviorSets select _presetBehavior ) select 1 ) ] ] spawn T8U_fnc_DebugLog; };
-
-	_group setCombatMode ( ( T8U_var_BehaviorSets select _presetBehavior ) select 1 );
-	
-	sleep ( ( T8U_var_BehaviorSets select _presetBehavior ) select 3 );
-	if ( isNull _group OR { count ( units _group ) < 1 } ) exitWith {};
-	
-	if ( T8U_var_DEBUG ) then { [ "fn_combatBehaviorMod.sqf", "COMBAT", [ _group, ( ( T8U_var_BehaviorSets select _presetBehavior ) select 2 ) ] ] spawn T8U_fnc_DebugLog; };
-	
-	_group setCombatMode ( ( T8U_var_BehaviorSets select _presetBehavior ) select 2 );
-
-	waitUntil { sleep 5; if ( isNull _group OR { count ( units _group ) < 1 } ) exitWith {}; ( behaviour ( leader _group ) ) != "COMBAT" };
-	if ( isNull _group OR { count ( units _group ) < 1 } ) exitWith {};
-	
-	if ( T8U_var_DEBUG ) then { [ "fn_combatBehaviorMod.sqf", "OUT OF COMBAT", [ _group, ( ( T8U_var_BehaviorSets select _presetBehavior ) select 0 ) ] ] spawn T8U_fnc_DebugLog; };
-	_group setCombatMode ( ( T8U_var_BehaviorSets select _presetBehavior ) select 0 );
+	_group setCombatMode (( T8U_var_BehaviorSets select _behaviourSet ) select 0 );
+	__SetOVAR( _group, "T8U_gvar_lastBehaviour", _ba );
+	// __DEBUG( __FILE__, "CBM", "OUT OF COMBAT" );
 };
+
+switch ( _lastBehaviour select 0 ) do
+{
+	case 0:
+	{
+		_group setCombatMode (( T8U_var_BehaviorSets select _behaviourSet ) select 1 );
+		private _na = [ 1, ( time + (( T8U_var_BehaviorSets select _behaviourSet ) select 3 ))];
+		__SetOVAR( _group, "T8U_gvar_lastBehaviour", _na );
+		__DEBUG( __FILE__, "CBM", "COMBAT STARTED" );
+	};
+	
+	case 1:
+	{
+		if ( time > ( _lastBehaviour select 1 )) then
+		{
+			_group setCombatMode (( T8U_var_BehaviorSets select _behaviourSet ) select 2 );
+			_ba = [ 2, time ];
+			__SetOVAR( _group, "T8U_gvar_lastBehaviour", _ba );
+			__DEBUG( __FILE__, "CBM", "MODE SWITCHED" );
+		};
+	};
+	
+	default {};
+};
+
+// lesser spam
+// __DEBUG( __FILE__, "CBM: FIRE MODE",  combatMode _group );
+// __DEBUG( __FILE__, "CBM: TIME", ( _lastBehaviour select 1 ) - time );

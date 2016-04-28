@@ -352,10 +352,9 @@ _return = [];
 			// [ _group ] spawn T8U_fnc_OnFiredEvent;
 			// leader _group addEventHandler [ "FiredNear", { [ _this ] call T8U_fnc_FiredEvent; } ];
 			// leader _group addEventHandler [ "Killed", { [ _this ] spawn T8U_fnc_KilledEvent; } ];
+			// if ( T8U_var_AllowCBM ) then { [ _group ] spawn T8U_fnc_CombatBehaviorMod; };
 
-
-			if ( T8U_var_AllowCBM ) then { [ _group ] spawn T8U_fnc_CombatBehaviorMod; };
-
+	
 			// Set the combat mode for the Group ( green, blue, red, white, ...)
 			_group setCombatMode ( ( T8U_var_BehaviorSets select _presetBehavior ) select 0 );
 
