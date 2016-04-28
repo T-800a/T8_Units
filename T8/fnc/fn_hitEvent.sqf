@@ -20,7 +20,6 @@ _shooter	= _this select 1;
 __DEBUG( __FILE__, "INIT", _this );
 
 if ( isNull _target ) exitWith {};
-if ( isNull _shooter ) exitWith {};
 if ( _target isEqualTo _shooter ) exitWith {};
 
 _attacked = ( group _target ) getVariable [ "T8U_gvar_Attacked", 0 ];
