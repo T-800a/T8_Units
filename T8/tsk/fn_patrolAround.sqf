@@ -39,8 +39,9 @@ _marker				= param [ 1, "NO-MARKER-SET", ["",[]]];
 _infGroup			= param [ 2, true, [true]];
 _teleport			= param [ 3, false, [false]];
 _PatrolAroundDis	= param [ 4, T8U_var_PatAroundRange, [123]];
-_formation			= param [ 5, "RANDOM", [""]];
-_behaviour			= param [ 6, "SAFE", [""]];
+_startAngle			= param [ 5, 0, [123]];
+_formation			= param [ 6, "RANDOM", [""]];
+_behaviour			= param [ 7, "SAFE", [""]];
 
 
 

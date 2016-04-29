@@ -25,11 +25,14 @@
 private [	"_marker", "_infGroup", "_inside", "_useRoad", "_PatrolAroundDis", "_maxRunTime", "_centerX", "_centerY", "_areaSizeX", "_areaSizeY", "_markerShape", "_maxDistance",
 			"_wpCount", "_angle", "_wpArray", "_markerDir", "_return" ];
 
-_marker				= param [ 0, "NO-MARKER-SET", [ "" ]];
-_infGroup			= param [ 1, true, [ true ]];
-_useRoad			= param [ 2, false, [ true ]];
-_inside				= param [ 3, true, [ true ]];
-_PatrolAroundDis	= param [ 4, T8U_var_PatAroundRange, [123]];
+params [
+	[ "_marker", "NO-MARKER-SET", [""]],
+	[ "_infGroup", true, [true]],
+	[ "_useRoad", false, [true]],
+	[ "_inside", true, [true]],
+	[ "_PatrolAroundDis", T8U_var_PatAroundRange, [123]],
+	[ "_startAngle", 0, [123]]
+];
 
 if (( getMarkerPos _marker ) isEqualTo [0,0,0]) exitWith { if ( T8U_var_DEBUG ) then { [ "fn_createWaypointPositions.sqf", "NO MARKER", _this ] spawn T8U_fnc_DebugLog; }; false };
 

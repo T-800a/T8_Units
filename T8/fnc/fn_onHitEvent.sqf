@@ -17,12 +17,13 @@ params [
 	[ "_shooter",	objNull, [objNull]]
 ];
 
-private _group	= group _target;
-private _units	= units _group;
-
 __DEBUG( __FILE__, "INIT", _this );
+if ( isNull _target ) exitWith {};
 
-if ( isNull _group ) exitWith { __DEBUG( __FILE__, "INIT", "ABORT" ); };
+private _group	= group _target;
+if ( isNull _group ) exitWith {};
+
+private _units	= units _group;
 
 // throw a smoke
 if ( alive _target AND {( __GetOVAR( _target, "T8U_ovar_lastSmoke", -120 )) < ( time - 30 )}) then
@@ -33,7 +34,6 @@ if ( alive _target AND {( __GetOVAR( _target, "T8U_ovar_lastSmoke", -120 )) < ( 
 	
 	[ _target, _shooter, "THROW" ] spawn T8U_fnc_SmokeScreen;
 	__DEBUG( __FILE__, "THROWSMOKE", _target );
-
 };
 
 // order supressive fire

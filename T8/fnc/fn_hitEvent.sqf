@@ -22,7 +22,7 @@ __DEBUG( __FILE__, "INIT", _this );
 if ( isNull _target ) exitWith {};
 if ( _target isEqualTo _shooter ) exitWith {};
 
-if ((( group _target ) getVariable [ "T8U_gvar_Attacked", 0 ] ) < ( time - 10 ) ) then { [ _target, _shooter ] spawn T8U_fnc_OnHitEvent; };
+if (( __GetOVAR(( group _target ), "T8U_gvar_Attacked", 0 )) < ( time - 10 )) then { [ _target, _shooter ] spawn T8U_fnc_OnHitEvent; };
 
 ( group _target ) setVariable [ "T8U_gvar_Attacked", time, false ];
 
