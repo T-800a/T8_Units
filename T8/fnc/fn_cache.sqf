@@ -94,7 +94,7 @@ _unitsToDelete = [];
 	} forEach _memberArray;
 	
 	// _originArray = [ _markerArray, _type, _infGroup, _taskArray, _customFNC ];
-	_groupArray = [ [ _typeOfArray, ( _originArray select 0 ), ( _originArray select 2 ), side _x, ( _originArray select 4 ) ], ( _originArray select 3 ),  _commArray, _settingsArray, [ _spawnPos ]];
+	_groupArray = [ [ _typeOfArray, ( _originArray select 0 ), ( _originArray select 2 ), side _x, ( _originArray select 4 ) ], ( _originArray select 3 ),  _commArray, _settingsArray, _spawnPos ];
 
 	_compiledArray pushBack _groupArray;
 	_unitsToDelete = _unitsToDelete + _memberArray;

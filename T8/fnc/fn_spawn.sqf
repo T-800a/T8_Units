@@ -14,57 +14,52 @@
 __allowEXEC(__FILE__);
 
 
-private [ "_MasterArray", "_posMkrArray", "_error", "_return" ];
 
-_MasterArray = _this select 0;
+private _MasterArray	= _this select 0;
+private _posMkrArray	= []; // All Markers for Debug
+private _error			= false;
+private _return			= [];
 
-if ( isNil "_MasterArray" ) exitWith { if ( T8U_var_DEBUG ) then { [ "fn_spawn.sqf", "NO SPAWNING: _masterArray IS NIL!" ] spawn T8U_fnc_DebugLog; }; false };
-if ( typeName _MasterArray == "BOOL" ) exitWith { if ( T8U_var_DEBUG ) then { [ "fn_spawn.sqf", "NO SPAWNING: EVERYBODY WAS ALREADY KILLED", _this ] spawn T8U_fnc_DebugLog; }; false };
+if ( isNil "_MasterArray" ) exitWith {				__DEBUG( __FILE__, "NO SPAWNING", "_masterArray IS NIL!"); false };
+if ( typeName _MasterArray == "BOOL" ) exitWith	{	__DEBUG( __FILE__, "NO SPAWNING", "EVERYBODY WAS ALREADY KILLED"); false };
 if ( typeName _MasterArray != "ARRAY" OR { !( count _MasterArray > 0 ) } ) exitWith { [ "Something went seriously wrong! Aborting T8U_fnc_Spawn!" ] call T8U_fnc_BroadcastHint; false };
 
-_posMkrArray = []; // All Markers for Debug
-_error = false;
-_return = [];
 
 // -> ForEach _MasterArray
 {
-	private [ 	"_abort", "_group", "_vehicleArray", "_posMkr", "_type", "_commArray", "_cacheArray", "_cachePos", "_PatrolMarkerArray", "_infGroup", "_groupSide", "_markerArray",
-				"_PatrolMarkerDoSAD", "_PatrolAroundDis", "_overwatchMarker", "_attackMarker", "_newStyleArray", "_groupArray", "_taskArray", "_cAM", "_sAM", "_cA0", "_cA1", 
-				"_teleport", "_settingsArray",  "_customFNC", "_spawnPos", "_relPos" ];
+	private [ "_group", "_vehicleArray", "_posMkr", "_type", "_cachePos", "_markerArray", "_PatrolAroundDis", "_newStyleArray", "_spawnPos", "_startAngle", "_formation", "_behaviour" ];
 
-	_abort = false; // for error findings
+	private _abort				= false; // for error findings
+	private _PatrolMarkerArray	= false;
+	private _PatrolMarkerDoSAD	= false;
+	private _attackMarker		= "NO-POS-GIVEN";
+	private _overwatchMarker	= "NO-POS-GIVEN";
+	private _overwatchMinDist	= 50;
+	private _overwatchRange		= 50;
+	private _infGroup			= true;
+	private _groupSide			= T8U_var_EnemySide;
+	private _customFNC			= "NO-FUNC-GIVEN";
+	private _relPos				= [];
 
-	_PatrolMarkerArray	= false;
-	_PatrolMarkerDoSAD	= false;
-	_attackMarker		= "NO-POS-GIVEN";
-	_overwatchMarker	= "NO-POS-GIVEN";
-	_overwatchMinDist	= 50;
-	_overwatchRange		= 50;
+	private _groupArray			= _x param [ 0, [], [[]]];
+	private _taskArray			= _x param [ 1, [], [[]]];
+	private _cAM				= _x param [ 2, [], [[]]];
+	private _sAM				= _x param [ 3, [], [[]]];
+	private _cachePos			= _x param [ 4, [], [[],""]];
+	
+	private _vehicleArray		= _groupArray param [ 0, [], [[],configFile]];
+	private _markerArray		= _groupArray param [ 1, false, ["",[]]];
 
-	_groupArray			= _x param [ 0, [], [[]]];
-	_taskArray			= _x param [ 1, [], [[]]];
-	_cAM				= _x param [ 2, [], [[]]];
-	_sAM				= _x param [ 3, [], [[]]];
-	_cacheArray			= _x param [ 4, [], [[]]];
+	private _type				= _taskArray param [ 0, "NO-TASK-GIVEN", [""]];
 
-	_type				= _taskArray param [ 0, "NO-TASK-GIVEN", [""]];
+	private _cA0				= _cAM param [ 0, true, [true]];
+	private _cA1				= _cAM param [ 1, true, [true]];
+	private _cA2				= _cAM param [ 2, true, [true]];
+	private _commArray			= [ _cA0, _cA1, _cA2 ];
 
-	_cA0				= _cAM param [ 0, true, [true]];
-	_cA1				= _cAM param [ 1, true, [true]];
-	_cA2				= _cAM param [ 2, true, [true]];
-	_commArray			= [ _cA0, _cA1, _cA2 ];
+	private _teleport			= _sAM param [ 0, false, [false]];
+	private _settingsArray		= [ _teleport ];
 
-	_teleport			= _sAM param [ 0, false, [false]];
-	_settingsArray		= [ _teleport ];
-
-	_cachePos			= _cacheArray param [ 0, [], [[],""]];
-
-	_vehicleArray		= _groupArray param [ 0, [], [[],configFile]];
-	_markerArray		= _groupArray param [ 1, false, ["",[]]];
-
-	_infGroup	= true;
-	_groupSide	= T8U_var_EnemySide;
-	_customFNC	= "NO-FUNC-GIVEN";
 
 	switch ( typeName _markerArray ) do
 	{
@@ -133,7 +128,6 @@ _return = [];
 		_spawnPos = [ _posMkr ] call T8U_fnc_CreateSpawnPos;
 	};
 
-	_relPos = [];
 
 	if (( typeName _vehicleArray ) isEqualTo "ARRAY" ) then
 	{
@@ -225,12 +219,13 @@ _return = [];
 
 		case "PATROL_AROUND":
 		{
-			_PatrolAroundDis = _taskArray param [ 1, T8U_var_PatAroundRange, [123]];
-			_formation = _taskArray param [ 2, "RANDOM", [""]];
-			_behaviour = _taskArray param [ 3, "SAFE", [""]];
+			_PatrolAroundDis	= _taskArray param [ 1, T8U_var_PatAroundRange, [123]];
+			_startAngle			= _taskArray param [ 2, 0, [123]];
+			_formation			= _taskArray param [ 3, "RANDOM", [""]];
+			_behaviour			= _taskArray param [ 4, "SAFE", [""]];
 			_group = [ _spawnPos, _groupSide, _vehicleArray, _relPos ] call BIS_fnc_spawnGroup;
 			_group setVariable ["NEWLY_CREATED", true];
-			[ _group, _markerArray, _infGroup, _teleport, _PatrolAroundDis, _formation, _behaviour ] spawn T8U_tsk_fnc_patrolAround;
+			[ _group, _markerArray, _infGroup, _teleport, _PatrolAroundDis, _startAngle, _formation, _behaviour ] spawn T8U_tsk_fnc_patrolAround;
 		};
 
 		case "PATROL_GARRISON":
@@ -267,7 +262,7 @@ _return = [];
 
 		default
 		{
-			private [ "_msg" ]; _msg = format [ "The task %1 does not exist! WTF?!<br /><br /> Call 0800 - T800A#WTFH for help. Not!", _type ]; [ _msg ] call T8U_fnc_BroadcastHint;
+			private _msg = format [ "The task %1 does not exist! WTF?!<br /><br /> Call 0800 - T800A#WTFH for help. Not!", _type ]; [ _msg ] call T8U_fnc_BroadcastHint;
 
 			_abort = true;
 			_error = true;
@@ -282,9 +277,8 @@ _return = [];
 	//	Military Units - Add EventHandlers, Routines, Skill, etc.
 	//
 
-			private [ "_presetSkill", "_presetBehavior" ];
-			_presetSkill	= 0;
-			_presetBehavior = 0;
+			private _presetSkill	= 0;
+			private _presetBehavior = 0;
 
 	// Setup Origin Array
 			_originArray = [ _markerArray, _type, _infGroup, _taskArray, _customFNC ];
@@ -310,18 +304,13 @@ _return = [];
 				};
 			};
 
-			if ( T8U_var_DEBUG ) then { [ "fn_spawn.sqf", "UNITS", units _group ] spawn T8U_fnc_DebugLog; };
+			__DEBUG( __FILE__, "UNITS", units _group );
 
-			_group setVariable [ "T8U_gvar_Comm", _commArray, false ];
-			_group setVariable [ "T8U_gvar_Settings", _settingsArray, false ];
-			_group setVariable [ "T8U_gvar_Origin", _originArray, false ];
-			_group setVariable [ "T8U_gvar_Assigned", "NO_TASK", false ];
-			_group setVariable [ "T8U_gvar_Member", ( units _group ), false ];
-
-			// T8_UnitsVarLeaderGroup: saves group to leader (dead units loose group)
-			leader _group setVariable [ "T8_UnitsVarLeaderGroup", group ( leader _group ), false ];
-
-			if ( T8U_var_DEBUG ) then { [ "fn_spawn.sqf", "T8_UnitsVars", [ _group getVariable "T8U_gvar_Comm", _group getVariable "T8U_gvar_Origin", _group getVariable "T8U_gvar_Assigned", _group getVariable [ "T8U_gvar_Attacked", "not yet" ], leader _group getVariable "T8_UnitsVarLeaderGroup"] ] spawn T8U_fnc_DebugLog; };
+			__SetOVAR( _group, "T8U_gvar_Comm", _commArray );
+			__SetOVAR( _group, "T8U_gvar_Settings", _settingsArray );
+			__SetOVAR( _group, "T8U_gvar_Origin", _originArray );
+			__SetOVAR( _group, "T8U_gvar_Assigned", "NO_TASK" );
+			__SetOVAR( _group, "T8U_gvar_Member", units _group );
 
 			// Set the skill for the Group
 			// -> forEach units _group
@@ -346,7 +335,7 @@ _return = [];
 				false
 			} count units _group;
 
-			if ( T8U_var_DEBUG_marker ) then { [ _group  ] spawn T8U_fnc_Track; };
+			if ( T8U_var_DEBUG_marker ) then { [ _group ] spawn T8U_fnc_Track; };
 
 			// not going to happen anymore -> fn_handleGroups does this now
 			// [ _group ] spawn T8U_fnc_OnFiredEvent;
@@ -356,18 +345,17 @@ _return = [];
 
 	
 			// Set the combat mode for the Group ( green, blue, red, white, ...)
-			_group setCombatMode ( ( T8U_var_BehaviorSets select _presetBehavior ) select 0 );
+			_group setCombatMode (( T8U_var_BehaviorSets select _presetBehavior ) select 0 );
 
 			// move units in vehicles for non infantry groups
 			sleep 2;
 
 			if !( _infGroup ) then
 			{
-				private [ "_units", "_unitsOnFoot", "_vehicles", "_freeCargo" ];
-				_units			= units _group;
-				_unitsOnFoot	= units _group;
-				_vehicles		= [];
-				_freeCargo		= [];
+				private _units			= units _group;
+				private _unitsOnFoot	= units _group;
+				private _vehicles		= [];
+				private _freeCargo		= [];
 
 				{
 					if !(( vehicle _x ) isEqualTo _x ) then
@@ -385,8 +373,8 @@ _return = [];
 					false
 				} count _units;
 
-				if ( T8U_var_DEBUG ) then { [ "fn_spawn.sqf", "_units", [ count _units, _units ]] call T8U_fnc_DebugLog; };
-				if ( T8U_var_DEBUG ) then { [ "fn_spawn.sqf", "_unitsOnFoot", [ count _unitsOnFoot, _unitsOnFoot ]] call T8U_fnc_DebugLog; };
+				__DEBUG( __FILE__, "_units", _units );
+				__DEBUG( __FILE__, "_unitsOnFoot", _unitsOnFoot );
 
 				{
 					private [ "_v" ];
@@ -402,7 +390,7 @@ _return = [];
 
 				_freeCargo = _freeCargo call BIS_fnc_arrayShuffle;
 
-				if ( T8U_var_DEBUG ) then { [ "fn_spawn.sqf", "_freeCargo", [ count _freeCargo, _freeCargo ]] call T8U_fnc_DebugLog; };
+				__DEBUG( __FILE__, "_freeCargo", _freeCargo );
 
 				{
 					private [ "_p" ];
@@ -449,15 +437,11 @@ _return = [];
 
 		if ( T8U_var_AllowZEUS ) then
 		{
-			private [ "_units", "_vehicles" ];
-
-			_units = units _group;
-			_vehicles = [];
-
+			private _units		= units _group;
+			private _vehicles	= [];
 
 			{
-				private [ "_v" ];
-				_v = assignedVehicle _x;
+				private _v = assignedVehicle _x;
 
 				if ( !isNull _v AND { !(  _v in _vehicles ) } ) then { _vehicles pushBack _v; };
 
@@ -470,7 +454,7 @@ _return = [];
 
 
 		// EXEC a custom Function for units
-		if ( _customFNC	!= "NO-FUNC-GIVEN" ) then {{ _x call ( missionNamespace getVariable _customFNC ); false } count ( units _group );};
+		if ( _customFNC	!= "NO-FUNC-GIVEN" ) then {{ _x call ( __GetMVAR( _customFNC, "" )); false } count ( units _group );};
 	};
 
 
@@ -481,7 +465,7 @@ _return = [];
 
 if ( _error ) exitWith { false };
 
-if ( T8U_var_DEBUG_hints ) then { private [ "_msg" ]; _msg = format [ "Your Units at %1 are spawned", _posMkrArray ]; [ _msg ] call T8U_fnc_BroadcastHint; };
+if ( T8U_var_DEBUG_hints ) then { private _msg = format [ "Your Units at %1 are spawned", _posMkrArray ]; [ _msg ] call T8U_fnc_BroadcastHint; };
 
 
 
