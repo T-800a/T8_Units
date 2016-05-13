@@ -12,45 +12,43 @@
 
 #include <..\MACRO.hpp>
 
-private [ "_oldGroup", "_newGroup", "_var01", "_var02", "_var03", "_var04", "_var05", "_var06", "_var07", "_var08", "_var09", "_var10" ];
+params [ "_oldGroup","_newGroup" ];
 
-_oldGroup = _this select 0;
-_newGroup = _this select 1;
+if ( isNil "_oldGroup" OR isNil "_newGroup" ) exitWith { __DEBUG( __FILE__, "ABORT", "ONE GROUP is NIL"); false };
+if ( isNull	_oldGroup  OR isNull _newGroup  ) exitWith { __DEBUG( __FILE__, "ABORT", "ONE GROUP is NULL"); false };
 
-if ( isNull	_oldGroup OR isNil "_oldGroup" OR isNull _newGroup OR isNil "_newGroup" ) exitWith { if ( T8U_var_DEBUG ) then { [ "fn_groupClearWaypoints.sqf", "ABORT: ANY GROUP isNULL or isNIL", [] ] spawn T8U_fnc_DebugLog; }; };
+private _var01 = __GetOVAR ( _oldGroup, "T8U_gvar_Comm",		[] );
+private _var02 = __GetOVAR ( _oldGroup, "T8U_gvar_Origin",		[] );
+private _var03 = __GetOVAR ( _oldGroup, "T8U_gvar_Assigned",	"NO_TASK" );
+private _var04 = __GetOVAR ( _oldGroup, "T8U_gvar_Member",		[] );
+private _var05 = __GetOVAR ( _oldGroup, "T8U_gvar_Attacked", 	-99999 );
+private _var06 = __GetOVAR ( _oldGroup, "T8U_gvar_called",		-99999 );
+private _var07 = __GetOVAR ( _oldGroup, "T8U_gvar_DACcalled",	-99999 );
+private _var08 = __GetOVAR ( _oldGroup, "T8U_gvar_PARAcalled",	-99999 );
+private _var09 = __GetOVAR ( _oldGroup, "T8U_gvar_Regrouped",	false );
+private _var10 = __GetOVAR ( _oldGroup, "T8U_gvar_Settings",	[] );
 
-_var01 = _oldGroup getVariable [ "T8U_gvar_Comm",		[] ];
-_var02 = _oldGroup getVariable [ "T8U_gvar_Origin",		[] ];
-_var03 = _oldGroup getVariable [ "T8U_gvar_Assigned",	"NO_TASK" ];
-_var04 = _oldGroup getVariable [ "T8U_gvar_Member",		[] ];
-_var05 = _oldGroup getVariable [ "T8U_gvar_Attacked", 	-99999 ];
-_var06 = _oldGroup getVariable [ "T8U_gvar_called",		-99999 ];
-_var07 = _oldGroup getVariable [ "T8U_gvar_DACcalled",	-99999 ];
-_var08 = _oldGroup getVariable [ "T8U_gvar_PARAcalled",	-99999 ];
-_var09 = _oldGroup getVariable [ "T8U_gvar_Regrouped",	false ];
-_var10 = _oldGroup getVariable [ "T8U_gvar_Settings",	[] ];
+__SetOVAR ( _oldGroup, "T8U_gvar_Comm",			[] );
+__SetOVAR ( _oldGroup, "T8U_gvar_Origin",		[] );
+__SetOVAR ( _oldGroup, "T8U_gvar_Assigned",		"---" );
+__SetOVAR ( _oldGroup, "T8U_gvar_Member",		[] );
+__SetOVAR ( _oldGroup, "T8U_gvar_Attacked",		-99999 );
+__SetOVAR ( _oldGroup, "T8U_gvar_called",		-99999 );
+__SetOVAR ( _oldGroup, "T8U_gvar_DACcalled",	-99999 );
+__SetOVAR ( _oldGroup, "T8U_gvar_PARAcalled",	-99999 );
+__SetOVAR ( _oldGroup, "T8U_gvar_Regrouped",	false );
+__SetOVAR ( _oldGroup, "T8U_gvar_Settings",		[] );
 
-_oldGroup setVariable [ "T8U_gvar_Comm",		[], false ];
-_oldGroup setVariable [ "T8U_gvar_Origin",		[], false ];
-_oldGroup setVariable [ "T8U_gvar_Assigned",	"---", false ];
-_oldGroup setVariable [ "T8U_gvar_Member",		[], false ];
-_oldGroup setVariable [ "T8U_gvar_Attacked",	-99999, false ];
-_oldGroup setVariable [ "T8U_gvar_called",		-99999, false ];
-_oldGroup setVariable [ "T8U_gvar_DACcalled",	-99999, false ];
-_oldGroup setVariable [ "T8U_gvar_PARAcalled",	-99999, false ];
-_oldGroup setVariable [ "T8U_gvar_Regrouped",	false, false ];
-_oldGroup setVariable [ "T8U_gvar_Settings",	[], false ];
-
-_newGroup setVariable [ "T8U_gvar_Comm",		_var01, false ];
-_newGroup setVariable [ "T8U_gvar_Origin",		_var02, false ];
-_newGroup setVariable [ "T8U_gvar_Assigned",	_var03, false ];
-_newGroup setVariable [ "T8U_gvar_Member",		_var04, false ];
-_newGroup setVariable [ "T8U_gvar_Attacked",	_var05, false ];
-_newGroup setVariable [ "T8U_gvar_called",		_var06, false ];
-_newGroup setVariable [ "T8U_gvar_DACcalled",	_var07, false ];
-_newGroup setVariable [ "T8U_gvar_PARAcalled",	_var08, false ];
-_newGroup setVariable [ "T8U_gvar_Regrouped",	_var09, false ];
-_newGroup setVariable [ "T8U_gvar_Settings",	_var10, false ];
+__SetOVAR ( _newGroup, "T8U_gvar_Comm",			_var01 );
+__SetOVAR ( _newGroup, "T8U_gvar_Origin",		_var02 );
+__SetOVAR ( _newGroup, "T8U_gvar_Assigned",		_var03 );
+__SetOVAR ( _newGroup, "T8U_gvar_Member",		_var04 );
+__SetOVAR ( _newGroup, "T8U_gvar_Attacked",		_var05 );
+__SetOVAR ( _newGroup, "T8U_gvar_called",		_var06 );
+__SetOVAR ( _newGroup, "T8U_gvar_DACcalled",	_var07 );
+__SetOVAR ( _newGroup, "T8U_gvar_PARAcalled",	_var08 );
+__SetOVAR ( _newGroup, "T8U_gvar_Regrouped",	_var09 );
+__SetOVAR ( _newGroup, "T8U_gvar_Settings",		_var10 );
 
 __DEBUG( __FILE__, "T8U_gvar_Comm",				_var01 );
 __DEBUG( __FILE__, "T8U_gvar_Origin",			_var02 );
@@ -63,5 +61,5 @@ __DEBUG( __FILE__, "T8U_gvar_PARAcalled",		_var08 );
 __DEBUG( __FILE__, "T8U_gvar_Regrouped",		_var09 );
 __DEBUG( __FILE__, "T8U_gvar_Settings",			_var10 );
 
-leader _oldGroup setVariable [ "T8_UnitsVarLeaderGroup", _newGroup, false ];
-
+// return
+true

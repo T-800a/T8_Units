@@ -41,26 +41,18 @@ if ( typeName _MasterArray != "ARRAY" OR { !( count _MasterArray > 0 ) } ) exitW
 	private _customFNC			= "NO-FUNC-GIVEN";
 	private _relPos				= [];
 
+	// get basic group setup
 	private _groupArray			= _x param [ 0, [], [[]]];
 	private _taskArray			= _x param [ 1, [], [[]]];
 	private _cAM				= _x param [ 2, [], [[]]];
-	private _sAM				= _x param [ 3, [], [[]]];
+	private _sAM				= _x param [ 3, [], [[],""]];
 	private _cachePos			= _x param [ 4, [], [[],""]];
 	
+	// get basic vehicle and marker setup
 	private _vehicleArray		= _groupArray param [ 0, [], [[],configFile]];
 	private _markerArray		= _groupArray param [ 1, false, ["",[]]];
 
-	private _type				= _taskArray param [ 0, "NO-TASK-GIVEN", [""]];
-
-	private _cA0				= _cAM param [ 0, true, [true]];
-	private _cA1				= _cAM param [ 1, true, [true]];
-	private _cA2				= _cAM param [ 2, true, [true]];
-	private _commArray			= [ _cA0, _cA1, _cA2 ];
-
-	private _teleport			= _sAM param [ 0, false, [false]];
-	private _settingsArray		= [ _teleport ];
-
-
+	// parse marker setup
 	switch ( typeName _markerArray ) do
 	{
 		case "ARRAY":	{ _posMkr = _markerArray call BIS_fnc_selectRandom; };
@@ -70,6 +62,7 @@ if ( typeName _MasterArray != "ARRAY" OR { !( count _MasterArray > 0 ) } ) exitW
 
 	_posMkrArray pushBack _posMkr;
 
+	// parse additional group settings
 	if ( count _groupArray > 2 ) then
 	{
 		switch ( typeName ( _groupArray select 2) ) do
@@ -102,7 +95,30 @@ if ( typeName _MasterArray != "ARRAY" OR { !( count _MasterArray > 0 ) } ) exitW
 			default { _type = "NO-TASK-GIVEN"; };
 		};
 	};
+	
+	// get task type setting
+	private _type				= _taskArray param [ 0, "NO-TASK-GIVEN", [""]];
 
+	// get communication setting
+	private _cA0				= _cAM param [ 0, true, [true]];
+	private _cA1				= _cAM param [ 1, true, [true]];
+	private _cA2				= _cAM param [ 2, true, [true]];
+	private _commArray			= [ _cA0, _cA1, _cA2 ];
+
+	// get additional settings
+	if (( typeName _sAM ) isEqualTo "STRING" ) then
+	{
+	// parse from config
+		
+		
+	} else {
+	// parse array
+		private _teleport			= _sAM param [ 0, false, [false]];
+		private _settingsArray		= [ _teleport ];
+	};
+	
+
+	// check for errors!
 	if (
 		!( count _vehicleArray > 0 )
 		OR { _posMkr == "NO-POS-GIVEN" }
@@ -119,6 +135,7 @@ if ( typeName _MasterArray != "ARRAY" OR { !( count _MasterArray > 0 ) } ) exitW
 		_error = true;
 	};
 
+	// get our spawn pos
 	if (( typeName _cachePos ) isEqualTo ( typeName "STR" )) then { _cachePos = getMarkerPos _cachePos; };
 	if ( _cachePos isEqualTo [0,0,0]) then { _cachePos = _posMkr; };
 	if ( count _cachePos > 1 ) then
@@ -129,6 +146,7 @@ if ( typeName _MasterArray != "ARRAY" OR { !( count _MasterArray > 0 ) } ) exitW
 	};
 
 
+	// create some relative spawn positions for vehicle type stuff
 	if (( typeName _vehicleArray ) isEqualTo "ARRAY" ) then
 	{
 		if !( _infGroup ) then
