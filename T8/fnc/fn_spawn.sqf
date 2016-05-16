@@ -14,7 +14,6 @@
 __allowEXEC(__FILE__);
 
 
-
 private _MasterArray	= _this select 0;
 private _posMkrArray	= []; // All Markers for Debug
 private _error			= false;
@@ -40,6 +39,10 @@ if ( typeName _MasterArray != "ARRAY" OR { !( count _MasterArray > 0 ) } ) exitW
 	private _groupSide			= T8U_var_EnemySide;
 	private _customFNC			= "NO-FUNC-GIVEN";
 	private _relPos				= [];
+	private _ovPresets			= false;
+	private _ovSkillSets		= [];
+	private _ovBehaviorSets		= [];
+	private _teleport			= false;
 
 	// get basic group setup
 	private _groupArray			= _x param [ 0, [], [[]]];
@@ -106,15 +109,51 @@ if ( typeName _MasterArray != "ARRAY" OR { !( count _MasterArray > 0 ) } ) exitW
 	private _commArray			= [ _cA0, _cA1, _cA2 ];
 
 	// get additional settings
-	if (( typeName _sAM ) isEqualTo "STRING" ) then
-	{
 	// parse from config
+	if (( typeName _sAM ) isEqualTo "STRING" AND { isClass ( missionConfigFile >> "cfgT8Units" >> "groupSettings" >> _sAM )}) then
+	{
+		private _cfg = ( missionConfigFile >> "cfgT8Units" >> "groupSettings" >> _sAM ); 
+
+		_ovPresets = true;
 		
+		private _BLU = [];
+		private _RED = [];
+		private _GRN = [];
 		
+		private _BLUc = "true" configClasses ( _cfg >> "behaviorAndSkills" >> "west" >> "skills" );
+		private _REDc = "true" configClasses ( _cfg >> "behaviorAndSkills" >> "east" >> "skills" );
+		private _GRNc = "true" configClasses ( _cfg >> "behaviorAndSkills" >> "indep" >> "skills" );
+		
+		{
+			_BLU pushback [ configName _x, ( getNumber ( _x >> "value" ))];
+			false
+		} count _BLUc;
+		
+		{
+			_RED pushback [ configName _x, ( getNumber ( _x >> "value" ))];
+			false
+		} count _REDc;
+		
+		{
+			_GRN pushback [ configName _x, ( getNumber ( _x >> "value" ))];
+			false
+		} count _GRNc;
+		
+		_ovSkillSets	= [ _BLU, _RED, _GRN ];
+		_ovBehaviorSets = [( getArray ( _cfg >>  "behaviorAndSkills" >> "west" >> "behaivior" )), ( getArray ( _cfg >>  "behaviorAndSkills" >> "east" >> "behaivior" )), ( getArray ( _cfg >>  "behaviorAndSkills" >> "indep" >> "behaivior" ))];
+
+
+		_teleport = switch ( getNumber ( _cfg >> "teleport" )) do
+		{
+			case 1 :	{ false };
+			case 2 :	{ true };
+			default		{ false };
+		};
+
+	// parse from array
 	} else {
 	// parse array
-		private _teleport			= _sAM param [ 0, false, [false]];
-		private _settingsArray		= [ _teleport ];
+		_teleport = _sAM param [ 0, false, [false]];
 	};
 	
 
@@ -291,47 +330,70 @@ if ( typeName _MasterArray != "ARRAY" OR { !( count _MasterArray > 0 ) } ) exitW
 	{
 		if ( _groupSide != civilian ) then
 		{
-	//
-	//	Military Units - Add EventHandlers, Routines, Skill, etc.
-	//
+//
+//	Military Units - Add EventHandlers, Routines, Skill, etc.
+//
 
+			// Setup Origin Array
+			_originArray = [ _markerArray, _type, _infGroup, _taskArray, _customFNC ];
+
+			
+			// save needed variables to group
+			__DEBUG( __FILE__, "UNITS", units _group );
+			__SetOVAR( _group, "T8U_gvar_Comm", _commArray );
+			__SetOVAR( _group, "T8U_gvar_Settings", _sAM );
+			__SetOVAR( _group, "T8U_gvar_Origin", _originArray );
+			__SetOVAR( _group, "T8U_gvar_Assigned", "NO_TASK" );
+			__SetOVAR( _group, "T8U_gvar_Member", units _group );
+
+			
+			// Select skill and behaivior sets
 			private _presetSkill	= 0;
 			private _presetBehavior = 0;
-
-	// Setup Origin Array
-			_originArray = [ _markerArray, _type, _infGroup, _taskArray, _customFNC ];
 
 			switch ( _groupSide ) do
 			{
 				case WEST:
 				{
-					_presetSkill	= ( T8U_var_Presets select 0 ) select 0;
-					_presetBehavior = ( T8U_var_Presets select 0 ) select 1;
+					if ( _ovPresets ) then 
+					{
+						_presetSkill	= 0;
+						_presetBehavior = 0;
+					} else {
+						_presetSkill	= ( T8U_var_Presets select 0 ) select 0;
+						_presetBehavior = ( T8U_var_Presets select 0 ) select 1;
+					};
 				};
 
 				case EAST:
 				{
-					_presetSkill	= ( T8U_var_Presets select 1 ) select 0;
-					_presetBehavior = ( T8U_var_Presets select 1 ) select 1;
+					if ( _ovPresets ) then 
+					{
+						_presetSkill	= 1;
+						_presetBehavior = 1;
+					} else {
+						_presetSkill	= ( T8U_var_Presets select 1 ) select 0;
+						_presetBehavior = ( T8U_var_Presets select 1 ) select 1;
+					};
 				};
 
 				case RESISTANCE:
 				{
-					_presetSkill	= ( T8U_var_Presets select 2 ) select 0;
-					_presetBehavior = ( T8U_var_Presets select 2 ) select 1;
+					if ( _ovPresets ) then 
+					{
+						_presetSkill	= 2;
+						_presetBehavior = 2;
+					} else {
+						_presetSkill	= ( T8U_var_Presets select 2 ) select 0;
+						_presetBehavior = ( T8U_var_Presets select 2 ) select 1;
+					};
 				};
 			};
 
-			__DEBUG( __FILE__, "UNITS", units _group );
-
-			__SetOVAR( _group, "T8U_gvar_Comm", _commArray );
-			__SetOVAR( _group, "T8U_gvar_Settings", _settingsArray );
-			__SetOVAR( _group, "T8U_gvar_Origin", _originArray );
-			__SetOVAR( _group, "T8U_gvar_Assigned", "NO_TASK" );
-			__SetOVAR( _group, "T8U_gvar_Member", units _group );
-
 			// Set the skill for the Group
-			// -> forEach units _group
+			private _selectedSkillSet		= if ( count _ovSkillSets > 0 ) then { _ovSkillSets select _presetSkill } else { T8U_var_SkillSets select _presetSkill };
+			private _selectedBehaviorSet	= if ( count _ovBehaviorSets > 0 ) then { _ovBehaviorSets select _presetBehavior } else { T8U_var_BehaviorSets select _presetBehavior };
+
 			{
 				private _tmpUnit = _x;
 
@@ -339,7 +401,7 @@ if ( typeName _MasterArray != "ARRAY" OR { !( count _MasterArray > 0 ) } ) exitW
 					_tmpUnit setskill [ ( _x select 0 ), ( _x select 1 ) ];
 					
 					false
-				} count ( T8U_var_SkillSets select _presetSkill );
+				} count _selectedSkillSet;
 
 				// Add a HIT event to all Units
 				_tmpUnit addEventHandler [ "Hit", { _this call T8U_fnc_HitEvent; } ];
@@ -353,17 +415,19 @@ if ( typeName _MasterArray != "ARRAY" OR { !( count _MasterArray > 0 ) } ) exitW
 				false
 			} count units _group;
 
+			// Set the combat mode for the Group ( green, blue, red, white, ...)
+			_group setCombatMode ( _selectedBehaviorSet select 0 );
+
+
 			if ( T8U_var_DEBUG_marker ) then { [ _group ] spawn T8U_fnc_Track; };
 
-			// not going to happen anymore -> fn_handleGroups does this now
-			// [ _group ] spawn T8U_fnc_OnFiredEvent;
-			// leader _group addEventHandler [ "FiredNear", { [ _this ] call T8U_fnc_FiredEvent; } ];
-			// leader _group addEventHandler [ "Killed", { [ _this ] spawn T8U_fnc_KilledEvent; } ];
-			// if ( T8U_var_AllowCBM ) then { [ _group ] spawn T8U_fnc_CombatBehaviorMod; };
 
-	
-			// Set the combat mode for the Group ( green, blue, red, white, ...)
-			_group setCombatMode (( T8U_var_BehaviorSets select _presetBehavior ) select 0 );
+				// not going to happen anymore -> fn_handleGroups does this now
+				// [ _group ] spawn T8U_fnc_OnFiredEvent;
+				// leader _group addEventHandler [ "FiredNear", { [ _this ] call T8U_fnc_FiredEvent; } ];
+				// leader _group addEventHandler [ "Killed", { [ _this ] spawn T8U_fnc_KilledEvent; } ];
+				// if ( T8U_var_AllowCBM ) then { [ _group ] spawn T8U_fnc_CombatBehaviorMod; };
+
 
 			// move units in vehicles for non infantry groups
 			sleep 2;

@@ -264,14 +264,77 @@ class cfgT8Units
 			behaivior[] = { "GREEN", "RED", "GREEN", 120 };
 		};
 	};
-	
-	
+
+
 	// custom group settings
 	class groupSettings
 	{
-		class base
+		class base_group
 		{
-			class behaviorAndSkills : behaviorAndSkills;
+			class behaviorAndSkills
+			{
+				class west
+				{
+					class skills
+					{
+						class aimingAccuracy	{ value	= 0.45; };
+						class aimingShake		{ value	= 0.40; };
+						class aimingSpeed		{ value	= 0.50; };
+						class spotDistance		{ value	= 0.95; };
+						class spotTime			{ value	= 0.90; };
+						class courage			{ value	= 0.70; };
+						class reloadSpeed		{ value	= 0.60; };
+						class commanding		{ value	= 0.90; };
+						class general			{ value	= 0.90; };
+					};
+					
+					behaivior[] = { "GREEN", "YELLOW", "GREEN", 90 };
+				};
+				
+				class east
+				{
+					class skills
+					{
+						class aimingAccuracy	{ value	= 0.30; };
+						class aimingShake		{ value	= 0.25; };
+						class aimingSpeed		{ value	= 0.30; };
+						class spotDistance		{ value	= 0.85; };
+						class spotTime			{ value	= 0.75; };
+						class courage			{ value	= 0.50; };
+						class reloadSpeed		{ value	= 0.40; };
+						class commanding		{ value	= 0.70; };
+						class general			{ value	= 0.70; };
+					};
+					
+					behaivior[] = { "YELLOW", "RED", "WHITE", 180 };
+				};
+				
+				class indep
+				{
+					class skills
+					{
+						class aimingAccuracy	{ value	= 0.30; };
+						class aimingShake		{ value	= 0.25; };
+						class aimingSpeed		{ value	= 0.30; };
+						class spotDistance		{ value	= 0.85; };
+						class spotTime			{ value	= 0.75; };
+						class courage			{ value	= 0.50; };
+						class reloadSpeed		{ value	= 0.40; };
+						class commanding		{ value	= 0.70; };
+						class general			{ value	= 0.70; };
+					};
+					
+					behaivior[] = { "GREEN", "RED", "GREEN", 120 };
+				};
+			};
+			
+			teleport = false;
+		};
+		
+
+		class teleport : base_group
+		{
+			teleport = true;
 		};
 	};
 	

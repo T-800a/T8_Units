@@ -96,7 +96,7 @@ _SpawnThisUnits =
 [
 	[ [ ( configFile >> "CfgGroups" >> "East" >> "OPF_F" >> "Infantry" >> "OIA_InfTeam" ), "Marker01", "T8u_fnc_rmNVG_TEST" ], [ "PATROL" ], [ true, true, true ], [], "Marker01_spawn" ],
 	[ [ ( configFile >> "CfgGroups" >> "East" >> "OPF_F" >> "Infantry" >> "OIA_InfTeam" ), "Marker01" ], [ "PATROL_AROUND" ], [ true, true, true ], [], getMarkerPos "Marker01_spawn" ],
-	[ [ ([ "OPF_F", "infantry", 5, 3 ] call T8U_fnc_createUnitContainer ), [ "Marker02_01", "Marker02_02" ]], [ "PATROL_AROUND", 50 ], [], [ true ]],
+	[ [ ([ "OPF_F", "infantry", 5, 3 ] call T8U_fnc_createUnitContainer ), [ "Marker02_01", "Marker02_02" ]], [ "PATROL_AROUND", 50 ], [], "teleport" ],
 	[ [ _groupArrayFullTeam + _groupArrayFullTeam + _groupArrayFullTeam, "Marker02_02" ], [ "OCCUPY", true ], [ true, false, false ]],
 	[ [ _groupArrayFullTeam, "Marker03" ], [ "OCCUPY" ]],
 	[ [ _groupArrayFullTeam, "Marker03" ], [ "GARRISON" ]],
