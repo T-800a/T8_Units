@@ -127,7 +127,7 @@ class cfgT8Units
 		enable_fatigue		= false;
 		
 		// vehicles a group can use to travel greater distance (when they are called for help) 
-		//		if you want to allow vehicles from other Add-ons, add them here
+		// if you want to allow vehicles from other addons, add them here
 		reinforcementVehicles[] =
 		{
 			"APC_Tracked_01_base_F", "APC_Tracked_02_base_F", "Wheeled_APC_F", "Truck_01_base_F", "Truck_02_base_F", "MRAP_01_base_F",
@@ -135,6 +135,7 @@ class cfgT8Units
 		};
 
 		// units that can lay down suppressive fire
+		// if you want to allow units from other addons, add them here
 		suppressingUnits[] = 
 		{
 			"B_soldier_AR_F", "B_G_soldier_AR_F", "O_soldier_AR_F", "O_soldierU_AR_F", "O_G_soldier_AR_F", "I_soldier_AR_F", "I_G_soldier_AR_F"
@@ -269,70 +270,78 @@ class cfgT8Units
 	// custom group settings
 	class groupSettings
 	{
-		class base_group
+		// some base classes
+		class base_militia
 		{
 			class behaviorAndSkills
 			{
-				class west
+				class skills
 				{
-					class skills
-					{
-						class aimingAccuracy	{ value	= 0.45; };
-						class aimingShake		{ value	= 0.40; };
-						class aimingSpeed		{ value	= 0.50; };
-						class spotDistance		{ value	= 0.95; };
-						class spotTime			{ value	= 0.90; };
-						class courage			{ value	= 0.70; };
-						class reloadSpeed		{ value	= 0.60; };
-						class commanding		{ value	= 0.90; };
-						class general			{ value	= 0.90; };
-					};
-					
-					behaivior[] = { "GREEN", "YELLOW", "GREEN", 90 };
+					class aimingAccuracy	{ value	= 0.50; };
+					class aimingShake		{ value	= 0.15; };
+					class aimingSpeed		{ value	= 0.20; };
+					class spotDistance		{ value	= 0.75; };
+					class spotTime			{ value	= 0.70; };
+					class courage			{ value	= 0.30; };
+					class reloadSpeed		{ value	= 0.20; };
+					class commanding		{ value	= 0.50; };
+					class general			{ value	= 0.50; };
 				};
 				
-				class east
-				{
-					class skills
-					{
-						class aimingAccuracy	{ value	= 0.30; };
-						class aimingShake		{ value	= 0.25; };
-						class aimingSpeed		{ value	= 0.30; };
-						class spotDistance		{ value	= 0.85; };
-						class spotTime			{ value	= 0.75; };
-						class courage			{ value	= 0.50; };
-						class reloadSpeed		{ value	= 0.40; };
-						class commanding		{ value	= 0.70; };
-						class general			{ value	= 0.70; };
-					};
-					
-					behaivior[] = { "YELLOW", "RED", "WHITE", 180 };
-				};
-				
-				class indep
-				{
-					class skills
-					{
-						class aimingAccuracy	{ value	= 0.30; };
-						class aimingShake		{ value	= 0.25; };
-						class aimingSpeed		{ value	= 0.30; };
-						class spotDistance		{ value	= 0.85; };
-						class spotTime			{ value	= 0.75; };
-						class courage			{ value	= 0.50; };
-						class reloadSpeed		{ value	= 0.40; };
-						class commanding		{ value	= 0.70; };
-						class general			{ value	= 0.70; };
-					};
-					
-					behaivior[] = { "GREEN", "RED", "GREEN", 120 };
-				};
+				behaivior[] = { "GREEN", "RED", "GREEN", 120 };
 			};
 			
 			teleport = false;
 		};
 		
-
-		class teleport : base_group
+		class base_regularForces
+		{
+			class behaviorAndSkills
+			{
+				class skills
+				{
+					class aimingAccuracy	{ value	= 0.30; };
+					class aimingShake		{ value	= 0.25; };
+					class aimingSpeed		{ value	= 0.30; };
+					class spotDistance		{ value	= 0.85; };
+					class spotTime			{ value	= 0.75; };
+					class courage			{ value	= 0.50; };
+					class reloadSpeed		{ value	= 0.40; };
+					class commanding		{ value	= 0.70; };
+					class general			{ value	= 0.70; };
+				};
+				
+				behaivior[] = { "GREEN", "YELLOW", "GREEN", 90 };
+			};
+			
+			teleport = false;
+		};
+		
+		class base_specialForces
+		{
+			class behaviorAndSkills
+			{
+				class skills
+				{
+					class aimingAccuracy	{ value	= 0.45; };
+					class aimingShake		{ value	= 0.40; };
+					class aimingSpeed		{ value	= 0.50; };
+					class spotDistance		{ value	= 0.95; };
+					class spotTime			{ value	= 0.90; };
+					class courage			{ value	= 0.70; };
+					class reloadSpeed		{ value	= 0.60; };
+					class commanding		{ value	= 0.90; };
+					class general			{ value	= 0.90; };
+				};
+				
+				behaivior[] = { "YELLOW", "RED", "WHITE", 180 };
+			};
+			
+			teleport = false;
+		};
+		
+		// 
+		class teleport : base_militia
 		{
 			teleport = true;
 		};

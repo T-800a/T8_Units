@@ -116,32 +116,17 @@ if ( typeName _MasterArray != "ARRAY" OR { !( count _MasterArray > 0 ) } ) exitW
 
 		_ovPresets = true;
 		
-		private _BLU = [];
-		private _RED = [];
-		private _GRN = [];
-		
-		private _BLUc = "true" configClasses ( _cfg >> "behaviorAndSkills" >> "west" >> "skills" );
-		private _REDc = "true" configClasses ( _cfg >> "behaviorAndSkills" >> "east" >> "skills" );
-		private _GRNc = "true" configClasses ( _cfg >> "behaviorAndSkills" >> "indep" >> "skills" );
-		
-		{
-			_BLU pushback [ configName _x, ( getNumber ( _x >> "value" ))];
-			false
-		} count _BLUc;
-		
-		{
-			_RED pushback [ configName _x, ( getNumber ( _x >> "value" ))];
-			false
-		} count _REDc;
-		
-		{
-			_GRN pushback [ configName _x, ( getNumber ( _x >> "value" ))];
-			false
-		} count _GRNc;
-		
-		_ovSkillSets	= [ _BLU, _RED, _GRN ];
-		_ovBehaviorSets = [( getArray ( _cfg >>  "behaviorAndSkills" >> "west" >> "behaivior" )), ( getArray ( _cfg >>  "behaviorAndSkills" >> "east" >> "behaivior" )), ( getArray ( _cfg >>  "behaviorAndSkills" >> "indep" >> "behaivior" ))];
+		private _skill = [];
 
+		private _cfg = "true" configClasses ( _cfg >> "behaviorAndSkills" >> "skills" );
+		
+		{
+			_skill pushback [ configName _x, ( getNumber ( _x >> "value" ))];
+			false
+		} count _cfg;
+			
+		_ovSkillSets	= [ _skill ];
+		_ovBehaviorSets = [( getArray ( _cfg >>  "behaviorAndSkills" >> "behaivior" ))];
 
 		_teleport = switch ( getNumber ( _cfg >> "teleport" )) do
 		{
@@ -351,39 +336,28 @@ if ( typeName _MasterArray != "ARRAY" OR { !( count _MasterArray > 0 ) } ) exitW
 			private _presetSkill	= 0;
 			private _presetBehavior = 0;
 
-			switch ( _groupSide ) do
+			if ( _ovPresets ) then 
 			{
-				case WEST:
+				_presetSkill	= 0;
+				_presetBehavior = 0;
+			} else {
+				switch ( _groupSide ) do
 				{
-					if ( _ovPresets ) then 
+					case WEST:
 					{
-						_presetSkill	= 0;
-						_presetBehavior = 0;
-					} else {
 						_presetSkill	= ( T8U_var_Presets select 0 ) select 0;
 						_presetBehavior = ( T8U_var_Presets select 0 ) select 1;
 					};
-				};
 
-				case EAST:
-				{
-					if ( _ovPresets ) then 
+					case EAST:
 					{
-						_presetSkill	= 1;
-						_presetBehavior = 1;
-					} else {
 						_presetSkill	= ( T8U_var_Presets select 1 ) select 0;
 						_presetBehavior = ( T8U_var_Presets select 1 ) select 1;
-					};
-				};
 
-				case RESISTANCE:
-				{
-					if ( _ovPresets ) then 
+					};
+
+					case RESISTANCE:
 					{
-						_presetSkill	= 2;
-						_presetBehavior = 2;
-					} else {
 						_presetSkill	= ( T8U_var_Presets select 2 ) select 0;
 						_presetBehavior = ( T8U_var_Presets select 2 ) select 1;
 					};
