@@ -23,6 +23,8 @@ private _error = false;
 if ( __GetOVAR( _group, "T8U_gvar_Introduced", false ) ) exitWith { __DEBUG( __FILE__, "EXIT", "GROUP ALREADY INTRODUCED" ); };
 __SetOVAR( _group, "T8U_gvar_Introduced", true );
 
+private _cfg = call T8U_fnc_selectConfigFile;
+if ( isNull _cfg ) exitWith { [ "WARNING!<br /><br />You are missing a configfile.<br /><br />Please check your description.ext maybe you did not included the T8 Units config." ] call T8U_fnc_BroadcastHint; _return };
 
 // build comm array
 private _cA0				= __GetOVAR( _group, "T8U_introduce_comm_share", true );

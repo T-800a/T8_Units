@@ -13,31 +13,24 @@
 #include <..\MACRO.hpp>
 
 params [
-	[ "_faction",	"OPF_F",	["STR"]],
-	[ "_type",		"infantry",	["STR"]],
-	[ "_min",		4,			[123]],
-	[ "_random",	4,			[123]]
+	[ "_faction",	"east",			["STR"]],
+	[ "_type",		"infantry",		["STR"]],
+	[ "_min",		4,				[123]],
+	[ "_random",	4,				[123]],
+	[ "_modSet",	T8U_var_modSet,	["STR"]],
 	
 ];
 
 __DEBUG( __FILE__, "INIT", _this );
 
-private _return = [];
-private _CFalloc	= isClass ( configFile >> "cfgT8Units" );
-private _CFMalloc	= isClass ( missionConfigFile >> "cfgT8Units" );
+private _return	= [];
+private _cfg	= call T8U_fnc_selectConfigFile;
 
-private _cfg = switch ( true ) do
-{
-	case ( _CFalloc AND _CFMalloc ):	{ missionConfigFile >> "cfgT8Units"; };
-	case ( _CFalloc AND !_CFMalloc ):	{ configFile >> "cfgT8Units"; };
-	case ( !_CFalloc AND _CFMalloc ):	{ missionConfigFile >> "cfgT8Units"; };
-	default								{ nil };
-};
+if ( isNull _cfg ) exitWith { [ "WARNING!<br /><br />You are missing a configfile.<br /><br />Please check your description.ext maybe you did not included the T8 Units config." ] call T8U_fnc_BroadcastHint; _return };
+if( !isClass ( _cfg >> "randomUnitContainer" >> ( toUpper _faction ))) exitWith { __DEBUG( __FILE__, "ERROR MISSING FACTION", _faction ); _return };
 
-if ( isNil "_cfg" ) exitWith { [ "WARNING!<br /><br />You are missing a configfile.<br /><br />Please check your description.ext maybe you did not included the T8 Units config." ] call T8U_fnc_BroadcastHint; _return };
-if( !isClass ( _cfg >> "randomUnitContainer" >> ( toUpper _faction ))) exitWith { __DEBUG( __FILE__, "MISSING FACTION", _faction ); _return };
-
-private _units = getArray ( _cfg >> "randomUnitContainer" >> ( toUpper _faction ) >> ( toLower _type ));
+private _units = __CFGARRAY( _cfg >> "randomUnitContainer" >> _modSet >> ( toLower _faction ) >> ( toLower _type ), [] );
+if ( count _units < 1 ) exitWith { __DEBUG( __FILE__, "ERROR", "EMPTY ARRAY" ); [] };
 
 // build minimum units
 for [{ _i = 0 },{ _i < _min }, { _i = _i + 1 }] do { _return pushBack ( _units call BIS_fnc_selectRandom ); };

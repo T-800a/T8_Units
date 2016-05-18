@@ -13,14 +13,15 @@
 #include <..\MACRO.hpp>
 __allowEXEC(__FILE__);
 
-
 private _MasterArray	= _this select 0;
 private _posMkrArray	= []; // All Markers for Debug
 private _error			= false;
 private _return			= [];
+private _cfg			= call T8U_fnc_selectConfigFile;
 
-if ( isNil "_MasterArray" ) exitWith {				__DEBUG( __FILE__, "NO SPAWNING", "_masterArray IS NIL!"); false };
-if ( typeName _MasterArray == "BOOL" ) exitWith	{	__DEBUG( __FILE__, "NO SPAWNING", "EVERYBODY WAS ALREADY KILLED"); false };
+if ( isNull _cfg ) exitWith { [ "WARNING!<br /><br />You are missing a configfile.<br /><br />Please check your description.ext maybe you did not included the T8 Units config." ] call T8U_fnc_BroadcastHint; _return };
+if ( isNil "_MasterArray" ) exitWith { __DEBUG( __FILE__, "NO SPAWNING", "_masterArray IS NIL!"); false };
+if ( typeName _MasterArray == "BOOL" ) exitWith	{ __DEBUG( __FILE__, "NO SPAWNING", "EVERYBODY WAS ALREADY KILLED"); false };
 if ( typeName _MasterArray != "ARRAY" OR { !( count _MasterArray > 0 ) } ) exitWith { [ "Something went seriously wrong! Aborting T8U_fnc_Spawn!" ] call T8U_fnc_BroadcastHint; false };
 
 
@@ -52,9 +53,9 @@ if ( typeName _MasterArray != "ARRAY" OR { !( count _MasterArray > 0 ) } ) exitW
 	private _cachePos			= _x param [ 4, [], [[],""]];
 	
 	// get basic vehicle and marker setup
-	private _vehicleArray		= _groupArray param [ 0, [], [[],configFile]];
+	private _vehicleArray		= _groupArray param [ 0, [], [[],configFile,""]];
 	private _markerArray		= _groupArray param [ 1, false, ["",[]]];
-
+	
 	// parse marker setup
 	switch ( typeName _markerArray ) do
 	{
@@ -99,6 +100,13 @@ if ( typeName _MasterArray != "ARRAY" OR { !( count _MasterArray > 0 ) } ) exitW
 		};
 	};
 	
+	// check if _vehicleArray should be loaded from T8U configFile / missionConfigFile
+	if ( typeName _vehicleArray isEqualTo "STRING" ) then 
+	{
+		_vehicleArray = __CFGARRAY( _cfg >> "groupCompilations" >> T8U_var_modSet >> str( toLower ( _groupSide )) >> _vehicleArray, [] );
+	};
+
+
 	// get task type setting
 	private _type				= _taskArray param [ 0, "NO-TASK-GIVEN", [""]];
 
@@ -110,32 +118,27 @@ if ( typeName _MasterArray != "ARRAY" OR { !( count _MasterArray > 0 ) } ) exitW
 
 	// get additional settings
 	// parse from config
-	if (( typeName _sAM ) isEqualTo "STRING" AND { isClass ( missionConfigFile >> "cfgT8Units" >> "groupSettings" >> _sAM )}) then
+	if (( typeName _sAM ) isEqualTo "STRING" AND { isClass ( _cfg >> "groupSettings" >> _sAM )}) then
 	{
-		private _cfg = ( missionConfigFile >> "cfgT8Units" >> "groupSettings" >> _sAM ); 
-
-		_ovPresets = true;
-		
-		private _skill = [];
-
-		private _cfg = "true" configClasses ( _cfg >> "behaviorAndSkills" >> "skills" );
+		_ovPresets				= true;
+		private _skill			= [];
+		private _configSkill	= "true" configClasses ( _cfg >> "groupSettings" >> _sAM >> "behaviorAndSkills" >> "skills" );
 		
 		{
 			_skill pushback [ configName _x, ( getNumber ( _x >> "value" ))];
 			false
-		} count _cfg;
+		} count _configSkill;
 			
 		_ovSkillSets	= [ _skill ];
-		_ovBehaviorSets = [( getArray ( _cfg >>  "behaviorAndSkills" >> "behaivior" ))];
+		_ovBehaviorSets = [( getArray ( _cfg >> "groupSettings" >> _sAM >>  "behaviorAndSkills" >> "behaivior" ))];
 
-		_teleport = switch ( getNumber ( _cfg >> "teleport" )) do
+		_teleport = switch ( getNumber ( _cfg >> "groupSettings" >> _sAM >> "teleport" )) do
 		{
 			case 1 :	{ false };
 			case 2 :	{ true };
 			default		{ false };
 		};
 
-	// parse from array
 	} else {
 	// parse array
 		_teleport = _sAM param [ 0, false, [false]];
@@ -144,14 +147,17 @@ if ( typeName _MasterArray != "ARRAY" OR { !( count _MasterArray > 0 ) } ) exitW
 
 	// check for errors!
 	if (
-		!( count _vehicleArray > 0 )
-		OR { _posMkr == "NO-POS-GIVEN" }
-		OR { _type == "NO-TASK-GIVEN" }
-		OR { ( getMarkerPos _posMkr ) isEqualTo [0,0,0] }) exitWith
+			(( typeName _vehicleArray isEqualTo "ARRAY" ) AND { count _vehicleArray < 1 })
+		OR	(( typeName _vehicleArray isEqualTo "CONFIG" ) AND { isNull _vehicleArray })
+		OR	{ _posMkr isEqualTo "NO-POS-GIVEN" }
+		OR	{ _type isEqualTo "NO-TASK-GIVEN" }
+		OR	{ ( getMarkerPos _posMkr ) isEqualTo [0,0,0] }) exitWith
 	{
 		[( format [ "Something went seriously wrong! Error in Unit's spawning definition!<br /><br />Marker: %1<br />Task: %2", _posMkr, _type ])] call T8U_fnc_BroadcastHint;
 		_error = true;
 	};
+
+
 
 	if (( typeName _vehicleArray ) isEqualTo "ARRAY" AND {!( count _vehicleArray > 0 )}) exitWith
 	{

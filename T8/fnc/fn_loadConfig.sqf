@@ -18,19 +18,7 @@ __DEBUG( "INIT", "T8 Units", "CONFIG LOADING STARTED" );
 // _myArray = getArray (missionConfigFile >> "myMissionConfig" >> "mySetup" >> "myArray");
 // _myText = getText (missionConfigFile >> "myMissionConfig" >> "mySetup" >> "myText");
 
-private _CFalloc	= isClass ( configFile >> "cfgT8Units" );
-private _CFMalloc	= isClass ( missionConfigFile >> "cfgT8Units" );
-
-__DEBUG( "INIT", "_CFalloc", _CFalloc );
-__DEBUG( "INIT", "_CFMalloc", _CFMalloc );
-
-private _cfg = switch ( true ) do
-{
-	case ( _CFalloc AND _CFMalloc ):	{ missionConfigFile >> "cfgT8Units"; };
-	case ( _CFalloc AND !_CFMalloc ):	{ configFile >> "cfgT8Units"; };
-	case ( !_CFalloc AND _CFMalloc ):	{ missionConfigFile >> "cfgT8Units"; };
-	default								{ nil };
-};
+private _cfg = call T8U_fnc_selectConfigFile;
 __DEBUG( "INIT", "_cfg", _cfg );
 
 if ( isNil "_cfg" ) then { [ "WARNING!<br /><br />You are missing a configfile.<br /><br />Please check your description.ext maybe you did not included the T8 Units config." ] call T8U_fnc_BroadcastHint; };
@@ -75,7 +63,7 @@ T8U_var_AllowDAC = switch ( getNumber ( _cfg >> "dac" >> "enable" )) do
 };
 __DEBUG( "INIT", "T8U_var_AllowDAC", T8U_var_AllowDAC );
 
-T8U_var_DACtimeout = if ( isClass _cfg ) then { getNumber ( _cfg >> "dac" >> "timeout" ) } else { 180 };
+T8U_var_DACtimeout = __CFGNUMBER( _cfg >> "dac" >> "timeout", 180 );
 __DEBUG( "INIT", "T8U_var_DACtimeout", T8U_var_DACtimeout );
 
 T8U_var_useHC = switch ( getNumber ( _cfg >> "main" >> "use_HeadlessClient" )) do
@@ -104,31 +92,34 @@ T8U_var_EnemySide = switch ( getNumber ( _cfg >> "main" >> "enemySide" )) do
 };
 __DEBUG( "INIT", "T8U_var_EnemySide", T8U_var_EnemySide );
 
-T8U_var_GuerDiplo = if ( isClass _cfg ) then { getNumber ( _cfg >> "main" >> "diplomacy" ) } else { 1 };
+T8U_var_modSet				= __CFGTEXT( _cfg >> "main" >> "modSet", "vanilla" );
+__DEBUG( "INIT", "T8U_var_modSet", T8U_var_modSet );
+
+T8U_var_GuerDiplo			= __CFGNUMBER( _cfg >> "main" >> "diplomacy", 1 );
 __DEBUG( "INIT", "T8U_var_GuerDiplo", T8U_var_GuerDiplo );
 
-T8U_var_OvSuperiority = if ( isClass _cfg ) then { getNumber ( _cfg >> "main" >> "superiority" ) } else { 3 };
+T8U_var_OvSuperiority		= __CFGNUMBER( _cfg >> "main" >> "superiority", 3 );
 __DEBUG( "INIT", "T8U_var_OvSuperiority", T8U_var_OvSuperiority );
 
-T8U_var_RevealRange = if ( isClass _cfg ) then { getNumber ( _cfg >> "main" >> "range_reveal" ) } else { 500 };
+T8U_var_RevealRange			= __CFGNUMBER( _cfg >> "main" >> "range_reveal", 500 );
 __DEBUG( "INIT", "T8U_var_RevealRange", T8U_var_RevealRange );
 
-T8U_var_DirectCallRange = if ( isClass _cfg ) then { getNumber ( _cfg >> "main" >> "range_helpCall" ) } else { 1500 };
+T8U_var_DirectCallRange		= __CFGNUMBER( _cfg >> "main" >> "range_helpCall", 1500 );
 __DEBUG( "INIT", "T8U_var_DirectCallRange", T8U_var_DirectCallRange );
 
-T8U_var_CallForHelpTimeout = if ( isClass _cfg ) then { getNumber ( _cfg >> "main" >> "timeout_helpCall" ) } else { 60 };
+T8U_var_CallForHelpTimeout	= __CFGNUMBER( _cfg >> "main" >> "timeout_helpCall", 60 );
 __DEBUG( "INIT", "T8U_var_CallForHelpTimeout", T8U_var_CallForHelpTimeout );
 
-T8U_var_SupportTimeout = if ( isClass _cfg ) then { getNumber ( _cfg >> "main" >> "timeout_support" ) } else { 180 };
+T8U_var_SupportTimeout		= __CFGNUMBER( _cfg >> "main" >> "timeout_support", 180 );
 __DEBUG( "INIT", "T8U_var_SupportTimeout", T8U_var_SupportTimeout );
 
-T8U_var_TaskReturnTime = if ( isClass _cfg ) then { getNumber ( _cfg >> "main" >> "timeout_taskReturn" ) } else { 30 };
+T8U_var_TaskReturnTime 		= __CFGNUMBER( _cfg >> "main" >> "timeout_taskReturn", 30 );
 __DEBUG( "INIT", "T8U_var_TaskReturnTime", T8U_var_TaskReturnTime );
 
-T8U_var_CacheTime = if ( isClass _cfg ) then { getNumber ( _cfg >> "main" >> "timeout_caching" ) } else { 15 };
+T8U_var_CacheTime			= __CFGNUMBER( _cfg >> "main" >> "timeout_caching", 15 );
 __DEBUG( "INIT", "T8U_var_CacheTime", T8U_var_CacheTime );
 
-T8U_var_PatAroundRange = if ( isClass _cfg ) then { getNumber ( _cfg >> "main" >> "range_PatrolAround" ) } else { 50 };
+T8U_var_PatAroundRange		= __CFGNUMBER( _cfg >> "main" >> "range_PatrolAround", 50 );
 __DEBUG( "INIT", "T8U_var_PatAroundRange", T8U_var_PatAroundRange );
 
 T8U_var_enableFatigue = switch ( getNumber ( _cfg >> "main" >> "enable_fatigue" )) do
@@ -139,10 +130,10 @@ T8U_var_enableFatigue = switch ( getNumber ( _cfg >> "main" >> "enable_fatigue" 
 };
 __DEBUG( "INIT", "T8U_var_enableFatigue", T8U_var_enableFatigue );
 
-T8U_var_ReinforceVehicle = if ( isClass _cfg ) then { getArray ( _cfg >> "main" >> "reinforcementVehicles" ) } else { [ "APC_Tracked_01_base_F", "APC_Tracked_02_base_F", "Wheeled_APC_F", "Truck_01_base_F", "Truck_02_base_F", "MRAP_01_base_F", "MRAP_02_base_F", "MRAP_03_base_F", "C_Offroad_01_F", "I_G_Offroad_01_F"] };
+T8U_var_ReinforceVehicle	= if ( isClass _cfg ) then { getArray ( _cfg >> "main" >> "reinforcementVehicles" ) } else { [ "APC_Tracked_01_base_F", "APC_Tracked_02_base_F", "Wheeled_APC_F", "Truck_01_base_F", "Truck_02_base_F", "MRAP_01_base_F", "MRAP_02_base_F", "MRAP_03_base_F", "C_Offroad_01_F", "I_G_Offroad_01_F"] };
 __DEBUG( "INIT", "T8U_var_ReinforceVehicle", T8U_var_ReinforceVehicle );
 
-T8U_var_SuppressingUnits = if ( isClass _cfg ) then { getArray ( _cfg >> "main" >> "suppressingUnits" ) } else { [ "B_soldier_AR_F", "B_G_soldier_AR_F", "O_soldier_AR_F", "O_soldierU_AR_F", "O_G_soldier_AR_F", "I_soldier_AR_F", "I_G_soldier_AR_F" ] };
+T8U_var_SuppressingUnits	= if ( isClass _cfg ) then { getArray ( _cfg >> "main" >> "suppressingUnits" ) } else { [ "B_soldier_AR_F", "B_G_soldier_AR_F", "O_soldier_AR_F", "O_soldierU_AR_F", "O_G_soldier_AR_F", "I_soldier_AR_F", "I_G_soldier_AR_F" ] };
 __DEBUG( "INIT", "T8U_var_SuppressingUnits", T8U_var_SuppressingUnits );
 
 
@@ -165,7 +156,7 @@ if ( isClass _cfg ) then
 	
 	private _BLUc = "true" configClasses ( _cfg >> "behaviorAndSkills" >> "west" >> "skills" );
 	private _REDc = "true" configClasses ( _cfg >> "behaviorAndSkills" >> "east" >> "skills" );
-	private _GRNc = "true" configClasses ( _cfg >> "behaviorAndSkills" >> "indep" >> "skills" );
+	private _GRNc = "true" configClasses ( _cfg >> "behaviorAndSkills" >> "guer" >> "skills" );
 	
 	{
 		_BLU pushback [ configName _x, ( getNumber ( _x >> "value" ))];
@@ -183,7 +174,7 @@ if ( isClass _cfg ) then
 	} count _GRNc;
 	
 	T8U_var_SkillSets = [ _BLU, _RED, _GRN ];
-	T8U_var_BehaviorSets = [( getArray ( _cfg >>  "behaviorAndSkills" >> "west" >> "behaivior" )), ( getArray ( _cfg >>  "behaviorAndSkills" >> "east" >> "behaivior" )), ( getArray ( _cfg >>  "behaviorAndSkills" >> "indep" >> "behaivior" ))];
+	T8U_var_BehaviorSets = [( getArray ( _cfg >>  "behaviorAndSkills" >> "west" >> "behaivior" )), ( getArray ( _cfg >>  "behaviorAndSkills" >> "east" >> "behaivior" )), ( getArray ( _cfg >>  "behaviorAndSkills" >> "guer" >> "behaivior" ))];
 
 } else {
 

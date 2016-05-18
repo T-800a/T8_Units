@@ -83,6 +83,7 @@
 			addFunction(releaseGroup);
 			addFunction(resetCalled);
 			addFunction(restartFiredEvent);
+			addFunction(selectConfigFile);
 			addFunction(smokeScreen);
 			addFunction(spawn);
 			addFunction(track);
