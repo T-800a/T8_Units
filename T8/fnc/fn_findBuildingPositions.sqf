@@ -72,7 +72,7 @@ __DEBUG( __FILE__, "_buildingPosArray", _buildingPosArray );
 _returnPosArray = _returnPosArray call BIS_fnc_arrayShuffle;
 __DEBUG( __FILE__, "_returnPosArray", _returnPosArray );
 
-if ( count _returnPosArray > 6 ) then { _returnPosArray resize 6; };
+if ( count _returnPosArray > 4 ) then { _returnPosArray resize 4; };
 
 _return = if (( count _returnPosArray ) > 1 ) then { [ _building, _returnPosArray ] } else { false };
 

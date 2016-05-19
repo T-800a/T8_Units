@@ -45,7 +45,7 @@ _moveAround = [];
 {
 	private [ "_b" ];
 	_b = _x;
-	if !( _b getvariable [ "occupied", false ] ) then
+	if (!( __GetOVAR( _b, "occupied", false )) AND { !(( typeOf _b ) in T8U_var_ignoredBuildings )}) then
 	{
 		private [ "_loop", "_n" ];
 		_loop = true;

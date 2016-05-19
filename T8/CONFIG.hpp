@@ -145,6 +145,12 @@ class cfgT8Units
 		{
 			"B_soldier_AR_F", "B_G_soldier_AR_F", "O_soldier_AR_F", "O_soldierU_AR_F", "O_G_soldier_AR_F", "I_soldier_AR_F", "I_G_soldier_AR_F"
 		};
+		
+		// ignored buildings for garrison and occupy
+		ignoredBuildings[] = 
+		{
+			"Land_Garage_V1_ruins_F", "Land_i_Garage_V1_F", "Land_i_Garage_V1_dam_F", "Land_i_Garage_V2_F", "Land_i_Garage_V2_dam_F", "Land_i_Addon_03_V1_F", "Land_i_Addon_03mid_V1_F", "Land_i_Addon_04_V1_F"
+		};
 
 		// a group will go RED when in combat, then go GREEN after some time ( T8_UnitsEngageAtWillTime ), and then return to T8U_fnc_SpawnCombatMode
 		enable_CBM			= true;
@@ -394,7 +400,7 @@ class cfgT8Units
 	// configuration for randomized unit containers
 	//
 	// if you want a randomized selection of units you can use the following function in your units array:
-	//    [ "OPF_F", "infantry", 5, 3 ] call T8U_fnc_createUnitContainer
+	//    [ "east", "infantry", 5, 3 ] call T8U_fnc_createUnitContainer
 	// units selected by this function are defined below
 	// if you add your custom selections (as example for different mods), please share them with me!
 	class groupRandomCompilations
@@ -403,20 +409,20 @@ class cfgT8Units
 		{
 			class west
 			{
-				infantry[]		= { "O_G_Soldier_F","O_G_Soldier_lite_F","O_G_Soldier_SL_F","O_G_Soldier_TL_F","O_G_Soldier_AR_F","O_G_medic_F","O_G_engineer_F","O_G_Soldier_exp_F","O_G_Soldier_GL_F","O_G_Soldier_M_F","O_G_Soldier_LAT_F","O_G_Soldier_A_F","O_G_officer_F","O_Soldier_F","O_officer_F","O_Soldier_lite_F","O_Soldier_GL_F","O_Soldier_AR_F","O_Soldier_SL_F", "O_Soldier_TL_F","O_soldier_M_F","O_Soldier_LAT_F","O_medic_F","O_soldier_repair_F","O_soldier_exp_F","O_Soldier_A_F","O_Soldier_AT_F","O_Soldier_AA_F","O_engineer_F","O_Sharpshooter_F","O_HeavyGunner_F","O_G_Sharpshooter_F","O_recon_F","O_recon_M_F","O_recon_LAT_F","O_recon_medic_F","O_recon_exp_F","O_recon_JTAC_F", "O_recon_TL_F","O_Pathfinder_F","O_sniper_F","O_ghillie_lsh_F","O_ghillie_sard_F","O_ghillie_ard_F" };
-				vehicles[]		= { "O_APC_Tracked_02_cannon_F","O_APC_Tracked_02_AA_F","O_MBT_02_cannon_F","O_MRAP_02_hmg_F","O_MRAP_02_gmg_F","O_G_Offroad_01_armed_F","O_APC_Wheeled_02_rcws_F" };
-				artillery[]		= { "O_MBT_02_arty_F" };
-				helicopter[]	= { "O_Heli_Light_02_F","O_Heli_Light_02_v2_F","O_Heli_Attack_02_F","O_Heli_Attack_02_black_F" };
-				air[]			= { "O_Plane_CAS_02_F" };
-			};
-
-			class east
-			{
 				infantry[]		= { "B_Soldier_F","B_Soldier_02_f","B_Soldier_03_f","B_Soldier_04_f","B_Soldier_05_f","B_Soldier_lite_F","B_Soldier_GL_F","B_soldier_AR_F","B_Soldier_SL_F","B_Soldier_TL_F","B_soldier_M_F","B_soldier_LAT_F","B_medic_F","B_soldier_repair_F","B_soldier_exp_F","B_Soldier_A_F","B_soldier_AT_F","B_soldier_AA_F","B_engineer_F","B_officer_F","B_soldier_PG_F","B_recon_F","B_recon_LAT_F","B_recon_exp_F","B_recon_medic_F","B_recon_TL_F","B_recon_M_F","B_recon_JTAC_F","B_spotter_F","B_sniper_F","B_support_MG_F","B_support_GMG_F","B_support_Mort_F","B_support_AMG_F","B_support_AMort_F","B_ghillie_lsh_F","B_ghillie_sard_F","B_ghillie_ard_F","B_Sharpshooter_F","B_Recon_Sharpshooter_F","B_HeavyGunner_F","B_G_Sharpshooter_F" };
 				vehicles[]		= { "B_APC_Tracked_01_AA_F","B_MBT_01_cannon_F","B_MBT_01_cannon_F","B_MRAP_01_gmg_F","B_MRAP_01_hmg_F","B_G_Offroad_01_armed_F","B_APC_Wheeled_01_cannon_F","B_MBT_01_TUSK_F" };
 				artillery[]		= { "B_MBT_01_mlrs_F","B_MBT_01_arty_F" };
 				helicopter[]	= { "B_Heli_Light_01_armed_F","B_Heli_Attack_01_F" };
 				air[]			= { "B_Plane_CAS_01_F" };
+			};
+
+			class east
+			{
+				infantry[]		= { "O_G_Soldier_F","O_G_Soldier_lite_F","O_G_Soldier_SL_F","O_G_Soldier_TL_F","O_G_Soldier_AR_F","O_G_medic_F","O_G_engineer_F","O_G_Soldier_exp_F","O_G_Soldier_GL_F","O_G_Soldier_M_F","O_G_Soldier_LAT_F","O_G_Soldier_A_F","O_G_officer_F","O_Soldier_F","O_officer_F","O_Soldier_lite_F","O_Soldier_GL_F","O_Soldier_AR_F","O_Soldier_SL_F", "O_Soldier_TL_F","O_soldier_M_F","O_Soldier_LAT_F","O_medic_F","O_soldier_repair_F","O_soldier_exp_F","O_Soldier_A_F","O_Soldier_AT_F","O_Soldier_AA_F","O_engineer_F","O_Sharpshooter_F","O_HeavyGunner_F","O_G_Sharpshooter_F","O_recon_F","O_recon_M_F","O_recon_LAT_F","O_recon_medic_F","O_recon_exp_F","O_recon_JTAC_F", "O_recon_TL_F","O_Pathfinder_F","O_sniper_F","O_ghillie_lsh_F","O_ghillie_sard_F","O_ghillie_ard_F" };
+				vehicles[]		= { "O_APC_Tracked_02_cannon_F","O_APC_Tracked_02_AA_F","O_MBT_02_cannon_F","O_MRAP_02_hmg_F","O_MRAP_02_gmg_F","O_G_Offroad_01_armed_F","O_APC_Wheeled_02_rcws_F" };
+				artillery[]		= { "O_MBT_02_arty_F" };
+				helicopter[]	= { "O_Heli_Light_02_F","O_Heli_Light_02_v2_F","O_Heli_Attack_02_F","O_Heli_Attack_02_black_F" };
+				air[]			= { "O_Plane_CAS_02_F" };
 			};
 
 			class guer
@@ -426,6 +432,15 @@ class cfgT8Units
 				artillery[]		= { "I_MBT_03_cannon_F" };
 				helicopter[]	= { "I_Heli_light_03_F" };
 				air[]			= { "I_Plane_Fighter_03_CAS_F","I_Plane_Fighter_03_AA_F" };
+			};
+			
+			class civ
+			{
+				infantry[]		= {};
+				vehicles[]		= {};
+				artillery[]		= {};
+				helicopter[]	= {};
+				air[]			= {};
 			};
 		};
 	};

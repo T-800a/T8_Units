@@ -16,7 +16,7 @@
 // cancel execute if not server / hc
 __allowEXEC(__FILE__);
 
-waitUntil { time > 1 };
+waitUntil { time > 5 };
 
 __DEBUG( __FILE__, "+----------------------------------------------------------", "" );
 __DEBUG( __FILE__, "| T8 Units", "GROUP HANDLE STARTED" );
@@ -40,8 +40,8 @@ while { time > 0 } do
 			private _task			= __GetOVAR( _group, "T8U_gvar_Assigned", "ERROR" );
 
 			if ( isNull _group )					then { _skip = true; __DEBUGY( __FILE__, "GROUP", "SKIP: _countGroup", _group ); };
-			if ( side _group isEqualTo CIVILIAN )	then { _skip = true; __SetOVAR( _group, "T8U_gvar_ignoreGroup", true ); __DEBUGY( __FILE__, "GROUP", "SKIP: CIVILIAN", _group ); };
-			if ( _task isEqualTo "ERROR" )			then { _skip = true; __SetOVAR( _group, "T8U_gvar_ignoreGroup", true ); __DEBUGY( __FILE__, "GROUP", "SKIP: NO T8U GROUP", _group ); };
+			if ( side _group isEqualTo CIVILIAN )	then { _skip = true; if !( __GetOVAR( _group, "T8U_gvar_introduce", false )) then { __SetOVAR( _group, "T8U_gvar_ignoreGroup", true ); }; __DEBUGY( __FILE__, "GROUP", "SKIP: CIVILIAN", _group ); };
+			if ( _task isEqualTo "ERROR" )			then { _skip = true; if !( __GetOVAR( _group, "T8U_gvar_introduce", false )) then { __SetOVAR( _group, "T8U_gvar_ignoreGroup", true ); }; __DEBUGY( __FILE__, "GROUP", "SKIP: NO T8U GROUP", _group ); };
 
 
 

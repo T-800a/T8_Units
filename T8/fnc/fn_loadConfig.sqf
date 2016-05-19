@@ -130,11 +130,14 @@ T8U_var_enableFatigue = switch ( getNumber ( _cfg >> "main" >> "enable_fatigue" 
 };
 __DEBUG( "INIT", "T8U_var_enableFatigue", T8U_var_enableFatigue );
 
-T8U_var_ReinforceVehicle	= if ( isClass _cfg ) then { getArray ( _cfg >> "main" >> "reinforcementVehicles" ) } else { [ "APC_Tracked_01_base_F", "APC_Tracked_02_base_F", "Wheeled_APC_F", "Truck_01_base_F", "Truck_02_base_F", "MRAP_01_base_F", "MRAP_02_base_F", "MRAP_03_base_F", "C_Offroad_01_F", "I_G_Offroad_01_F"] };
+T8U_var_ReinforceVehicle	= __CFGARRAY( _cfg >> "main" >> "reinforcementVehicles", [] );
 __DEBUG( "INIT", "T8U_var_ReinforceVehicle", T8U_var_ReinforceVehicle );
 
-T8U_var_SuppressingUnits	= if ( isClass _cfg ) then { getArray ( _cfg >> "main" >> "suppressingUnits" ) } else { [ "B_soldier_AR_F", "B_G_soldier_AR_F", "O_soldier_AR_F", "O_soldierU_AR_F", "O_G_soldier_AR_F", "I_soldier_AR_F", "I_G_soldier_AR_F" ] };
+T8U_var_SuppressingUnits	= __CFGARRAY( _cfg >> "main" >> "suppressingUnits", [] );
 __DEBUG( "INIT", "T8U_var_SuppressingUnits", T8U_var_SuppressingUnits );
+
+T8U_var_ignoredBuildings	= __CFGARRAY( _cfg >> "main" >> "ignoredBuildings", [] );
+__DEBUG( "INIT", "T8U_var_ignoredBuildings", T8U_var_ignoredBuildings );
 
 
 T8U_var_AllowCBM = switch ( getNumber ( _cfg >> "main" >> "enable_CBM" )) do

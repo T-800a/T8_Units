@@ -73,7 +73,7 @@ if ( typeName _MasterArray != "ARRAY" OR { !( count _MasterArray > 0 ) } ) exitW
 		{
 			case "BOOL":	{ _infGroup		= _groupArray param [ 2, true, [true]]; };
 			case "SIDE":	{ _groupSide	= _groupArray param [ 2, T8U_var_EnemySide ]; };
-			case "STRING":	{ _customFNC	= _groupArray param [ 2, "NO-FUNC-GIVEN", ["123"]]; };
+			case "STRING":	{ _customFNC	= _groupArray param [ 2, "NO-FUNC-GIVEN", [""]]; };
 			default { _type = "NO-TASK-GIVEN"; };
 		};
 	};
@@ -84,7 +84,7 @@ if ( typeName _MasterArray != "ARRAY" OR { !( count _MasterArray > 0 ) } ) exitW
 		{
 			case "BOOL":	{ _infGroup		= _groupArray param [ 3, true, [true]]; };
 			case "SIDE":	{ _groupSide	= _groupArray param [ 3, T8U_var_EnemySide ]; };
-			case "STRING":	{ _customFNC	= _groupArray param [ 3, "NO-FUNC-GIVEN", ["123"]]; };
+			case "STRING":	{ _customFNC	= _groupArray param [ 3, "NO-FUNC-GIVEN", [""]]; };
 			default { _type = "NO-TASK-GIVEN"; };
 		};
 	};
@@ -95,7 +95,7 @@ if ( typeName _MasterArray != "ARRAY" OR { !( count _MasterArray > 0 ) } ) exitW
 		{
 			case "BOOL":	{ _infGroup		= _groupArray param [ 4, true, [true]]; };
 			case "SIDE":	{ _groupSide	= _groupArray param [ 4, T8U_var_EnemySide ]; };
-			case "STRING":	{ _customFNC	= _groupArray param [ 4, "NO-FUNC-GIVEN", ["123"]]; };
+			case "STRING":	{ _customFNC	= _groupArray param [ 4, "NO-FUNC-GIVEN", [""]]; };
 			default { _type = "NO-TASK-GIVEN"; };
 		};
 	};
@@ -103,7 +103,7 @@ if ( typeName _MasterArray != "ARRAY" OR { !( count _MasterArray > 0 ) } ) exitW
 	// check if _vehicleArray should be loaded from T8U configFile / missionConfigFile
 	if ( typeName _vehicleArray isEqualTo "STRING" ) then 
 	{
-		_vehicleArray = __CFGARRAY( _cfg >> "groupCompilations" >> T8U_var_modSet >> str( toLower ( _groupSide )) >> _vehicleArray, [] );
+		_vehicleArray = __CFGARRAY( _cfg >> "groupCompilations" >> T8U_var_modSet >> toLower ( str ( _groupSide )) >> _vehicleArray, [] );
 	};
 
 
