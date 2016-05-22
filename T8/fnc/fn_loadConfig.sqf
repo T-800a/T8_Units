@@ -12,15 +12,11 @@
 
 #include <..\MACRO.hpp>
 
-__DEBUG( "INIT", "T8 Units", "CONFIG LOADING STARTED" );
-
 // _myNumber = getNumber (missionConfigFile >> "myMissionConfig" >> "mySetup" >> "myNumber");
 // _myArray = getArray (missionConfigFile >> "myMissionConfig" >> "mySetup" >> "myArray");
 // _myText = getText (missionConfigFile >> "myMissionConfig" >> "mySetup" >> "myText");
 
 private _cfg = call T8U_fnc_selectConfigFile;
-__DEBUG( "INIT", "_cfg", _cfg );
-
 if ( isNil "_cfg" ) then { [ "WARNING!<br /><br />You are missing a configfile.<br /><br />Please check your description.ext maybe you did not included the T8 Units config." ] call T8U_fnc_BroadcastHint; };
 
 T8U_var_DEBUG = switch ( getNumber ( _cfg >> "debug" >> "enable" )) do
@@ -29,7 +25,6 @@ T8U_var_DEBUG = switch ( getNumber ( _cfg >> "debug" >> "enable" )) do
 	case 2 :	{ true };
 	default		{ true };
 };
-__DEBUG( "INIT", "T8U_var_DEBUG", T8U_var_DEBUG );
 
 T8U_var_DEBUG_hints = switch ( getNumber ( _cfg >> "debug" >> "allow_hints" )) do
 {
@@ -37,7 +32,6 @@ T8U_var_DEBUG_hints = switch ( getNumber ( _cfg >> "debug" >> "allow_hints" )) d
 	case 2 :	{ true };
 	default		{ true };
 };
-__DEBUG( "INIT", "T8U_var_DEBUG_hints", T8U_var_DEBUG_hints );
 
 T8U_var_DEBUG_marker = switch ( getNumber ( _cfg >> "debug" >> "allow_marker" )) do
 {
@@ -45,7 +39,6 @@ T8U_var_DEBUG_marker = switch ( getNumber ( _cfg >> "debug" >> "allow_marker" ))
 	case 2 :	{ true };
 	default		{ true };
 };
-__DEBUG( "INIT", "T8U_var_DEBUG_marker", T8U_var_DEBUG_marker );
 
 T8U_var_DEBUG_useCon = switch ( getNumber ( _cfg >> "debug" >> "allow_console" )) do
 {
@@ -53,7 +46,14 @@ T8U_var_DEBUG_useCon = switch ( getNumber ( _cfg >> "debug" >> "allow_console" )
 	case 2 :	{ true };
 	default		{ true };
 };
-__DEBUG( "INIT", "T8U_var_DEBUG_useCon", T8U_var_DEBUG_useCon );
+
+__DEBUG( "CONFIG", "======================================================================================", "" );
+__DEBUG( "CONFIG", "T8 Units", "CONFIG LOADING STARTED" );
+__DEBUG( "CONFIG", "_cfg", _cfg );
+__DEBUG( "CONFIG", "T8U_var_DEBUG", T8U_var_DEBUG );
+__DEBUG( "CONFIG", "T8U_var_DEBUG_hints", T8U_var_DEBUG_hints );
+__DEBUG( "CONFIG", "T8U_var_DEBUG_marker", T8U_var_DEBUG_marker );
+__DEBUG( "CONFIG", "T8U_var_DEBUG_useCon", T8U_var_DEBUG_useCon );
 
 T8U_var_AllowDAC = switch ( getNumber ( _cfg >> "dac" >> "enable" )) do
 {
@@ -61,10 +61,10 @@ T8U_var_AllowDAC = switch ( getNumber ( _cfg >> "dac" >> "enable" )) do
 	case 2 :	{ true };
 	default		{ false };
 };
-__DEBUG( "INIT", "T8U_var_AllowDAC", T8U_var_AllowDAC );
+__DEBUG( "CONFIG", "T8U_var_AllowDAC", T8U_var_AllowDAC );
 
 T8U_var_DACtimeout = __CFGNUMBER( _cfg >> "dac" >> "timeout", 180 );
-__DEBUG( "INIT", "T8U_var_DACtimeout", T8U_var_DACtimeout );
+__DEBUG( "CONFIG", "T8U_var_DACtimeout", T8U_var_DACtimeout );
 
 T8U_var_useHC = switch ( getNumber ( _cfg >> "main" >> "use_HeadlessClient" )) do
 {
@@ -72,7 +72,7 @@ T8U_var_useHC = switch ( getNumber ( _cfg >> "main" >> "use_HeadlessClient" )) d
 	case 2 :	{ true };
 	default		{ false };
 };
-__DEBUG( "INIT", "T8U_var_useHC", T8U_var_useHC );
+__DEBUG( "CONFIG", "T8U_var_useHC", T8U_var_useHC );
 
 T8U_var_AllowZEUS = switch ( getNumber ( _cfg >> "main" >> "allow_ZEUS" )) do
 {
@@ -80,7 +80,7 @@ T8U_var_AllowZEUS = switch ( getNumber ( _cfg >> "main" >> "allow_ZEUS" )) do
 	case 2 :	{ true };
 	default		{ true };
 };
-__DEBUG( "INIT", "T8U_var_AllowZEUS", T8U_var_AllowZEUS );
+__DEBUG( "CONFIG", "T8U_var_AllowZEUS", T8U_var_AllowZEUS );
 
 T8U_var_EnemySide = switch ( getNumber ( _cfg >> "main" >> "enemySide" )) do
 {
@@ -90,37 +90,37 @@ T8U_var_EnemySide = switch ( getNumber ( _cfg >> "main" >> "enemySide" )) do
 	case 4 :	{ CIVILIAN };
 	default		{ EAST };
 };
-__DEBUG( "INIT", "T8U_var_EnemySide", T8U_var_EnemySide );
+__DEBUG( "CONFIG", "T8U_var_EnemySide", T8U_var_EnemySide );
 
 T8U_var_modSet				= __CFGTEXT( _cfg >> "main" >> "modSet", "vanilla" );
-__DEBUG( "INIT", "T8U_var_modSet", T8U_var_modSet );
+__DEBUG( "CONFIG", "T8U_var_modSet", T8U_var_modSet );
 
 T8U_var_GuerDiplo			= __CFGNUMBER( _cfg >> "main" >> "diplomacy", 1 );
-__DEBUG( "INIT", "T8U_var_GuerDiplo", T8U_var_GuerDiplo );
+__DEBUG( "CONFIG", "T8U_var_GuerDiplo", T8U_var_GuerDiplo );
 
 T8U_var_OvSuperiority		= __CFGNUMBER( _cfg >> "main" >> "superiority", 3 );
-__DEBUG( "INIT", "T8U_var_OvSuperiority", T8U_var_OvSuperiority );
+__DEBUG( "CONFIG", "T8U_var_OvSuperiority", T8U_var_OvSuperiority );
 
 T8U_var_RevealRange			= __CFGNUMBER( _cfg >> "main" >> "range_reveal", 500 );
-__DEBUG( "INIT", "T8U_var_RevealRange", T8U_var_RevealRange );
+__DEBUG( "CONFIG", "T8U_var_RevealRange", T8U_var_RevealRange );
 
 T8U_var_DirectCallRange		= __CFGNUMBER( _cfg >> "main" >> "range_helpCall", 1500 );
-__DEBUG( "INIT", "T8U_var_DirectCallRange", T8U_var_DirectCallRange );
+__DEBUG( "CONFIG", "T8U_var_DirectCallRange", T8U_var_DirectCallRange );
 
 T8U_var_CallForHelpTimeout	= __CFGNUMBER( _cfg >> "main" >> "timeout_helpCall", 60 );
-__DEBUG( "INIT", "T8U_var_CallForHelpTimeout", T8U_var_CallForHelpTimeout );
+__DEBUG( "CONFIG", "T8U_var_CallForHelpTimeout", T8U_var_CallForHelpTimeout );
 
 T8U_var_SupportTimeout		= __CFGNUMBER( _cfg >> "main" >> "timeout_support", 180 );
-__DEBUG( "INIT", "T8U_var_SupportTimeout", T8U_var_SupportTimeout );
+__DEBUG( "CONFIG", "T8U_var_SupportTimeout", T8U_var_SupportTimeout );
 
 T8U_var_TaskReturnTime 		= __CFGNUMBER( _cfg >> "main" >> "timeout_taskReturn", 30 );
-__DEBUG( "INIT", "T8U_var_TaskReturnTime", T8U_var_TaskReturnTime );
+__DEBUG( "CONFIG", "T8U_var_TaskReturnTime", T8U_var_TaskReturnTime );
 
 T8U_var_CacheTime			= __CFGNUMBER( _cfg >> "main" >> "timeout_caching", 15 );
-__DEBUG( "INIT", "T8U_var_CacheTime", T8U_var_CacheTime );
+__DEBUG( "CONFIG", "T8U_var_CacheTime", T8U_var_CacheTime );
 
 T8U_var_PatAroundRange		= __CFGNUMBER( _cfg >> "main" >> "range_PatrolAround", 50 );
-__DEBUG( "INIT", "T8U_var_PatAroundRange", T8U_var_PatAroundRange );
+__DEBUG( "CONFIG", "T8U_var_PatAroundRange", T8U_var_PatAroundRange );
 
 T8U_var_enableFatigue = switch ( getNumber ( _cfg >> "main" >> "enable_fatigue" )) do
 {
@@ -128,16 +128,16 @@ T8U_var_enableFatigue = switch ( getNumber ( _cfg >> "main" >> "enable_fatigue" 
 	case 2 :	{ true };
 	default		{ false };
 };
-__DEBUG( "INIT", "T8U_var_enableFatigue", T8U_var_enableFatigue );
+__DEBUG( "CONFIG", "T8U_var_enableFatigue", T8U_var_enableFatigue );
 
 T8U_var_ReinforceVehicle	= __CFGARRAY( _cfg >> "main" >> "reinforcementVehicles", [] );
-__DEBUG( "INIT", "T8U_var_ReinforceVehicle", T8U_var_ReinforceVehicle );
+__DEBUG( "CONFIG", "T8U_var_ReinforceVehicle", T8U_var_ReinforceVehicle );
 
 T8U_var_SuppressingUnits	= __CFGARRAY( _cfg >> "main" >> "suppressingUnits", [] );
-__DEBUG( "INIT", "T8U_var_SuppressingUnits", T8U_var_SuppressingUnits );
+__DEBUG( "CONFIG", "T8U_var_SuppressingUnits", T8U_var_SuppressingUnits );
 
 T8U_var_ignoredBuildings	= __CFGARRAY( _cfg >> "main" >> "ignoredBuildings", [] );
-__DEBUG( "INIT", "T8U_var_ignoredBuildings", T8U_var_ignoredBuildings );
+__DEBUG( "CONFIG", "T8U_var_ignoredBuildings", T8U_var_ignoredBuildings );
 
 
 T8U_var_AllowCBM = switch ( getNumber ( _cfg >> "main" >> "enable_CBM" )) do
@@ -146,7 +146,7 @@ T8U_var_AllowCBM = switch ( getNumber ( _cfg >> "main" >> "enable_CBM" )) do
 	case 2 :	{ true };
 	default		{ false };
 };
-__DEBUG( "INIT", "T8U_var_AllowCBM", T8U_var_AllowCBM );
+__DEBUG( "CONFIG", "T8U_var_AllowCBM", T8U_var_AllowCBM );
 
 
 if ( isClass _cfg ) then 
@@ -224,9 +224,9 @@ if ( isClass _cfg ) then
 	];
 };
 
-__DEBUG( "INIT", "T8U_var_Presets", T8U_var_Presets );
-__DEBUG( "INIT", "T8U_var_BehaviorSets", T8U_var_BehaviorSets );
-__DEBUG( "INIT", "T8U_var_SkillSets", T8U_var_SkillSets );
+__DEBUG( "CONFIG", "T8U_var_Presets", T8U_var_Presets );
+__DEBUG( "CONFIG", "T8U_var_BehaviorSets", T8U_var_BehaviorSets );
+__DEBUG( "CONFIG", "T8U_var_SkillSets", T8U_var_SkillSets );
 
 
 
@@ -247,6 +247,7 @@ T8U_var_KilledLeaderTimeout		= 20;
 T8U_var_FiredEventTimeout		= 10;
 
 
-
+__DEBUG( "CONFIG", "T8 Units", "CONFIG LOADING FINISHED" );
+__DEBUG( "CONFIG", "======================================================================================", "" );
 
 ///// END OF CONFIG FILE ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

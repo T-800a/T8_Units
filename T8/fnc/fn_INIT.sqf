@@ -16,13 +16,17 @@
 #include <..\MACRO.hpp>
 
 
-__DEBUGCLEAR();
-__DEBUG( "INIT", "======================================================================================", "" );
-__DEBUG( "INIT", "T8 Units", "INIT STARTED" );
+// cancel double execution
+if ( !isNil "T8U_var_INIT" ) exitWith {};
+T8U_var_INIT = true;
 
 
 // loading main configuration from missionConfigFile / configFile 
 [] call T8U_fnc_loadConfig;
+
+
+__DEBUG( "INIT", "======================================================================================", "" );
+__DEBUG( "INIT", "T8 Units", "INIT STARTED" );
 
 
 // cancel execute if not server / hc

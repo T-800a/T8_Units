@@ -17,9 +17,9 @@ private _CFMalloc	= isClass ( missionConfigFile >> "cfgT8Units" );
 
 private _return = switch ( true ) do
 {
-	case ( _CFalloc AND _CFMalloc ):	{ __DEBUG( __FILE__, "CONFIG FROM", "missionConfigFile" );	missionConfigFile >> "cfgT8Units" };
-	case ( _CFalloc AND !_CFMalloc ):	{ __DEBUG( __FILE__, "CONFIG FROM", "configFile" );			configFile >> "cfgT8Units" };
-	case ( !_CFalloc AND _CFMalloc ):	{ __DEBUG( __FILE__, "CONFIG FROM", "missionConfigFile" );	missionConfigFile >> "cfgT8Units" };
+	case ( _CFalloc AND _CFMalloc ):	{ missionConfigFile >> "cfgT8Units" };
+	case ( _CFalloc AND !_CFMalloc ):	{ configFile >> "cfgT8Units" };
+	case ( !_CFalloc AND _CFMalloc ):	{ missionConfigFile >> "cfgT8Units" };
 	default								{ configNull };
 };
 

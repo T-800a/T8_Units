@@ -98,7 +98,7 @@ while { time > 0 } do
 				private _commArray		= __GetOVAR( _group, "T8U_gvar_Comm", []);
 				private _shareInfo		= _commArray param [ 0, false, [ false ]];
 				private _execTask		= _commArray param [ 1, false, [ false ]];
-				private _reactTask		= _commArray param [ 2, true, [ true ]];
+				private _reactTask		= _commArray param [ 2, false, [ false ]];
 				
 				if ( isNull _unit )				then { _skip = true; __DEBUGY( __FILE__, "GROUP", "SKIP: leader Null", _group ); };
 				if ( !alive _unit )				then { _skip = true; __DEBUGY( __FILE__, "GROUP", "SKIP: leader DEAD", _group ); };
@@ -133,7 +133,7 @@ while { time > 0 } do
 
 	///// 2. Look for possible Support or Groups to Held if conditions are met /////
 
-					if ( _shareInfo AND { __GetOVAR( _group, "T8U_gvar_called", -99999 ) < ( time - T8U_var_CallForHelpTimeout ) } ) then
+					if ( _shareInfo AND { __GetOVAR( _group, "T8U_gvar_called", -99999 ) < ( time - T8U_var_CallForHelpTimeout )}) then
 					{
 						if ( ( _countFriendlies / _countEnemies ) > 0 AND { ( _countFriendlies / _countEnemies ) < T8U_var_OvSuperiority } ) then
 						{
