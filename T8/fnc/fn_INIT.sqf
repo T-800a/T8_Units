@@ -16,7 +16,7 @@
 #include <..\MACRO.hpp>
 
 
-// cancel double execution
+// cancel double execution (if script and addon present)
 if ( !isNil "T8U_var_INIT" ) exitWith {};
 T8U_var_INIT = true;
 
