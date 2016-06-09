@@ -24,10 +24,15 @@ __DEBUG( __FILE__, "+----------------------------------------------------------"
 
 while { time > 0 } do
 {
+	// start a forEach for allGroups
 	{
-	// count allGroups
-		private _group = _x;
-
+	
+		private _group		= _x;
+		private _countGroup	= count ( units _group );
+		
+		// delete empty non DAC groups
+		if ( _countGroup <= 0 AND {( _x getVariable [ "DAC_Excluded", "RM" ] ) == "RM" }) then { __DEBUGY( __FILE__, "GROUP", "SKIP: DELETED", _group ); deleteGroup _x; };
+		
 		if !( __GetOVAR( _group, "T8U_gvar_ignoreGroup", false )) then
 		{
 			private _skip			= false;
@@ -39,7 +44,7 @@ while { time > 0 } do
 			private _nearFriendlies	= [];
 			private _task			= __GetOVAR( _group, "T8U_gvar_Assigned", "ERROR" );
 
-			if ( isNull _group )					then { _skip = true; __DEBUGY( __FILE__, "GROUP", "SKIP: _countGroup", _group ); };
+			if ( isNull _group )					then { _skip = true; __DEBUGY( __FILE__, "GROUP", "SKIP: isNull", _group ); };
 			if ( side _group isEqualTo CIVILIAN )	then { _skip = true; if !( __GetOVAR( _group, "T8U_gvar_introduce", false )) then { __SetOVAR( _group, "T8U_gvar_ignoreGroup", true ); }; __DEBUGY( __FILE__, "GROUP", "SKIP: CIVILIAN", _group ); };
 			if ( _task isEqualTo "ERROR" )			then { _skip = true; if !( __GetOVAR( _group, "T8U_gvar_introduce", false )) then { __SetOVAR( _group, "T8U_gvar_ignoreGroup", true ); }; __DEBUGY( __FILE__, "GROUP", "SKIP: NO T8U GROUP", _group ); };
 
@@ -78,7 +83,6 @@ while { time > 0 } do
 				if ( T8U_var_AllowCBM ) then { _skipCBM = false; };
 			};
 
-			private _countGroup	= count ( units _group );
 			private _countFriendlies = count _nearFriendlies;
 			private _countEnemies = count _knownEnemies;
 

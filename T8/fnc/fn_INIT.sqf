@@ -47,10 +47,6 @@ if ( T8U_var_DEBUG ) then
 [] spawn T8U_fnc_handleGroups;
 
 
-// clear empty groups every 30 seconds (ignores DAC owned groups)
-[] spawn T8U_fnc_GroupClearEmpty;
-
-
 // we are good to go!
 // only used for missionEXEC.sqf! 
 T8U_var_InitDONE = true;

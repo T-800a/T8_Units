@@ -62,7 +62,7 @@
 			addFunction(getOutCover);
 			addFunction(getOutVehicle);
 			addFunction(getSupport);
-			addFunction(groupClearEmpty);
+		//	addFunction(groupClearEmpty);		// no longer needed
 			addFunction(groupClearWaypoints);
 			addFunction(groupCopyVars);
 			addFunction(groupRegroup);
@@ -70,7 +70,7 @@
 			addFunction(hitEvent);
 			addFunction(inBuilding);
 			addFunction(introduce);
-		//	addFunction(killedEvent);		// no longer needed
+		//	addFunction(killedEvent);			// no longer needed
 			addFunction(loadConfig);
 			addFunction(moveOut);
 			addFunction(moveTo);
