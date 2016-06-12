@@ -40,7 +40,7 @@ if ( alive _target AND {( __GetOVAR( _target, "T8U_ovar_lastSmoke", -120 )) < ( 
 if ( alive ( leader _group ) AND { !isNull _shooter }) then
 {
 	{
-		if ( ( typeOf _x ) in T8U_var_SuppressingUnits ) then { _x suppressFor ( 10 + ( random 10 )); };
+		if ( ( typeOf _x ) in T8U_var_SuppressingUnits ) then { _x commandSuppressiveFire _shooter; };
 		
 		false
 	} count _units;
