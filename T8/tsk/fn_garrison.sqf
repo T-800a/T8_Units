@@ -55,14 +55,14 @@ if ( side _group != CIVILIAN ) then
 	_basePos = [( getMarkerPos _marker ), 400, true ] call T8U_fnc_findEmptyPos;
 
 	[ _group, _basePos, "MOVE", "SAFE", _statementGetIn, 5, "LIMITED", [ 15, 15, 15 ] ] call T8U_fnc_CreateWaypoint;
-	[ _group, _basePos, "HOLD", "SAFE", "", 5, "LIMITED" ] call T8U_fnc_CreateWaypoint;
-	[ _group, _basePos, "TALK", "SAFE", _statementGetOut, 5, "LIMITED", [ 5, 5, 5 ] ] call T8U_fnc_CreateWaypoint;
-	[ _group, _basePos, "CYCLE", "SAFE", "", 100, "LIMITED", [ 30, 30, 30 ] ] call T8U_fnc_CreateWaypoint;
+//	[ _group, _basePos, "HOLD", "SAFE", "", 5, "LIMITED" ] call T8U_fnc_CreateWaypoint;
+//	[ _group, _basePos, "TALK", "SAFE", _statementGetOut, 5, "LIMITED", [ 5, 5, 5 ] ] call T8U_fnc_CreateWaypoint;
+//	[ _group, _basePos, "CYCLE", "SAFE", "", 100, "LIMITED", [ 30, 30, 30 ] ] call T8U_fnc_CreateWaypoint;
 
 	if ( T8U_var_DEBUG ) then { [ "fn_garrison.sqf", "MILITARY: Successfully Initialized", [ _group ] ] spawn T8U_fnc_DebugLog; };
 
 	_group enableAttack false;
-	
+/*	
 	// Exit garrisoning when group gets new task assigned
 	waitUntil { sleep 2; [ _group ] call T8U_fnc_ReleaseGroup };
 	
@@ -78,6 +78,7 @@ if ( side _group != CIVILIAN ) then
 	
 	sleep 5;
 	_group setVariable [ "T8U_gvar_Regrouped", true, false ];
+*/
 
 } else {
 
@@ -86,4 +87,4 @@ if ( side _group != CIVILIAN ) then
 	if ( T8U_var_DEBUG ) then { [ "fn_garrison.sqf", "MILITARY: Successfully Initialized", [ _group ] ] spawn T8U_fnc_DebugLog; };
 };
 
-
+//

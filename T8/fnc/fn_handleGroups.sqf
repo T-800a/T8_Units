@@ -94,7 +94,10 @@ while { time > 0 } do
 			if ( !_skip ) then
 			{
 				__DEBUGY( __FILE__, "GROUP", "VALID for HANDLING", _group );
-				
+
+				// just force the unit POS to AUTO ... maybe removes a bug
+				{ _x setUnitPos "AUTO"; _x setUnitPosWeak "AUTO"; false } count _units;
+
 				private _eventArray		= __GetOVAR( _group, "T8U_gvar_FiredEvent", []);
 				private _shooter		= _eventArray param [ 1, objNull, [ objNull ]];
 				private _time			= _eventArray param [ 5, 0, [ 123 ]];
@@ -311,6 +314,7 @@ while { time > 0 } do
 							};
 						};
 					};					
+
 					
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 				};

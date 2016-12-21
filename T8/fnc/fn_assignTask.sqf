@@ -69,6 +69,8 @@ __SetOVAR( _groupHelper, "T8U_gvar_Assigned", _typeTask );
 // WAIT for garrisoned groups to properly regroup!
 if ( _type in [ "GARRISON", "PATROL_GARRISON" ]) then 
 {
+/*
+
 	private [ "_t", "_r" ];
 	_r = false;
 	_t = time + 30;
@@ -82,6 +84,12 @@ if ( _type in [ "GARRISON", "PATROL_GARRISON" ]) then
 		_r
 	};
 	
+*/
+	_groupHelper setVariable [ "T8U_gvar_garrisoning", false, false ];
+	
+	sleep 2;
+	
+	{ [ _x ] joinSilent _groupHelper; [ _x, false ] spawn T8U_fnc_MoveOut; false } count ( units _groupHelper );	
 	[ leader _groupHelper ] spawn T8U_fnc_GetOutCover;
 	( _groupHelper ) enableAttack true;
 };

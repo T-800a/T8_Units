@@ -113,6 +113,9 @@ if ( _teleport ) then {[ _group ] call T8U_fnc_teleportGroupToCurrentWaypoint; }
 
 __DEBUG( __FILE__, "Successfully Initialized", _group );
 
+
+/*
+
 // Exit garrisoning when group gets new task assigned
 waitUntil { sleep 2; [ _group ] call T8U_fnc_ReleaseGroup };
 
@@ -128,3 +131,5 @@ if ( isNull _group ) exitWith {};
 
 sleep 5;
 _group setVariable [ "T8U_gvar_Regrouped", true, false ];
+
+*/

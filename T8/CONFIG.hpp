@@ -153,7 +153,7 @@ class cfgT8Units
 		};
 
 		// a group will go RED when in combat, then go GREEN after some time ( T8_UnitsEngageAtWillTime ), and then return to T8U_fnc_SpawnCombatMode
-		enable_CBM			= true;
+		enable_CBM			= false;
 	};
 	
 	
