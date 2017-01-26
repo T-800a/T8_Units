@@ -12,24 +12,24 @@
 
 #include <..\MACRO.hpp>
 
-private [ "_group", "_pos", "_wpType", "_combatBehave", "_statement", "_statementIL", "_compRadius", "_speed", "_timeout", "_wp", "_n" ];
-
-_group				= param [ 0, grpNull, [grpNull]];
-_pos				= param [ 1, [], [[]]];
-_wpType				= param [ 2, "MOVE", [""]];
-_combatBehave		= param [ 3, "AWARE", [""]];
-_statement			= param [ 4, "", [""]];
-_compRadius			= param [ 5, 50, [123]];
-_speed				= param [ 6, "FULL", [""]];
-_timeout			= param [ 7, [ 2, 4, 6 ], [[]]];
+params [
+	[ "_group", grpNull, [grpNull]],
+	[ "_pos", [], [[]]],
+	[ "_wpType", "MOVE", [""]],
+	[ "_combatBehave", "AWARE", [""]],
+	[ "_statement", "", [""]],
+	[ "_compRadius", 50, [123]],
+	[ "_speed", "FULL", [""]],
+	[ "_timeout", [ 2, 4, 6 ], [[]]]
+];
 
 if ( isNull _group OR { ( count _pos ) < 2 } ) exitWith { if ( T8U_var_DEBUG ) then { [ "fn_createWaypoint.sqf", "Can't create Waypoint", _this ] spawn T8U_fnc_DebugLog; }; false };
 
 // make waypoint scripts only execute where unit is local
-_statementIL = format [ "if ( local this ) then { %1 };", _statement ];
+private _statementIL = format [ "if ( local this ) then { %1 };", _statement ];
+private _n	= count ( waypoints _group );
 
-_n = count ( waypoints _group );
-_wp = _group addWaypoint [ _pos , _n ];
+private _wp	= _group addWaypoint [ _pos , _n ];
 
 _wp setWaypointPosition [ _pos, 1 ];
 _wp setWaypointType _wpType;

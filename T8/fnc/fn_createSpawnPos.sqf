@@ -12,9 +12,9 @@
 
 #include <..\MACRO.hpp>
 
-private [ "_marker", "_areaSize", "_areaSizeX", "_areaSizeY", "_wpPosFEP", "_loop", "_tmpAreaSize", "_markerPos" ];
+private [ "_areaSize", "_areaSizeX", "_areaSizeY", "_wpPosFEP", "_loop", "_tmpAreaSize", "_markerPos" ];
 
-_marker		= param [ 0, [0,0,0], [ "", []]];
+private _marker = param [ 0, [0,0,0], [ "", []]];
 
 if ( _marker isEqualTo [0,0,0] ) exitWith { if ( T8U_var_DEBUG ) then { [ "fn_createSpawnPos.sqf", "Can't create SpawnPos" ] spawn T8U_fnc_DebugLog; }; false };
 

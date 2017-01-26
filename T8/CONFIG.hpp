@@ -61,17 +61,17 @@ class cfgT8Units
 	class debug
 	{
 		// general debug switch
-		enable				= true;
+		enable				= false;
 
 		// show debug Hints
-		allow_hints			= true;
+		allow_hints			= false;
 
 		// create debug markers
-		allow_marker		= true;
+		allow_marker		= false;
 
 		// send debug messages to Killzone Kids console instead of RPT file
 		// http://killzonekid.com/arma-console-extension-debug_console-dll-v3-0/
-		allow_console		= true;	
+		allow_console		= false;	
 	};
 
 	// MAIN configuration

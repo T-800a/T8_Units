@@ -12,12 +12,14 @@
 
 #include <..\MACRO.hpp>
 
-private [	"_unitCaller", "_unitTarget", "_cPos", "_tPos", "_hyp", "_cX", "_cY", "_tX", "_tY", "_katA", "_katG", "_mX", "_mY", "_aBase", "_switch", "_aReel", 
+private [	"_cPos", "_tPos", "_hyp", "_cX", "_cY", "_tX", "_tY", "_katA", "_katG", "_mX", "_mY", "_aBase", "_switch", "_aReel", 
 			"_aReelFP_A", "_aReelFP_B", "_oX_A", "_oY_A", "_oX_B", "_oY_B", "_fpX_A", "_fpY_A", "_fpX_B", "_fpY_B", "_flankingPos", "_loop", "_tmpAreaSize", "_flankingPosArray" ];
 
-_unitCaller			= param [ 0, objNull, [objNull,[]], [2,3] ];
-_unitTarget			= param [ 1, objNull, [objNull,[]], [2,3] ];
-_modHyp				= param [ 2, 1, [123] ];
+params [
+	[ "_unitCaller", objNull, [objNull,[]], [2,3]],
+	[ "_unitTarget", objNull, [objNull,[]], [2,3]],
+	[ "_modHyp", 1, [123]]
+];
 
 _flankingPosArray	= [];
 
