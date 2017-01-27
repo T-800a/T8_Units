@@ -1,0 +1,50 @@
+========================================= V.070 UPDATE LOG ============================================================
+
+	Script:		T8 Units
+	Author(s):	T-800a, Celludriel
+	E-Mail:		t-800a@gmx.net
+
+	This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.
+	To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-sa/4.0/ or send a letter to 
+	Creative Commons, 444 Castro Street, Suite 900, Mountain View, California, 94041, USA.
+
+=======================================================================================================================
+
+####   S C R I P T   I N I T   C H A N G E S   ####
+
++	no changes on how to spawn groups
++	in the description.ext:
+
+|	#include <T8\CONFIG.hpp>
+|
+|	class cfgFunctions
+|	{
+|		#include <T8\FUNCTIONS.hpp>
+|	};
+
+
+
+
+####   C O N F I G   C H A N G E S   ####
+
++	everything is now class based according to A3 configs
+
+	main Config:
+	cfgT8Units
+		class debug:					debug settings
+		class main:						main settings (time delays, zeus, etc.)
+		class dac:						D.A.C. settings
+		class behaviorAndSkills:		base AI skill settings
+		class groupSettings:			selectable AI skill settings (e.g. if a group should have different skill)
+		class groupCompilations:		predefined group compilations to use in definitions
+		class groupRandomCompilations:	predefined unit selections to use with T8U_fnc_createUnitContainer
+		
+		
+
+####   G R O U P   C O N T A I N E R   C H A N G E S   ####
+
+MY_EXAMPE_CONTAINER = 
+[
+	[[ BASIC SETTINGS ], [ TASK SETTINGS ], [ COMMUNICATION SETTINGS ], [ GROUP SETTINGS ], [ SPAWN POS ]],
+	[...]
+];

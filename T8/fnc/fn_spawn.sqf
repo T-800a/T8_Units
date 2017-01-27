@@ -158,12 +158,12 @@ if ( typeName _MasterArray != "ARRAY" OR { !( count _MasterArray > 0 ) } ) exitW
 	};
 
 
-
 	if (( typeName _vehicleArray ) isEqualTo "ARRAY" AND {!( count _vehicleArray > 0 )}) exitWith
 	{
 		[( format [ "Something went seriously wrong! Error in Unit's spawning definition!<br /><br />Marker: %1<br />Task: %2", _posMkr, _type ])] call T8U_fnc_BroadcastHint;
 		_error = true;
 	};
+
 
 	// get our spawn pos
 	if (( typeName _cachePos ) isEqualTo ( typeName "STR" )) then { _cachePos = getMarkerPos _cachePos; };
