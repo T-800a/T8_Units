@@ -19,16 +19,14 @@
 
 #include <..\MACRO.hpp>
 
-private [ "_pos", "_normal", "_check", "_return" ];
-
-_pos = param [ 0, [0,0,0], [[]]];
+params [[ "_pos", [0,0,0], [[]]]];
 
 if ( _pos isEqualTo [0,0,0] ) exitWith { false };
 
-_normal		= surfaceNormal _pos;
-_check		= ( _normal select 2 ) * 1000;
+private _normal		= surfaceNormal _pos;
+private _check		= ( _normal select 2 ) * 1000;
 
-_return = if ( _check > 995 ) then { true } else { false };
+private _return = if ( _check > 995 ) then { true } else { false };
 
 // Return
 _return

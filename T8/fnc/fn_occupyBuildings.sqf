@@ -52,10 +52,14 @@ _buildings = _buildings call BIS_fnc_arrayShuffle;
 __DEBUG( __FILE__, "_buildings", _buildings );
 
 {
-	if !( __GetOVAR( _x, "occupied", false )) then
+	if (!( __GetOVAR( _x, "occupied", false )) AND { !(( typeOf _x ) in T8U_var_ignoredBuildings )}) then
 	{
 		private _temp = [ _x ] call T8U_fnc_findBuildingPositions;
-		if (( typeName _temp ) isEqualTo ( typeName [] )) then { _buildingPositions pushBack _temp };
+		
+		if (( typeName _temp ) isEqualTo ( typeName [] )) then
+		{
+			_buildingPositions pushBack _temp;
+		};
 	};
 
 	false

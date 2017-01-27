@@ -25,23 +25,24 @@
 		class client
 		{
 			file = "T8\fnc";
-			
+
 			addFunction(hint);
 			addFunction(broadcastHint);
 		};
-		
+
 		class server
 		{
 			file = "T8\fnc";
-			
+
 			addFunctionPost(INIT);
-			
+
 			addFunction(assignTask);
 			addFunction(cache);
 			addFunction(checkEXEC);
 			addFunction(combatBehaviorMod);
 			addFunction(createFlankingPos);
 			addFunction(createSpawnPos);
+			addFunction(createUnitContainer);
 			addFunction(createWaypoint);
 			addFunction(createWaypointPositions);
 			addFunction(debugLog);
@@ -61,13 +62,16 @@
 			addFunction(getOutCover);
 			addFunction(getOutVehicle);
 			addFunction(getSupport);
-			addFunction(groupClearEmpty);
+		//	addFunction(groupClearEmpty);		// no longer needed
 			addFunction(groupClearWaypoints);
 			addFunction(groupCopyVars);
 			addFunction(groupRegroup);
+			addFunction(handleGroups);
 			addFunction(hitEvent);
 			addFunction(inBuilding);
-			addFunction(killedEvent);
+			addFunction(introduce);
+		//	addFunction(killedEvent);			// no longer needed
+			addFunction(loadConfig);
 			addFunction(moveOut);
 			addFunction(moveTo);
 			addFunction(moveToPos);
@@ -79,6 +83,7 @@
 			addFunction(releaseGroup);
 			addFunction(resetCalled);
 			addFunction(restartFiredEvent);
+			addFunction(selectConfigFile);
 			addFunction(smokeScreen);
 			addFunction(spawn);
 			addFunction(track);
@@ -87,7 +92,9 @@
 			addFunction(zone);
 			addFunction(zoneCreate);
 			addFunction(zoneNotAktiv);
+			addFunction(teleportGroupToCurrentWaypoint);
 			
+
 			// polygon stuff
 			addFunction(getPolygon);
 			addFunction(drawPolygon);
@@ -97,13 +104,13 @@
 			addFunction(checkOutside);
 		};
 	};
-	
+
 	class T8U_tsk
 	{
 		class task
 		{
 			file = "T8\tsk";
-			
+
 			// basic tasks
 			addFunction(attack);
 			addFunction(defend);
@@ -132,7 +139,6 @@
 			addFunction(HALO);
 		};
 	};
-	
+
 // uncomment if not defined in description.ext
 // };
-	

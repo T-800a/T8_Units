@@ -57,11 +57,10 @@ T8U_fnc_rmNVG_TEST =
 		{
 			_this removePrimaryWeaponItem "acc_pointer_IR";
 			_this addPrimaryWeaponItem "acc_flashlight";
-			
-			sleep 1;
-			
-			group _this enableGunLights "forceon";
 		};
+			
+		sleep 1;
+		group _this enableGunLights "forceon";
 	};
 };
 
@@ -94,32 +93,34 @@ T8U_var_SupportUnitsRESISTANCE = [];
 // this groups of units are spawned directly at mission start
 _SpawnThisUnits = 
 [
-
-	[ [ _groupArrayMiniPat, "Marker01", "T8u_fnc_rmNVG_TEST" ], [ "PATROL" ], [ true, true, true ], [ "Marker01_spawn" ]],
-	[ [ _groupArrayFullPat, "Marker01" ], [ "PATROL_AROUND" ], [ true, true, true ], [ getMarkerPos "Marker01_spawn" ]],
-	[ [ _groupArrayFullPat, [ "Marker02_01", "Marker02_02" ]], [ "PATROL_AROUND", 50 ] ],
+	[ [ ( configFile >> "CfgGroups" >> "East" >> "OPF_F" >> "Infantry" >> "OIA_InfTeam" ), "Marker01", "T8u_fnc_rmNVG_TEST" ], [ "PATROL" ], [ true, true, true ], [], "Marker01_spawn" ],
+	[ [ ( configFile >> "CfgGroups" >> "East" >> "OPF_F" >> "Infantry" >> "OIA_InfTeam" ), "Marker01" ], [ "PATROL_AROUND" ], [ true, true, true ], [], getMarkerPos "Marker01_spawn" ],
+	[ [ ( configFile >> "CfgGroups" >> "East" >> "OPF_F" >> "Motorized_MTP" >> "OIA_MotInf_MGTeam" ), "Marker04", "T8u_fnc_rmNVG_TEST" ], [ "DEFEND" ], [ true, false, false ]],
+	
+	[ [ ([ "infantry", 5, 3 ] call T8U_fnc_createUnitContainer ), [ "Marker02_01", "Marker02_02" ]], [ "PATROL_AROUND", 50 ], [], "teleport" ],
+	
 	[ [ _groupArrayFullTeam + _groupArrayFullTeam + _groupArrayFullTeam, "Marker02_02" ], [ "OCCUPY", true ], [ true, false, false ]],
-	[ [ _groupArrayFullTeam, "Marker03" ], [ "OCCUPY" ] ],
-	[ [ _groupArrayFullTeam, "Marker03" ], [ "GARRISON" ] ],
-	[ [ _groupArrayFireTeam, "Marker04", "T8u_fnc_rmNVG_TEST" ], [ "DEFEND" ], [ true, false, false ] ],
-	[ [ _groupArrayFullTeam, "Marker05" ], [ "LOITER" ] ],
-	[ [ _groupArrayFullTeam, "Marker06" ], [ "PATROL_GARRISON" ] ],
-	[ [ _groupArrayW_APC + _groupArrayFireTeam, "Marker07", false ], [ "PATROL_URBAN" ] ],
-	[ [ _groupArrayMiniPat, [ "Marker08_01", "Marker08_02" ], "T8u_fnc_rmNVG_TEST" ], [ "PATROL" ]  ],
-	[ [ _groupArrayFullPat, "Marker09" ], [ "PATROL_AROUND", 150 ] ],
-	[ [ _groupArrayW_APC + _groupArrayFireTeam, [ "marker_urban_01", "marker_urban_02" ], false ], [ "PATROL_URBAN" ] ],
+	[ [ _groupArrayW_APC + _groupArrayFireTeam, "Marker07", false ], [ "PATROL_URBAN" ], [ false, false, false ]],
+	[ [ _groupArrayW_APC + _groupArrayFireTeam, [ "marker_urban_01", "marker_urban_02" ], false ], [ "PATROL_URBAN" ]],
 	[ [ _groupArrayFullTeam, "ip" ], [ "PATROL_MARKER", [ "ip1", "ip2", "ip3" ] ] ],
-	[ [ _groupArrayIfritPat + _groupArrayFullTeam, "vp", false ], [ "PATROL_MARKER", [ "vp1", "vp2", "vp3" ], false ] ],
-	[ [ _groupArraySniperTeam, "spawnSnipers" ], [ "OVERWATCH", "overwatchTHIS" ] ],
-	[ [ _groupArrayFullTeam + _groupArrayFullTeam, "MarkerRED" ], [ "DEFEND_BASE" ] ],
+	[ [ _groupArrayIfritPat + _groupArrayFullTeam, "vp", false ], [ "PATROL_MARKER", [ "vp1", "vp2", "vp3" ], false ]],
+	[ [ _groupArraySniperTeam, "spawnSnipers" ], [ "OVERWATCH", "overwatchTHIS" ]],
+	
+	[ [ "fireteam", [ "Marker08_01", "Marker08_02" ], "T8u_fnc_rmNVG_TEST" ], [ "PATROL" ]],
+	[ [ "squad", "Marker03" ], [ "OCCUPY" ]],
+	[ [ "squad", "Marker03" ], [ "GARRISON" ]],
+	[ [ "squad", "Marker05" ], [ "LOITER" ]],
+	[ [ "squad", "Marker06" ], [ "PATROL_GARRISON" ]],
+	[ [ "squad", "Marker09" ], [ "PATROL_AROUND", 150, 135 ], [], [ true ]],
+	[ [ "platoon", "MarkerRED" ], [ "DEFEND_BASE" ]],
 
-	[ [ _groupArrayGurTeam, "MarkerGUR", "T8u_fnc_rmNVG_TEST", RESISTANCE ], [ "PATROL" ] ],
-	[ [ _groupArrayGurTeam, "MarkerGUR", RESISTANCE, "T8u_fnc_rmNVG_TEST", true ], [ "PATROL" ] ],
+	[ [ "squad", "MarkerGUR", true, "T8u_fnc_rmNVG_TEST", RESISTANCE ], [ "PATROL" ]],
+	[ [ "squad", "MarkerGUR", RESISTANCE, "T8u_fnc_rmNVG_TEST" ], [ "PATROL" ]],
 	
-	[ [ _groupArrayBluTeam, "MarkerBLU", WEST ], [ "PATROL" ] ],
-	[ [ _groupArrayBluTeam, "MarkerBLU", WEST ], [ "PATROL" ] ],
+	[ [ "squad", "MarkerBLU", WEST ], [ "PATROL" ]],
+	[ [ "squad", "MarkerBLU", WEST ], [ "PATROL" ]],
 	
-	[ [ _groupArrayCIV, "MarkerCIV", CIVILIAN ], [ "GARRISON" ] ]
+	[ [ _groupArrayCIV, "MarkerCIV", CIVILIAN ], [ "GARRISON" ]]
 ];
 
 [ _SpawnThisUnits ] spawn T8U_fnc_Spawn;
@@ -128,8 +129,8 @@ _SpawnThisUnits =
 // they are spawned when a WEST unit is near and they will be cached when no WEST unit is near
 SpawnThisUnitsViaTrigger = 
 [ 
-	[ [ _groupArrayFullTeam, "MarkerByTrigger", "T8u_fnc_rmNVG_TEST" ], [ "DEFEND_BASE" ] ],
-	[ [ _groupArrayFireTeam, "MarkerByTrigger", "T8u_fnc_rmNVG_TEST" ], [ "PATROL_AROUND" ] ]
+	[ [ _groupArrayFullTeam, "MarkerByTrigger", "T8u_fnc_rmNVG_TEST" ], [ "DEFEND_BASE" ]],
+	[ [ ( configFile >> "CfgGroups" >> "East" >> "OPF_F" >> "Infantry" >> "OIA_InfTeam" ), "MarkerByTrigger", "T8u_fnc_rmNVG_TEST" ], [ "PATROL_AROUND" ]]
 ];
 
 // [ _unitsArray, _marker, _distance, _condition, _actSide, _actType, _actRepeat, _onAct, _onDeAct ] call T8U_fnc_TriggerSpawn;
@@ -138,8 +139,8 @@ SpawnThisUnitsViaTrigger =
 
 SpawnZonePU = 
 [
-	[ [ _groupArrayFireTeam, "MarkerZonePU", "T8u_fnc_rmNVG_TEST" ], [ "PATROL_AROUND" ] ],
-	[ [ _groupArrayT_APC, "MarkerZonePU", false ], [ "PATROL_URBAN" ] ] 
+	[ [ ( configFile >> "CfgGroups" >> "East" >> "OPF_F" >> "Infantry" >> "OIA_InfTeam" ), "MarkerZonePU", "T8u_fnc_rmNVG_TEST" ], [ "PATROL_AROUND" ]],
+	[ [ _groupArrayT_APC, "MarkerZonePU", false ], [ "PATROL_URBAN" ]] 
 ];
 
 // [ _unitsArray, _marker, _owner, _actSide, _distance, _condition, _onAct, _onDeAct ] call T8U_fnc_Zone
@@ -147,15 +148,15 @@ SpawnZonePU =
 
 BLUFOR_attack_01 = 
 [
-	[ [ [ "B_MRAP_01_F", "B_MRAP_01_F" ] + _groupArrayBluTeam, "BLUFOR_attack_spawn_01", false, WEST ], [ "ATTACK", "Marker04" ] ],
-	[ [ [ "B_Truck_01_transport_F" ] + _groupArrayBluTeam, "BLUFOR_attack_spawn_01", false, WEST ], [ "ATTACK", "Marker04" ] ]
+	[ [ [ "B_MRAP_01_F", "B_MRAP_01_F" ] + _groupArrayBluTeam, "BLUFOR_attack_spawn_01", false, WEST ], [ "ATTACK", "Marker04" ]],
+	[ [ [ "B_Truck_01_transport_F" ] + _groupArrayBluTeam, "BLUFOR_attack_spawn_01", false, WEST ], [ "ATTACK", "Marker04" ]]
 ];
 // im Radio-Trigger: [ BLUFOR_attack_01 ] spawn T8U_fnc_Spawn;
 
 BLUFOR_attack_02 = 
 [
-	[ [ _groupArrayBluTeam, "BLUFOR_attack_spawn_02", true, WEST ], [ "ATTACK", "overwatchTHIS" ] ],
-	[ [ _groupArrayBluTeam, "BLUFOR_attack_spawn_02", true, WEST ], [ "ATTACK", "overwatchTHIS" ] ]
+	[ [ _groupArrayBluTeam, "BLUFOR_attack_spawn_02", true, WEST ], [ "ATTACK", "overwatchTHIS" ]],
+	[ [ _groupArrayBluTeam, "BLUFOR_attack_spawn_02", true, WEST ], [ "ATTACK", "overwatchTHIS" ]]
 ];
 // im Radio-Trigger: [ BLUFOR_attack_02 ] spawn T8U_fnc_Spawn;
 

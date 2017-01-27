@@ -38,7 +38,7 @@ switch ( _switch ) do
 	{
 		if ( T8U_var_DEBUG ) then { [ "fn_smokeScreen.sqf", "THROW SMOKE", _this ] spawn T8U_fnc_DebugLog; };
 		
-		_unit addMagazine "SmokeShell";
+		_unit addMagazine [ "SmokeShell", 1 ];
 		_unit doWatch _target;
 		_unit setDir _dir;
 		sleep 0.5;

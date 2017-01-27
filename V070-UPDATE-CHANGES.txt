@@ -1,0 +1,149 @@
+========================================= V.070 UPDATE LOG ============================================================
+
+	Script:		T8 Units
+	Author(s):	T-800a, Celludriel
+	E-Mail:		t-800a@gmx.net
+
+	This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.
+	To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-sa/4.0/ or send a letter to 
+	Creative Commons, 444 Castro Street, Suite 900, Mountain View, California, 94041, USA.
+
+=======================================================================================================================
+
+######   S C R I P T   I N I T   C H A N G E S   ######
+
++	no changes on how to spawn groups
++	in the description.ext:
+
+|	#include <T8\CONFIG.hpp>
+|
+|	class cfgFunctions
+|	{
+|		#include <T8\FUNCTIONS.hpp>
+|	};
+
+
+
+
+######   C O N F I G   C H A N G E S   ######
+
++	everything is now class based according to A3 configs
+
+	main Config:
+	cfgT8Units
+		class debug:					debug settings
+		class main:						main settings (time delays, zeus, etc.)
+		class dac:						D.A.C. settings
+		class behaviorAndSkills:		base AI skill settings
+		class groupSettings:			predefined AI skill settings, can be applied to a single group individually (e.g. if a group should have different skill)
+		class groupCompilations:		predefined group compilations to use in definitions
+		class groupRandomCompilations:	predefined unit selections to use with T8U_fnc_createUnitContainer
+		
+		
+
+######   G R O U P   C O N T A I N E R   C H A N G E S   ######
+
+MY_EXAMPE_CONTAINER = 
+[
+	[[ BASIC SETTINGS ], [ TASK SETTINGS ], ( COMMUNICATION SETTINGS ), (GROUP SETTINGS), ( SPAWN POS )],
+	[...]
+];
+
+
+####   BASIC SETTINGS   ####
+[ UNITS, SPAWN MARKER, (SIDE), (VEHICLE GROUP), (FUNCTION) ]
++ SIDE, VEHICLE GROUP, FUNCTION are optinal an don't need to be in this order
+
+##   UNITS   ##
+can be ARRAY, STRING, OR CONFIG:
++ [ "O_soldier_TL_F", "O_medic_F", "O_soldier_F", "O_soldier_AR_F" ]
++ ( configFile >> "CfgGroups" >> "East" >> "OPF_F" >> "Infantry" >> "OIA_InfTeam" )
++ "fireteam"
+	- this points to group compilations defined in "class groupCompilations"
+
++ ([ "infantry", 5, 3 ] call T8U_fnc_createUnitContainer )
+	- this function can be used to create a randomized unit selection based on "class groupRandomCompilations"
+		Parameters:
+			TYPE:			optional, "infantry" 			- type of units, check "class groupRandomCompilations"
+			MIN UNITS:		optional, 4						- min. spawned units
+			RANDOM UNITS:	optional, 4, [123]],			- additional random units
+			FACTION:		optional, T8U_var_EnemySide 	- spawn side, check "class groupRandomCompilations"
+			MOD SET:		optional, T8U_var_modSet		- modset to select from, check "class groupRandomCompilations"
+
+##   SPAWN MARKER   ##
+can be ARRAY or STRING
++ "my_marker"
++ [ "my_first_marker", "my_second_marker" ]		- patrol tasks will work over various markers
+
+##   SIDE   ##
+- unchanged -
++ optional, spawn side of units -> east, west, independent, civilian
+
+##   VEHICLE GROUP   ##
+- unchanged -
++ optional, BOOL, true if vehicle group (e.g. units should not disembark on waypoints)
+
+##   FUNCTION   ##
+- unchanged -
++ optional, STRING, function to call after units are spawned, called for each unit once
+
+
+####   TASK SETTINGS   ####
+- unchanged -
+
+
+####   COMMUNICATION SETTINGS    ####
+- unchanged -
+
+
+####   GROUP SETTINGS    ####
+optional, can be ARRAY, STRING, BOOL
+	+ BOOL:		- true, teleport unit to first waypoint
+	+ STRING	- points to the config "class groupSettings" and a special AI skill setting + teleport setting (may be extended)
+	+ ARRAY		- [ true ], teleport unit to first waypoint (maybe more options in the array later on)
+
+
+####   SPAWN POS    ####
+optional, can be ARRAY or STRING, custom spawn position, if you don't want the units to spawn at the task marker
+	+ ARRAY:	- regular position array > [0,0,0]
+	+ STRING:	- a marker
+
+
+####   SOME EXAMPLES   ####
+
+A_EXAMPE_CONTAINER = 
+[
+	[[ ( configFile >> "CfgGroups" >> "East" >> "OPF_F" >> "Infantry" >> "OIA_InfTeam" ), "marker" ], [ "PATROL" ]],
+	[[ [ "O_soldier_TL_F", "O_medic_F", "O_soldier_F", "O_soldier_AR_F" ], "marker" ], [ "PATROL" ]],
+	[[ ([ "infantry", 5, 3 ] call T8U_fnc_createUnitContainer ), "marker" ], [ "PATROL" ]],
+	[[ "squad", "marker" ], [ "PATROL" ]],
+	
+	[[ "squad", [ "marker_01", "marker_02" ], true, "TMP_fnc_someFunction", WEST ], [ "PATROL" ]],
+	
+	[[ "squad", "marker" ], [ "PATROL" ], [], "base_militia", "spawn_marker" ],
+	[[ "squad", "marker" ], [ "PATROL" ], [], true, ( getPos someObject )],
+	
+	[ "fireteam", [ "marker_01", "marker_02" ], "TMP_fnc_someFunction", RESISTANCE, false ], [ "PATROL_MARKER", [ "ip1", "ip2", "ip3" ]], , [ false, false, false ],  "base_militia", "spawn_marker" ]]
+];
+
+
+
+######   S C R I P T   C H A N G E S   ######
+
++ moved all CONFIG things to A3 config type definitions and syntax
+
++ T8U_fnc_loadConfig
+	parse the new config
+	
++ T8U_fnc_handleGroups
+	all groups are now controlled from one single handle / loop!
+	now only one spawned function controlls all groups, and not a spawned function for each group.
+	
++ T8U_fnc_teleportGroupToCurrentWaypoint
+	teleport group to first waypoint id desired
+	
++ T8U_fnc_createUnitContainer
+	create randomized unit selection based on config
+
++ FIXES and CHANGHES EVERYWHERE ... 
+	

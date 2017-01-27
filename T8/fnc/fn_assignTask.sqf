@@ -69,6 +69,8 @@ __SetOVAR( _groupHelper, "T8U_gvar_Assigned", _typeTask );
 // WAIT for garrisoned groups to properly regroup!
 if ( _type in [ "GARRISON", "PATROL_GARRISON" ]) then 
 {
+/*
+
 	private [ "_t", "_r" ];
 	_r = false;
 	_t = time + 30;
@@ -82,6 +84,12 @@ if ( _type in [ "GARRISON", "PATROL_GARRISON" ]) then
 		_r
 	};
 	
+*/
+	_groupHelper setVariable [ "T8U_gvar_garrisoning", false, false ];
+	
+	sleep 2;
+	
+	{ [ _x ] joinSilent _groupHelper; [ _x, false ] spawn T8U_fnc_MoveOut; false } count ( units _groupHelper );	
 	[ leader _groupHelper ] spawn T8U_fnc_GetOutCover;
 	( _groupHelper ) enableAttack true;
 };
@@ -184,9 +192,12 @@ switch ( _typeTask ) do
 
 __SetOVAR( _groupHelper, "T8U_gvar_Assigned", _typeTask );
 
+// not going to happen anymore -> fn_handleGroups does this now
+// [ _group ] spawn T8U_fnc_OnFiredEvent;
+// if ( T8U_var_AllowCBM ) then { [ _groupHelper ] spawn T8U_fnc_CombatBehaviorMod; };
+
 leader _groupHelper addEventHandler ["FiredNear", { [ _this ] call T8U_fnc_FiredEvent; }];
 leader _groupHelper addEventHandler ["Killed", { [ _this ] spawn T8U_fnc_KilledEvent; }];
-[ _groupHelper ] spawn T8U_fnc_OnFiredEvent;
-if ( T8U_var_AllowCBM ) then { [ _groupHelper ] spawn T8U_fnc_CombatBehaviorMod; };
+
 
 _groupHelper

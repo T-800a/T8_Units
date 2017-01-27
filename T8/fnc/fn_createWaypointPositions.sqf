@@ -7,58 +7,54 @@
 	Author:		T-800a
 	E-Mail:		t-800a@gmx.net
 
-							Dem Mathe :/
+		Dem Mathe :/
 
-							punkt px um punkt ox drehen
-							p'x = cos(theta) * (px-ox) - sin(theta) * (py-oy) + ox
-							p'y = sin(theta) * (px-ox) + cos(theta) * (py-oy) + oy
+		punkt px um punkt ox drehen
+		p'x = cos(theta) * (px-ox) - sin(theta) * (py-oy) + ox
+		p'y = sin(theta) * (px-ox) + cos(theta) * (py-oy) + oy
 
-							X^2/a^2+Y^2/b^2
-							is less than 1, the point P lies inside the ellipse. If it equals 1, it is right on
-							the ellipse. If it is greater than 1, P is outside.
+		X^2/a^2+Y^2/b^2
+		is less than 1, the point P lies inside the ellipse. If it equals 1, it is right on
+		the ellipse. If it is greater than 1, P is outside.
 
  =======================================================================================================================
 */
 
 #include <..\MACRO.hpp>
 
-private [	"_marker", "_infGroup", "_inside", "_useRoad", "_PatrolAroundDis", "_maxRunTime", "_centerX", "_centerY", "_areaSizeX", "_areaSizeY", "_markerShape", "_maxDistance",
-			"_wpCount", "_angle", "_wpArray", "_markerDir", "_return" ];
-
-_marker				= param [ 0, "NO-MARKER-SET", [ "" ]];
-_infGroup			= param [ 1, true, [ true ]];
-_useRoad			= param [ 2, false, [ true ]];
-_inside				= param [ 3, true, [ true ]];
-_PatrolAroundDis	= param [ 4, T8U_var_PatAroundRange, [123]];
+params [
+	[ "_marker", "NO-MARKER-SET", [""]],
+	[ "_infGroup", true, [true]],
+	[ "_useRoad", false, [true]],
+	[ "_inside", true, [true]],
+	[ "_PatrolAroundDis", T8U_var_PatAroundRange, [123]],
+	[ "_startAngle", 0, [123]]
+];
 
 if (( getMarkerPos _marker ) isEqualTo [0,0,0]) exitWith { if ( T8U_var_DEBUG ) then { [ "fn_createWaypointPositions.sqf", "NO MARKER", _this ] spawn T8U_fnc_DebugLog; }; false };
 
 __DEBUG( __FILE__, "INIT", _this );
 __DEBUG( __FILE__, "INIT > START TIME", diag_tickTime );
-_maxRunTime	= ( diag_tickTime + 10.0 );
 
-_centerX	= ( getMarkerPos _marker ) select 0;
-_centerY	= ( getMarkerPos _marker ) select 1;
-_areaSizeX	= ( getMarkerSize _marker ) select 0;
-_areaSizeY	= ( getMarkerSize _marker ) select 1;
-_markerDir	= ( markerDir _marker ) * ( -1);
+private _maxRunTime	= ( diag_tickTime + 10.0 );
 
-_markerShape = toUpper ( markershape _marker );
+private _centerX	= ( getMarkerPos _marker ) select 0;
+private _centerY	= ( getMarkerPos _marker ) select 1;
+private _areaSizeX	= ( getMarkerSize _marker ) select 0;
+private _areaSizeY	= ( getMarkerSize _marker ) select 1;
+private _markerDir	= ( markerDir _marker ) * ( -1);
+private _angleNew	= _startAngle + 181;
+
+private _markerShape = toUpper ( markershape _marker );
 
 if ( _areaSizeX < 40 ) then { _areaSizeX = 40; };
 if ( _areaSizeY < 40 ) then { _areaSizeY = 40; };
 
-if ( _inside ) then { _maxDistance = _areaSizeX - ( _areaSizeX * 0.2 ); } else { _maxDistance = _areaSizeX + _PatrolAroundDis; };
-
-if ( _infGroup ) then
-{
-	_wpCount = 5 + ( floor ( random 4 ) ) + ( floor ( ( ( _areaSizeX + _areaSizeY ) / 2 ) / 100 ) );
-} else {
-	_wpCount = 4 + ( floor ( ( ( _areaSizeX + _areaSizeY ) / 2 ) / 100 ) );
-};
-_angle = ( 360 / ( _wpCount - 1 ) );
-_wpArray = [];
-_return = [];
+private _maxDistance = if ( _inside ) then { _areaSizeX - ( _areaSizeX * 0.2 )} else { _areaSizeX + _PatrolAroundDis };
+private _wpCount = if ( _infGroup ) then { 5 + ( floor ( random 4 )) + ( floor ((( _areaSizeX + _areaSizeY ) / 2 ) / 100 ))} else { 4 + ( floor ((( _areaSizeX + _areaSizeY ) / 2 ) / 100 ))};
+private _angle = ( 360 / ( _wpCount - 1 ) );
+private _wpArray = [];
+private _return = [];
 
 
 switch ( _markerShape ) do
@@ -67,9 +63,9 @@ switch ( _markerShape ) do
 	{
 		while { count _wpArray < _wpCount } do
 		{
-			private [ "_x", "_y", "_wpPos", "_wpPosFEP", "_angleNew", "_tmpMaxDist", "_loop", "_toClose", "_loopI", "_cX", "_cY", "_n" ];
+			private [ "_x", "_y", "_wpPos", "_wpPosFEP", "_tmpMaxDist", "_loop", "_toClose", "_loopI", "_cX", "_cY", "_n" ];
 
-			_angleNew = count _wpArray * _angle;
+			
 			_tmpMaxDist = ( _areaSizeX + _areaSizeY ) / 5;
 			_wpPosFEP = [];
 			_loop = true;
@@ -125,6 +121,7 @@ switch ( _markerShape ) do
 				};				
 			};
 			
+			_angleNew = _angleNew + _angle;
 			if ( str ( _wpPosFEP ) == str ([0.5,0.5,0]) ) then { _wpPosFEP = [] };
 			
 			if ( _useRoad ) then { if ( isOnRoad _wpPosFEP ) then { _wpArray pushBack _wpPosFEP; }; } else { _wpArray pushBack _wpPosFEP; };			
@@ -140,9 +137,8 @@ switch ( _markerShape ) do
 
 		while { count _wpArray < _wpCount } do
 		{
-			private [ "_x", "_y", "_wpPos", "_wpPosFEP", "_loop", "_toClose", "_loopI", "_cX", "_cY", "_angleNew", "_tmpMaxDist" ];
+			private [ "_x", "_y", "_wpPos", "_wpPosFEP", "_loop", "_toClose", "_loopI", "_cX", "_cY", "_tmpMaxDist" ];
 
-			_angleNew = count _wpArray * _angle;
 			_tmpMaxDist = ( _areaSizeX + _areaSizeY ) / 5;
 			_wpPosFEP = [];			
 			_loop = true;
@@ -229,6 +225,7 @@ switch ( _markerShape ) do
 				};
 			};
 			
+			_angleNew = _angleNew + _angle;
 			if ( diag_tickTime > _maxRunTime ) exitWith { __DEBUG( __FILE__, "RUN TIME VIOLATION", diag_tickTime ); };
 		};
 	};
@@ -237,9 +234,8 @@ switch ( _markerShape ) do
 	{
 		while { count _wpArray < _wpCount } do
 		{
-			private [ "_angleNew", "_x", "_y", "_wpPos", "_wpPosFEP", "_loop", "_tmpMaxDist", "_a" ];
+			private [ "_x", "_y", "_wpPos", "_wpPosFEP", "_loop", "_tmpMaxDist", "_a" ];
 
-			_angleNew = count _wpArray * _angle;
 			_wpPosFEP = [];
 			_loop = true;
 			_a = true;
@@ -261,6 +257,8 @@ switch ( _markerShape ) do
 				if ( _tmpMaxDist > _maxDistance * 2 ) then { _loop = false; _a = true; _wpPosFEP = []; };
 			};
 
+			_angleNew = _angleNew + _angle;
+			
 			_wpArray pushBack _wpPosFEP;
 			
 			if ( diag_tickTime > _maxRunTime ) exitWith { __DEBUG( __FILE__, "RUN TIME VIOLATION", diag_tickTime ); };
@@ -268,7 +266,8 @@ switch ( _markerShape ) do
 	};
 };
 
-if ( T8U_var_DEBUG ) then { [ "fn_createWaypointPositions.sqf", "_wpArray", [ _wpArray, count _wpArray] ] spawn T8U_fnc_DebugLog; };
+
+__DEBUG( __FILE__, "CREATED: _wpArray", _wpArray );
 
 // 50/50 chance of switching positons from first to last ... patrols can be with and against the clock
 if ( 50 < random 100 ) then 
@@ -279,14 +278,15 @@ if ( 50 < random 100 ) then
 	_n = count _wpArray;
 	while { _i < _n } do { _newElement = _wpArray call BIS_fnc_arrayPop; _i = _i + 1; _newArray = _newArray + [ _newElement ]; };
 	_wpArray = _newArray;
-	if ( T8U_var_DEBUG ) then { [ "fn_createWaypointPositions.sqf", "SHIFTED _wpArray", [ _wpArray, count _wpArray] ] spawn T8U_fnc_DebugLog; };
+	
+	__DEBUG( __FILE__, "SHIFTED: _wpArray", _wpArray );
 };
 
 
 _wpArray = _wpArray - [];
 { if !( _x in _return ) then { _return pushBack _x; }; false } count _wpArray;
 
-if ( T8U_var_DEBUG ) then { [ "fn_createWaypointPositions.sqf", "FINISHED _wpArray", [ _wpArray, count _wpArray] ] spawn T8U_fnc_DebugLog; };
+__DEBUG( __FILE__, "FINAL: _wpArray", _wpArray );
 
 // RETURN
 _return

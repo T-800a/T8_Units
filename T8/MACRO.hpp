@@ -16,10 +16,11 @@
 // #define __DEBUG(NAME,TEXT,VAR)
 // #define __DEBUGMKR(NAME,TEXT,VAR)
 
-#define __DEBUG(NAME,TEXT,VAR)			if ( T8U_var_DEBUG ) then { [NAME,TEXT,VAR] call T8U_fnc_debugLog; }
-#define __DEBUGX(NAME,TEXT,VAR)			if ( T8U_var_DEBUG ) then { [NAME,TEXT,VAR,false] call T8U_fnc_debugLog; }
-#define __DEBUGMKR(NAME,TEXT,VAR)		if ( T8U_var_DEBUG_marker ) then { [NAME,TEXT,VAR] call T8U_fnc_DebugMarker; }
-
+#define __DEBUG(NAME,TEXT,VAR)			if ( T8U_var_DEBUG ) then { [ NAME, TEXT, VAR, true ] call T8U_fnc_debugLog; }
+#define __DEBUGX(NAME,TEXT,VAR)			if ( T8U_var_DEBUG ) then { [ NAME, TEXT, VAR, false ] call T8U_fnc_debugLog; }
+#define __DEBUGY(NAME,TEXT,VAR,PRETEXT)	if ( T8U_var_DEBUG ) then { [ NAME, format [ "%1: %2", PRETEXT, TEXT ], VAR, false ] call T8U_fnc_debugLog; }
+#define __DEBUGMKR(NAME,TEXT,VAR)		if ( T8U_var_DEBUG_marker ) then { [ NAME, TEXT, VAR ] call T8U_fnc_DebugMarker; }
+#define __DEBUGCLEAR()					if ( T8U_var_DEBUG_useCon ) then { "debug_console" callExtension ("C"); }
 
 // put in function to make a check if allowed to exec on machine
 #define __allowEXEC(VAR)				if ( VAR call T8U_fnc_checkEXEC ) exitWith {}
@@ -37,3 +38,6 @@
 #define __PBOT(VAR)						private VAR = true;
 #define __PBOF(VAR)						private VAR = false;
 
+#define __CFGARRAY(CFG,ALT)				if ( isArray ( CFG )) then { getArray ( CFG )} else { ALT }
+#define __CFGTEXT(CFG,ALT)				if ( isText( CFG )) then { getText ( CFG )} else { ALT }
+#define __CFGNUMBER(CFG,ALT)			if ( isNumber ( CFG )) then { getNumber ( CFG )} else { ALT }

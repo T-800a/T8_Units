@@ -45,7 +45,7 @@ _moveAround = [];
 {
 	private [ "_b" ];
 	_b = _x;
-	if !( _b getvariable [ "occupied", false ] ) then
+	if (!( __GetOVAR( _b, "occupied", false )) AND { !(( typeOf _b ) in T8U_var_ignoredBuildings )}) then
 	{
 		private [ "_loop", "_n" ];
 		_loop = true;
@@ -172,12 +172,12 @@ while { _loop } do
 			OR !alive _leader
 			OR ( count ( units _group )) < 1
 			OR !( _group getVariable [ "T8U_gvar_garrisoning", false ] )
-		) then { _loop = false; if ( T8U_var_DEBUG ) then { [ "fn_garrisonBuildings.sqf", "Kill while", [ _group ] ] spawn T8U_fnc_DebugLog; }; };
+		) then { _loop = false; };
 		
-		if ( ( group _leader ) getVariable [ "T8U_gvar_Assigned", "ERROR" ] != "NO_TASK" ) then { _loop = false; if ( T8U_var_DEBUG ) then { [ "fn_garrisonBuildings.sqf", "Kill while", [ _group ] ] spawn T8U_fnc_DebugLog; }; };	
+		if ( ( group _leader ) getVariable [ "T8U_gvar_Assigned", "ERROR" ] != "NO_TASK" ) then { _loop = false; };	
 	};
 	
-	if ( ! _loop ) exitWith {};
+	if ( ! _loop ) exitWith { if ( T8U_var_DEBUG ) then { [ "fn_garrisonBuildings.sqf", "Kill while", [ _group ] ] spawn T8U_fnc_DebugLog; }; };
 };
 
 sleep 2;
@@ -185,6 +185,7 @@ sleep 2;
 // Remove occupation
 { _x setvariable [ "occupied", false, false ]; false } count _buildingList;
 
+/*
 if ( isNull _group OR { ( count ( units _group )) < 1 } ) exitWith { if ( T8U_var_DEBUG ) then { [ "fn_garrisonBuildings.sqf", "TERMINATING", [ _group ] ] spawn T8U_fnc_DebugLog; }; };
 
 if ( _group getVariable [ "T8U_gvar_garrisoning", false ] ) then 
@@ -197,4 +198,6 @@ if ( _group getVariable [ "T8U_gvar_garrisoning", false ] ) then
 } else {
 	{ [ _x ] joinSilent _group; [ _x, false ] spawn T8U_fnc_MoveOut; } forEach ( units _group );
 };
+*/
+
 [ "fn_garrisonBuildings.sqf", "-- END --", [ _group ] ] spawn T8U_fnc_DebugLog;

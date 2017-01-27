@@ -1,7 +1,7 @@
 ========================================= C H A N G E L O G ===========================================================
 
 	Script:		T8 Units
-	Author(s):	Hauke Sven "T-800a" Fischbach
+	Author(s):	T-800a, Celludriel
 	E-Mail:		t-800a@gmx.net
 
 	This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.
@@ -9,6 +9,26 @@
 	Creative Commons, 444 Castro Street, Suite 900, Mountain View, California, 94041, USA.
 
 =======================================================================================================================
+
+##### V070 - 28.01.2017 #####
+# moved all CONFIG things to A3 config type definitions and syntax
+
+# T8U_fnc_loadConfig
+	parse the new config
+	
+# T8U_fnc_handleGroups
+	all groups are now controlled from one single handle / loop!
+	now only one spawned function controlls all groups, and not a spawned function for each group.
+	
+# T8U_fnc_teleportGroupToCurrentWaypoint
+	teleport group to first waypoint id desired
+	
+# T8U_fnc_createUnitContainer
+	create randomized unit selection based on config
+	
+# FIXES and CHANGHES EVERYWHERE ... 
+
+
 
 ##### V061 - 25.01.2016 #####
 

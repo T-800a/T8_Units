@@ -15,14 +15,12 @@
 
 #include <..\MACRO.hpp>
 
-private [ "_pos", "_posGroundASL", "_posSkyASL", "_return" ];
+params [[ "_pos", [], [[]]]];
 
-_pos = _this select 0;
+private _posGroundASL	= ATLToASL [( _pos select 0 ), ( _pos select 1 ), 2 ];
+private _posSkyASL		= ATLToASL [( _pos select 0 ), ( _pos select 1 ), 50 ];
 
-_posGroundASL	= ATLToASL [( _pos select 0 ), ( _pos select 1 ), 2 ];
-_posSkyASL		= ATLToASL [( _pos select 0 ), ( _pos select 1 ), 50 ];
-
-_return = lineIntersects [ _posGroundASL, _posSkyASL ];
+private _return = lineIntersects [ _posGroundASL, _posSkyASL ];
 
 // Return
 _return

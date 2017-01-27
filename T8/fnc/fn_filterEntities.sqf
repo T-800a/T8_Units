@@ -14,24 +14,23 @@
 
 #include <..\MACRO.hpp>
 
-private [ "_unit", "_range", "_array", "_friendly", "_base", "_parray", "_return" ];
+params [
+	[ "_unit", objNull, [objNull]],
+	[ "_range", 1000, [123]],
+	[ "_friendly", false, [true]]
+];
 
-_unit		= param [ 0, objNull, [objNull]];
-_range		= param [ 1, 1000, [123]];
-_friendly	= param [ 2, false, [true]];
+private _parray		= [];
+private _return		= [];
 
-if ( T8U_var_DEBUG ) then { [ "fn_filterEntities.sqf", "INIT", _this ] spawn T8U_fnc_DebugLog; };
-if ( isNull _unit ) exitWith { if ( T8U_var_DEBUG ) then { [ "fn_filterEntities.sqf", "INPUT ERROR" ] spawn T8U_fnc_DebugLog; }; };
+// __DEBUG( __FILE__,  "INIT", _this );
+if ( isNull _unit ) exitWith { __DEBUG( __FILE__, "INIT", "INPUT ERROR" ); _return };
 
-_array = _unit nearEntities [ [ "CAManBase", "LandVehicle" ], _range ];
-
-_base 		= side _unit;
-_parray		= [];
-_return		= [];
+private _array	= _unit nearEntities [[ "CAManBase", "LandVehicle" ], _range ];
+private _base	= side _unit;
 
 {
-	private [ "_e" ];
-	_e = _x;
+	private _e = _x;
 	
 	if ( _e isKindOf "CAManBase" )		then { _parray pushBack _e; };
 	if ( _e isKindOf "LandVehicle" )	then { _parray pushBack _e; { _parray pushBack _x; } forEach ( crew _e ); };
@@ -92,7 +91,7 @@ switch ( _groupSide ) do
 	};
 };
 
-if ( T8U_var_DEBUG ) then { [ "fn_filterEntities.sqf", "FILTERED", _return ] spawn T8U_fnc_DebugLog; };
-
 // Return
+if !(( typeName _return ) isEqualTo "ARRAY" ) then { _return = []; };
+// __DEBUG( __FILE__,  "FILTERED", _return );
 _return

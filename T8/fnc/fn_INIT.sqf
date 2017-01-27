@@ -15,28 +15,42 @@
 // include the few macros we use ...
 #include <..\MACRO.hpp>
 
-// include CONFIG FILE
-#include <..\CONFIG.hpp>
+
+// cancel double execution (if script and addon present)
+if ( !isNil "T8U_var_INIT" ) exitWith {};
+T8U_var_INIT = true;
+
+
+// loading main configuration from missionConfigFile / configFile 
+[] call T8U_fnc_loadConfig;
+
+
+__DEBUG( "INIT", "======================================================================================", "" );
+__DEBUG( "INIT", "T8 Units", "INIT STARTED" );
 
 
 // cancel execute if not server / hc
 __allowEXEC(__FILE__);
 
 
-// if ( T8U_var_DEBUG_useCon ) exitWith { "debug_console" callExtension ("C"); };
+if ( T8U_var_DEBUG ) then 
+{
+	// per unit tracking on Debug (only in SP editor or when player = server )
+	[] spawn T8U_fnc_TrackAllUnits;
+	
+	// delete debug markers (checks every 30s for markers older than 180s)
+	[] spawn T8U_fnc_DebugMarkerDelete;
+};
 
-__DEBUG( __FILE__, "======================================================================================", "" );
-__DEBUG( __FILE__, "T8 Units", "INIT STARTED" );
 
-// Clear empty groups every 30 seconds (ignores DAC groups)
-[] spawn T8U_fnc_GroupClearEmpty;
+// start our group handling / communication management
+[] spawn T8U_fnc_handleGroups;
 
-// Per Unit Tracking on Debug ( only in SP editor or when User = Server ) / Delete DebugMarker (check every 30s for ones older than 180s)
-if ( T8U_var_DEBUG ) then { [] spawn T8U_fnc_TrackAllUnits; [] spawn T8U_fnc_DebugMarkerDelete; };
 
-// Were are good to go!
+// we are good to go!
 // only used for missionEXEC.sqf! 
 T8U_var_InitDONE = true;
 
-__DEBUG( __FILE__, "T8 Units", "INIT FINISHED" );
-__DEBUG( __FILE__, "======================================================================================", "" );
+__DEBUG( "INIT", "T8 Units", "INIT FINISHED" );
+__DEBUG( "INIT", "======================================================================================", "" );
+

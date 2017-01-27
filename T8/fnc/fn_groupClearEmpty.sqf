@@ -7,6 +7,10 @@
 	Author:		T-800a
 	E-Mail:		t-800a@gmx.net
 
+	!!! FUNCTION OBSOLETE / OUTDATED !!!
+	!!! FUNCTION OBSOLETE / OUTDATED !!!
+	!!! FUNCTION OBSOLETE / OUTDATED !!!
+
 	+----- DAC & Groups ----------------------------------------------------------------------------------------------+
 	_group setVariable ["DAC_Excluded", True];
 		true		=> will be reused  by DAC

@@ -31,10 +31,12 @@ __DEBUG( __FILE__, str( _unitsArray + "_created" ),		_created );
 __DEBUG( __FILE__, str( _unitsArray + "_creating" ),	_creating );
 __DEBUG( __FILE__, str( _unitsArray + "_active" ),		_active );
 
-if ( _active	OR {( typeName _active ) isEqualTo ( typeName "" )}) exitWith	{ __DEBUG( __FILE__, "ZONE AKTIVE - NO CACHING", _this ); };
-if ( !_created	OR {( typeName _created ) isEqualTo ( typeName "" )}) exitWith	{ __DEBUG( __FILE__, "COULD NOT CACHE", _this ); };
+if !(( typeName _active ) isEqualTo "BOOL" )	exitWith { __DEBUG( __FILE__, "ERROR - NO CACHING", _this ); };
+if !(( typeName _created ) isEqualTo "BOOL" )	exitWith { __DEBUG( __FILE__, "ERROR - NO CACHING", _this ); };
+if ( _active )		exitWith { __DEBUG( __FILE__, "ZONE AKTIVE - NO CACHING", _this ); };
+if ( !_created )	exitWith { __DEBUG( __FILE__, "COULD NOT CACHE", _this ); };
 
-if ( typeName ( missionNamespace getVariable _unitsArray ) == "BOOL" ) exitWith { __DEBUG( __FILE__, "NO CACHING - EVERYBODY WAS DEAD LAST TIME", _this ); };
+if ( typeName ( missionNamespace getVariable _unitsArray ) isEqualTo "BOOL" ) exitWith { __DEBUG( __FILE__, "NO CACHING - EVERYBODY WAS DEAD LAST TIME", _this ); };
 
 __DEBUG( __FILE__, "_unitsArray", _marker );
 
@@ -57,9 +59,10 @@ _compiledArray = [];
 _unitsToDelete = [];
 
 {	// forEach -> _groups
-	private [ "_commArray", "_originArray", "_memberArray", "_spawnPos", "_groupArray", "_typeOfArray", "_vehicles" ];
+	private [ "_commArray", "_settingsArray", "_originArray", "_memberArray", "_spawnPos", "_groupArray", "_typeOfArray", "_vehicles" ];
 	
 	_commArray		= __GetOVAR( _x, "T8U_gvar_Comm", [] );
+	_settingsArray	= __GetOVAR( _x, "T8U_gvar_Settings", [] );
 	_originArray	= __GetOVAR( _x, "T8U_gvar_Origin", [] );
 	_memberArray	= __GetOVAR( _x, "T8U_gvar_Member", [] );
 
@@ -91,7 +94,7 @@ _unitsToDelete = [];
 	} forEach _memberArray;
 	
 	// _originArray = [ _markerArray, _type, _infGroup, _taskArray, _customFNC ];
-	_groupArray = [ [ _typeOfArray, ( _originArray select 0 ), ( _originArray select 2 ), side _x, ( _originArray select 4 ) ], ( _originArray select 3 ),  _commArray, [ _spawnPos ]];
+	_groupArray = [ [ _typeOfArray, ( _originArray select 0 ), ( _originArray select 2 ), side _x, ( _originArray select 4 ) ], ( _originArray select 3 ),  _commArray, _settingsArray, _spawnPos ];
 
 	_compiledArray pushBack _groupArray;
 	_unitsToDelete = _unitsToDelete + _memberArray;

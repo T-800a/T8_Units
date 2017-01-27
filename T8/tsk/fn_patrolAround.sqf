@@ -3,39 +3,50 @@
 
 	Script: fn_patrolAround.sqf
 	Author(s): T-800a
-	Inspired and partly based on code by Binesi's BIN_taskDefend/Patrole
+	Inspired and partly based on code by Binesi's BIN_taskDefend/Patrol
 
 	Description:
 	Creates a continually randomized patrol path which circles around a given marker with some distance.
-	The Size of the Marker is important!
-	On each Waypoint there is a 20% chance to switch to a random next Waypoint.
+	The size of the marker is important!
+	On each waypoint there is a 20% chance to switch to a random next waypoint.
 
 	Parameter(s):
-	_this select 0: the group to which to assign the waypoints (Group)
-	_this select 1: the position on which to base the patrol (Markername / String)
-	_this select 2: (optional) is infantry group (Bool) Will force group to leave vehicle on waypoints!
-	_this select 3: (optional) distance between patrole points and marker zone (Integer)
+	_this select 0: (group)					the group to which to assign the waypoints
+	_this select 1: (string/array)			the position on which to base the patrol
+	_this select 2: (bool)		(optional)	is infantry group will force group to leave vehicle on waypoints!
+	_this select 3: (integer)	(optional)	distance between patrole points and marker zone
+	_this select 4: (integer)	(optional)	angle of first created waypoint
+	_this select 5: (string)	(optional)	formation of group
+	_this select 6: (string)	(optional)	behaviour of group
 
 	Returns:
-	Boolean - success flag
+	boolean - success flag
 
 	Example(s):
-	null = [ group this, "MY_MARKER" ] execVM "fn_patrolAround.sqf"
+	// group partrols around MY_MARKER
+	fun = [ group this, "MY_MARKER" ] execVM "fn_patrolAround.sqf"
 
-	null = [ group this, "MY_MARKER", false, 100 ] execVM "fn_patrolAround.sqf"  
-	// Is not a Infantry Group, distance between marker border and Waypoints = 100m
+	// group partrols around MY_MARKER; group is not a infantry group; distance between marker border and waypoints = 100m
+	fun = [ group this, "MY_MARKER", false, 100 ] execVM "fn_patrolAround.sqf"
 
  =======================================================================================================================
 */
 
 #include <..\MACRO.hpp>
 
-private [ "_group", "_marker", "_infGroup", "_PatrolAroundDis", "_speedMode", "_formation", "_statement", "_range", "_wp", "_wpArray", "_cycle", "_behaviour" ];
+private [ "_speedMode", "_statement", "_range", "_cycle" ];
 
-_group				= param [ 0, grpNull, [grpNull]];
-_marker				= param [ 1, "NO-MARKER-SET", ["",[]]]; 
-_infGroup			= param [ 2, true, [true]];
-_PatrolAroundDis	= param [ 3, T8U_var_PatAroundRange, [123]];
+params [
+	[ "_group", grpNull, [grpNull]],
+	[ "_marker", "NO-MARKER-SET", ["",[]]],
+	[ "_infGroup", true, [true]],
+	[ "_teleport", false, [false]],
+	[ "_PatrolAroundDis", T8U_var_PatAroundRange, [123]],
+	[ "_startAngle", 0, [123]],
+	[ "_formation", "RANDOM", [""]],
+	[ "_behaviour", "SAFE", [""]]
+];
+
 
 __DEBUG( __FILE__, "INIT", _this );
 
@@ -43,10 +54,14 @@ if ( isNull _group ) exitWith { false };
 if (( typeName _marker ) isEqualTo ( typeName "" ) AND {( getMarkerPos _marker ) isEqualTo [0,0,0] }) exitWith { false };
 if (( typeName _marker ) isEqualTo ( typeName [] ) AND {( count _marker ) isEqualTo 0 }) exitWith { false };
 
+private _wpArrayTmp		= [];
+private _wpArray		= [];
 
 if ( _infGroup ) then
 {
-	_formation = ["STAG COLUMN", "WEDGE", "ECH LEFT", "ECH RIGHT", "VEE", "DIAMOND"] call BIS_fnc_selectRandom;
+	if(_formation == "RANDOM") then {
+		_formation = ["STAG COLUMN", "WEDGE", "ECH LEFT", "ECH RIGHT", "VEE", "DIAMOND"] call BIS_fnc_selectRandom;
+	};
 	_statement = "[ this ] spawn T8U_fnc_GetOutVehicle; if ((random 10)>9) then { group this setCurrentWaypoint [(group this), (ceil (random (count (waypoints (group this)))))];};";
 	_speedMode = "LIMITED";
 	_range = 20;
@@ -64,46 +79,46 @@ _group setFormation _formation;
 // Create waypoints based on array of positions
 if (( typeName _marker ) isEqualTo ( typeName [] )) then
 {
-	private _wpArrayTmp = [];
-	_wpArray = [];
 	{
 		__DEBUG( __FILE__, "_marker > _x", _x );
-		
+
 		if !(( getMarkerPos _x ) isEqualTo [0,0,0] ) then
 		{
-			_wpArrayTmp = [ _x, _infGroup, false, false, _PatrolAroundDis ] call T8U_fnc_CreateWaypointPositions;
+			_wpArrayTmp = [ _x, _infGroup, false, false, _PatrolAroundDis, _startAngle ] call T8U_fnc_CreateWaypointPositions;
 			_wpArray append _wpArrayTmp;
 		};
-		
+
 		__DEBUG( __FILE__, "_wpArray", _wpArray );
-		
+
 		false
 	} count _marker;
-	
+
 } else {
-	_wpArray = [ _marker, _infGroup, false, false, _PatrolAroundDis ] call T8U_fnc_CreateWaypointPositions;
+	_wpArray = [ _marker, _infGroup, false, false, _PatrolAroundDis, _startAngle ] call T8U_fnc_CreateWaypointPositions;
 	__DEBUG( __FILE__, "_wpArray", _wpArray );
 };
 
 {
-    private [ "_wp", "_markerName", "_markerFP" ];
-
-	if ( count _x > 0 ) then 
+	if ( count _x > 0 ) then
 	{
-		[ _group, _x, "MOVE", "SAFE", _statement, _range, _speedMode, [ 0, 15, 60 ] ] call T8U_fnc_CreateWaypoint;
+		[ _group, _x, "MOVE", _behaviour, _statement, _range, _speedMode, [ 0, 15, 60 ] ] call T8U_fnc_CreateWaypoint;
 
 		_cycle = _x;
-		
+
 		if ( T8U_var_DEBUG_marker ) then { [ _x ] call T8U_fnc_DebugMarker; };
 	};
 } forEach _wpArray;
 
 // Cycle in case we reach the end
-[ _group, _cycle, "CYCLE", "SAFE", "", 100 ] call T8U_fnc_CreateWaypoint;
+[ _group, _cycle, "CYCLE", _behaviour, "", 100, _speedMode ] call T8U_fnc_CreateWaypoint;
 
-_group setCurrentWaypoint [ _group, ceil ( random ( count ( waypoints _group ) ) ) ];
+// Select random waypoint on the patrol
+if ( _startAngle isEqualTo 0 ) then { _group setCurrentWaypoint [ _group, ceil ( random ( count ( waypoints _group )))];};
 
-if ( T8U_var_DEBUG ) then { [ "fn_patrolAround.sqf", "Successfully Initialized", [ _group ] ] spawn T8U_fnc_DebugLog; };
+// teleport the group to the current waypoint so they can start their loop, only if the group is newly created
+if ( _teleport ) then {[ _group ] call T8U_fnc_teleportGroupToCurrentWaypoint; };
+
+__DEBUG( __FILE__, "Successfully Initialized", _group );
 
 // Return
 true

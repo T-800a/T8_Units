@@ -22,7 +22,7 @@ params [
 	[ "_immobile", false, [true]]
 ];
 
-__DEBUG( __FILE__, "INIT", _this );
+// __DEBUG( __FILE__, "INIT", _this );
 
 if ( ( typeName _pos ) != "ARRAY" ) then { _pos = ( getPosATL _pos ) };
 
@@ -69,7 +69,7 @@ if ( ! _abort ) then
 	if ( _stance AND { random 100 > 33 } ) then { _unit setUnitPos "Middle"; };
 };
 
-__DEBUG( __FILE__, "FINISHED", _this );
+// __DEBUG( __FILE__, "FINISHED", _this );
 
 // Return
 true

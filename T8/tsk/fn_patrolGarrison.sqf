@@ -14,7 +14,8 @@
 	Parameter(s):
 	_this select 0: the group to which to assign the waypoints (Group)
 	_this select 1: the position on which to base the patrol (Markername / String)
-	_this select 2: (optional) debug markers on or off (Bool)
+	_this select 2: (optional) formation of group (String)
+	_this select 3: (optional) behaviour of group (String)
 
 	Returns:
 	Boolean - success flag
@@ -31,6 +32,10 @@ private [ "_group", "_marker", "_leader", "_n", "_speedMode", "_formation", "_st
 
 _group		= param [ 0, grpNull, [grpNull]];
 _marker		= param [ 1, "NO-MARKER-SET", ["",[]]];
+_infGroup	= param [ 2, true, [true]];
+_teleport	= param [ 3, false, [false]];
+_formation	= param [ 4, "RANDOM", [""]];
+_behaviour	= param [ 5, "SAFE", [""]];
 _leader		= leader _group;
 
 __DEBUG( __FILE__, "INIT", _this );
@@ -39,7 +44,9 @@ if ( isNull _group ) exitWith { false };
 if (( typeName _marker ) isEqualTo ( typeName "" ) AND {( getMarkerPos _marker ) isEqualTo [0,0,0] }) exitWith { false };
 if (( typeName _marker ) isEqualTo ( typeName [] ) AND {( count _marker ) isEqualTo 0 }) exitWith { false };
 
-_formation = [ "STAG COLUMN", "WEDGE", "VEE", "DIAMOND" ] call BIS_fnc_selectRandom;
+if(_formation == "RANDOM") then {
+	_formation = [ "STAG COLUMN", "WEDGE", "VEE", "DIAMOND" ] call BIS_fnc_selectRandom;
+};
 _speedMode = "LIMITED";
 
 _statementGetIn		= '[ this ] spawn T8U_fnc_GetInCover; [ this ] spawn T8U_fnc_GetOutVehicle; [ this, ( getPos this ) ] spawn T8U_fnc_GarrisonBuildings; ( group this ) enableAttack false;';
@@ -50,7 +57,7 @@ _group setBehaviour "AWARE";
 _group setSpeedMode _speedMode;
 _group setFormation _formation;
 
-[ _group, getMarkerPos _marker, "MOVE", "SAFE", "", _range, _speedMode ] call T8U_fnc_CreateWaypoint;
+[ _group, getMarkerPos _marker, "MOVE", _behaviour, "", _range, _speedMode ] call T8U_fnc_CreateWaypoint;
 
 // Create waypoints based on array of positions
 // Create waypoints based on array of positions
@@ -60,20 +67,20 @@ if (( typeName _marker ) isEqualTo ( typeName [] )) then
 	_wpArray = [];
 	{
 		__DEBUG( __FILE__, "_marker > _x", _x );
-		
+
 		if !(( getMarkerPos _x ) isEqualTo [0,0,0] ) then
 		{
 			_wpArrayTmp = [ _x, true ] call T8U_fnc_CreateWaypointPositions;
 			_wpArrayTmp = _wpArrayTmp call BIS_fnc_arrayShuffle;
-		
+
 			_wpArray append _wpArrayTmp;
 		};
-		
+
 		__DEBUG( __FILE__, "_wpArray", _wpArray );
-		
+
 		false
 	} count _marker;
-	
+
 } else {
 	_wpArray = [ _marker, true ] call T8U_fnc_CreateWaypointPositions;
 	_wpArray = _wpArray call BIS_fnc_arrayShuffle;
@@ -84,24 +91,30 @@ _n = 2;
 {
     private [ "_wp", "_markerName", "_markerFP" ];
 
-	if ( count _x > 0 ) then 
+	if ( count _x > 0 ) then
 	{
-		[ _group, _x, "MOVE", "SAFE", _statementGetIn, _range, _speedMode, [ 30, 30, 30 ] ] call T8U_fnc_CreateWaypoint;
-		[ _group, _x, "TALK", "SAFE", _statementGetOut, _range, _speedMode, [ 90, 120, 150 ] ] call T8U_fnc_CreateWaypoint;
-		
+		[ _group, _x, "MOVE", _behaviour, _statementGetIn, _range, _speedMode, [ 30, 30, 30 ] ] call T8U_fnc_CreateWaypoint;
+		[ _group, _x, "TALK", _behaviour, _statementGetOut, _range, _speedMode, [ 90, 120, 150 ] ] call T8U_fnc_CreateWaypoint;
+
 		// to regroup ?!
-		[ _group, _x, "MOVE", "SAFE", "", 10, "FULL", [ 30, 30, 30 ] ] call T8U_fnc_CreateWaypoint;
-		
+		[ _group, _x, "MOVE", _behaviour, "", 10, "FULL", [ 30, 30, 30 ] ] call T8U_fnc_CreateWaypoint;
+
 		if ( T8U_var_DEBUG_marker ) then { [ _x ] call T8U_fnc_DebugMarker; };
     };
 } forEach _wpArray;
 
 // Cycle in case we reach the end
-[ _group, ( _wpArray call BIS_fnc_selectRandom ), "CYCLE", "SAFE", "", 100, _speedMode, [ 30, 30, 30 ] ] call T8U_fnc_CreateWaypoint;
+[ _group, ( _wpArray call BIS_fnc_selectRandom ), "CYCLE", _behaviour, "", 100, _speedMode, [ 30, 30, 30 ] ] call T8U_fnc_CreateWaypoint;
 
 _group setCurrentWaypoint [ _group, 2 ];
 
+// teleport the group to the current waypoint so they can start their loop, only if the group is newly created
+if ( _teleport ) then {[ _group ] call T8U_fnc_teleportGroupToCurrentWaypoint; };
+
 __DEBUG( __FILE__, "Successfully Initialized", _group );
+
+
+/*
 
 // Exit garrisoning when group gets new task assigned
 waitUntil { sleep 2; [ _group ] call T8U_fnc_ReleaseGroup };
@@ -118,3 +131,5 @@ if ( isNull _group ) exitWith {};
 
 sleep 5;
 _group setVariable [ "T8U_gvar_Regrouped", true, false ];
+
+*/

@@ -12,34 +12,39 @@
 
 #include <..\MACRO.hpp>
 
-private [ "_target", "_shooter", "_group", "_units", "_targets", "_ptargets" ];
+params [
+	[ "_target",	objNull, [objNull]],
+	[ "_shooter",	objNull, [objNull]]
+];
 
-_target		= _this select 0;
-_shooter	= _this select 1;
-_group		= group _target;
+__DEBUG( __FILE__, "INIT", _this );
+if ( isNull _target ) exitWith {};
 
-_units		= units _target;
-_ptargets	= [];
+private _group	= group _target;
+if ( isNull _group ) exitWith {};
 
-if ( T8U_var_DEBUG ) then { [ "fn_onHitEvent.sqf", "INIT", _this ] spawn T8U_fnc_DebugLog; };
-if ( isNull _group ) exitWith { if ( T8U_var_DEBUG ) then { [ "fn_onHitEvent.sqf", "ABORT", _this ] spawn T8U_fnc_DebugLog; }; };
+private _units	= units _group;
 
-_targets = ( leader _group ) nearTargets 750;
-{ if ( ( _x select 3 ) > 0 ) then { _ptargets pushBack ( _x select 4 ); }; false } count _targets;
-
-if ( T8U_var_DEBUG ) then { [ "fn_onHitEvent.sqf", "PROCESSED TARGETS:", [ _ptargets, ( _target findNearestEnemy _target ) ] ] spawn T8U_fnc_DebugLog; };
-
-// if ( ( count _ptargets ) < 1 ) then
-if (( _target findNearestEnemy _target ) isEqualTo objNull ) then
+// throw a smoke
+if ( alive _target AND {( __GetOVAR( _target, "T8U_ovar_lastSmoke", -120 )) < ( time - 30 )}) then
 {
+	__SetOVAR( _target, "T8U_ovar_lastSmoke", time );
+	
 	sleep 1.5;
-	[ _target, _shooter, "CREATE" ] spawn T8U_fnc_SmokeScreen;
+	
+	[ _target, _shooter, "THROW" ] spawn T8U_fnc_SmokeScreen;
+	__DEBUG( __FILE__, "THROWSMOKE", _target );
+};
 
-} else {
-
+// order supressive fire
+if ( alive ( leader _group ) AND { !isNull _shooter }) then
+{
 	{
-		if ( ( typeOf _x ) in T8U_var_SuppressingUnits ) then { _x suppressFor ( 10 + ( random 10 )); };
-	} count ( units _group );
+		if ( ( typeOf _x ) in T8U_var_SuppressingUnits ) then { _x commandSuppressiveFire _shooter; };
+		
+		false
+	} count _units;
+	__DEBUG( __FILE__, "SUPPRESS", _group );
 };
 
 

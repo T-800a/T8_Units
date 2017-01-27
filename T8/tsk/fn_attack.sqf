@@ -28,11 +28,13 @@
 private [ "_group", "_marker", "_infGroup", "_speedMode", "_formation", "_statement", "_range", "_behaviour" ];
 
 _group		= param [ 0, grpNull, [grpNull]];
-_marker		= param [ 1, "NO-MARKER-SET", [""]]; 
+_marker		= param [ 1, "NO-MARKER-SET", ["",[]]]; 
 _infGroup	= param [ 2, true, [true]]; 
 
 if ( T8U_var_DEBUG ) then { [ "fn_attack.sqf", "INIT", _this ] spawn T8U_fnc_DebugLog; };
 
+if ((( typeName _marker ) isEqualTo "ARRAY" ) AND {( count _marker ) isEqualTo 0 }) exitWith { false };
+if (( typeName _marker ) isEqualTo "ARRAY" ) then { _marker = _marker call BIS_fnc_selectRandom; };
 if ( isNull _group OR { ! alive ( leader _group ) } OR { str ( getMarkerPos _marker ) == str ([0,0,0]) } ) exitWith { false };
 
 _formation = [ "WEDGE", "VEE" ] call BIS_fnc_selectRandom;

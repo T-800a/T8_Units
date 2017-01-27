@@ -12,19 +12,17 @@
 
 #include <..\MACRO.hpp>
 
-private [ "_target", "_shooter", "_attacked" ];
+params [
+	[ "_target",	objNull, [objNull]],
+	[ "_shooter",	objNull, [objNull]]
+];
 
-_target		= _this select 0;
-_shooter	= _this select 1;
+__DEBUG( __FILE__, "INIT", _this );
 
-if ( _target isEqualTo _shooter ) exitWith { if ( T8U_var_DEBUG ) then { [ "fn_hitEvent.sqf", "NOPE" ] spawn T8U_fnc_DebugLog; }; };
-if ( T8U_var_DEBUG ) then { [ "fn_hitEvent.sqf", "INIT", _this ] spawn T8U_fnc_DebugLog; };
+if ( isNull _target ) exitWith {};
+if ( _target isEqualTo _shooter ) exitWith {};
 
-
-_attacked = ( group _target ) getVariable [ "T8U_gvar_Attacked", 0 ];
-
-if ( T8U_var_DEBUG ) then { [ "fn_hitEvent.sqf", "_attacked", _attacked ] spawn T8U_fnc_DebugLog; };
-
-if ( _attacked < ( time - 15 ) ) then { [ _target, _shooter ] spawn T8U_fnc_OnHitEvent; };
+if (( __GetOVAR(( group _target ), "T8U_gvar_Attacked", 0 )) < ( time - 10 )) then { [ _target, _shooter ] spawn T8U_fnc_OnHitEvent; };
 
 ( group _target ) setVariable [ "T8U_gvar_Attacked", time, false ];
+

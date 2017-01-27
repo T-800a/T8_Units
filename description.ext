@@ -9,6 +9,8 @@
 */
 
 
+#include <T8\CONFIG.hpp>
+
 class cfgFunctions
 {
 	#include <T8\FUNCTIONS.hpp>

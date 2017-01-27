@@ -7,6 +7,12 @@
 	Author:		T-800a
 	E-Mail:		t-800a@gmx.net
 
+
+	!!! FUNCTION OBSOLETE / OUTDATED !!!
+	!!! FUNCTION OBSOLETE / OUTDATED !!!
+	!!! FUNCTION OBSOLETE / OUTDATED !!!
+
+
  =======================================================================================================================
 */
 
