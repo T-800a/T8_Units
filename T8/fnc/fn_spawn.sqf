@@ -49,7 +49,7 @@ if ( typeName _MasterArray != "ARRAY" OR { !( count _MasterArray > 0 ) } ) exitW
 	private _groupArray			= _x param [ 0, [], [[]]];
 	private _taskArray			= _x param [ 1, [], [[]]];
 	private _cAM				= _x param [ 2, [], [[]]];
-	private _sAM				= _x param [ 3, [], [[],""]];
+	private _sAM				= _x param [ 3, [], [[],"",true]];
 	private _cachePos			= _x param [ 4, [], [[],""]];
 	
 	// get basic vehicle and marker setup
@@ -118,7 +118,11 @@ if ( typeName _MasterArray != "ARRAY" OR { !( count _MasterArray > 0 ) } ) exitW
 
 	// get additional settings
 	// parse from config
-	if (( typeName _sAM ) isEqualTo "STRING" AND { isClass ( _cfg >> "groupSettings" >> _sAM )}) then
+	
+	if ( _sAM isEqualType true ) then { _teleport = _sAM; };
+	if ( _sAM isEqualType [] ) then { _teleport = _sAM param [ 0, false, [false]]; };
+	
+	if ( _sAM isEqualType "" AND { isClass ( _cfg >> "groupSettings" >> _sAM )}) then
 	{
 		_ovPresets				= true;
 		private _skill			= [];
@@ -139,15 +143,12 @@ if ( typeName _MasterArray != "ARRAY" OR { !( count _MasterArray > 0 ) } ) exitW
 			default		{ false };
 		};
 
-	} else {
-	// parse array
-		_teleport = _sAM param [ 0, false, [false]];
 	};
 	
 
 	// check for errors!
 	if (
-			(( typeName _vehicleArray isEqualTo "ARRAY" ) AND { count _vehicleArray < 1 })
+			(( _vehicleArray isEqualType [] ) AND { count _vehicleArray < 1 })
 		OR	(( typeName _vehicleArray isEqualTo "CONFIG" ) AND { isNull _vehicleArray })
 		OR	{ _posMkr isEqualTo "NO-POS-GIVEN" }
 		OR	{ _type isEqualTo "NO-TASK-GIVEN" }
