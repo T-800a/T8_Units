@@ -42,6 +42,7 @@
 			addFunction(combatBehaviorMod);
 			addFunction(createFlankingPos);
 			addFunction(createSpawnPos);
+			addFunction(findObjectivePos);
 			addFunction(createUnitContainer);
 			addFunction(createWaypoint);
 			addFunction(createWaypointPositions);
