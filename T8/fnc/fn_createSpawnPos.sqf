@@ -79,7 +79,10 @@ __DEBUG( __FILE__, "_minDis", _minDis );
 __DEBUG( __FILE__, "_objectPos", _objectPos );
 
 // return position
-if ( count _objectPos > 1 ) exitWith { _objectPos };
+if ( count _objectPos > 1 ) exitWith { 
+	_objectPos = [_objectPos, 1, 150, 3, 0, 20, 0] call BIS_fnc_findSafePos;
+	_objectPos 
+};
 
 // or bool
 false
