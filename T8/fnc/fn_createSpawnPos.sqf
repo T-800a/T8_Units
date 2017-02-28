@@ -10,47 +10,76 @@
  =======================================================================================================================
 */
 
+if !(isServer) exitWith {};
+
 #include <..\MACRO.hpp>
 
-private [ "_areaSize", "_areaSizeX", "_areaSizeY", "_wpPosFEP", "_loop", "_tmpAreaSize", "_markerPos" ];
+private [ "_playerDir", "_objectPos", "_object", "_debug", "_minDis", "_n", "_range", "_startPos" ];
 
-private _marker = param [ 0, [0,0,0], [ "", []]];
+params [
+	[ "_marker", [0,0,0], [ "", []]]
+];
 
 if ( _marker isEqualTo [0,0,0] ) exitWith { if ( T8U_var_DEBUG ) then { [ "fn_createSpawnPos.sqf", "Can't create SpawnPos" ] spawn T8U_fnc_DebugLog; }; false };
 
-if (( typeName _marker ) isEqualTo ( typeName "STR" )) then 
-{
+_range = 50;
+_startPos = [0,0,0];
+if (( typeName _marker ) isEqualTo ( typeName "STR" )) then {
 	if (( getMarkerPos _marker ) isEqualTo [0,0,0]) exitWith { if ( T8U_var_DEBUG ) then { [ "fn_createSpawnPos.sqf", "Can't create SpawnPos" ] spawn T8U_fnc_DebugLog; }; false };
 	
 	_areaSizeX		= ( getMarkerSize _marker ) select 0;
 	_areaSizeY		= ( getMarkerSize _marker ) select 1;
-	_areaSize		= if ((( _areaSizeX + _areaSizeY ) / 2 ) < 150 ) then { 50 } else {(( _areaSizeX + _areaSizeY ) / 2 ) / 3 };
-	_tmpAreaSize	= _areaSize;
-	_markerPos		= getMarkerPos _marker;
-
+	_range		= if ((( _areaSizeX + _areaSizeY ) / 2 ) < 150 ) then { 50 } else {(( _areaSizeX + _areaSizeY ) / 2 ) / 3 };
+	_startPos = getMarkerPos _marker;
 } else {
-	_areaSizeX		= 50;
-	_areaSizeY		= 50;
-	_areaSize		= 50;
-	_tmpAreaSize	= 50;
-	_markerPos		= _marker;
+    _startPos = _marker;
 };
 
-_wpPosFEP		= [];
-_loop			= true;
+_objectPos = [];
+_n = 1;
+_minDis = 20;
 
-
-while { _loop } do
+while { count _objectPos < 1 } do
 {
-	private [ "_spawnPos", "_roadObj", "_roadPos"];
-	_spawnPos = [ _markerPos, random _tmpAreaSize, random 360 ] call BIS_fnc_relPos;
-	_roadObj = [ _spawnPos, 50 ] call BIS_fnc_nearestRoad;
-	if ( isNull _roadObj ) then { _roadPos = _spawnPos; } else {  _roadPos = getPos _roadObj; };
-	_wpPosFEP =  _roadPos findEmptyPosition [ 1 , 50 , "Land_VR_Block_02_F" ]; // 20x20 block ... should be enough space for a Trooper
-	if (( surfaceIsWater _roadPos || (( count _wpPosFEP  ) < 2 ) && {( _wpPosFEP distance ( nearestObject _wpPosFEP )) < 10 })) then { _tmpAreaSize = _tmpAreaSize + 5; } else { _loop = false; };
+	private [ "_relPos", "_tmpPos", "_roadPos", "_roadObj" ];
+
+	// find a relative location in a random 360 radius from given marker
+	_relPos = [ _startPos , random _range, random 360 ] call BIS_fnc_relPos;
+	
+	// try and put the position on the nearest road like it was in the old createSpawnPos
+	_roadObj = [ _relPos, 50 ] call BIS_fnc_nearestRoad;
+	if ( !isNull _roadObj ) then {
+		_relPos = getPos _roadObj; 	
+	};
+	
+	// try and find an empty position
+	_tmpPos = _relPos findEmptyPosition [ 5, 50, "Land_VR_Block_02_F" ];
+
+	// check if the empty position isn't in the water or has any closeby object 
+	// that could cause the unit to spawn inside
+	if ( 	count _tmpPos > 1
+			&& { !surfaceIsWater _tmpPos }
+			&& { ( _tmpPos distance ( nearestObject _tmpPos )) > _minDis }) then { 
+		_objectPos = _tmpPos; 
+	};
+
+	// the longer we attempt to find a valid location decrease the allowed distance
+	// of a nearby object that could prevent spawning, exit the function when we are past
+	// 500 tries
+	if ( _n isEqualTo 300 ) then { _minDis = 10; };
+	if ( _n isEqualTo 400 ) then { _minDis = 1; };
+	if ( _n > 500 ) exitWith {};
+	
+	// increase the amount of tries to search for a random location
+	_n = _n + 1;
 };
 
-if ( T8U_var_DEBUG ) then { [ "fn_createSpawnPos.sqf", "SpawnPos", _wpPosFEP ] spawn T8U_fnc_DebugLog; };
+__DEBUG( __FILE__, "_n", _n );
+__DEBUG( __FILE__, "_minDis", _minDis );
+__DEBUG( __FILE__, "_objectPos", _objectPos );
 
-// Return
-_wpPosFEP
+// return position
+if ( count _objectPos > 1 ) exitWith { _objectPos };
+
+// or bool
+false

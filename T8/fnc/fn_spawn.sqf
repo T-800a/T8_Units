@@ -171,9 +171,9 @@ if ( typeName _MasterArray != "ARRAY" OR { !( count _MasterArray > 0 ) } ) exitW
 	if ( _cachePos isEqualTo [0,0,0]) then { _cachePos = _posMkr; };
 	if ( count _cachePos > 1 ) then
 	{
-		_spawnPos = [ _cachePos ] call T8U_fnc_findObjectivePos;
+		_spawnPos = [ _cachePos ] call T8U_fnc_createSpawnPos;
 	} else {
-		_spawnPos = [ _posMkr ] call T8U_fnc_findObjectivePos;
+		_spawnPos = [ _posMkr ] call T8U_fnc_createSpawnPos;
 	};
 
 	// create some relative spawn positions for vehicle type stuff
