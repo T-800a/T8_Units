@@ -49,10 +49,10 @@
 #define false			1
 #define true			2
 
-#define EAST			0
-#define WEST			1
-#define RESISTANCE		2
-#define CIVILIAN		3
+#define __EAST			1
+#define __WEST			2
+#define __RESI			3
+#define __CIVI			4
 
 
 class cfgT8Units
@@ -92,7 +92,11 @@ class cfgT8Units
 		allow_ZEUS			= true;
 
 		// standard side for spawned units
-		enemySide			= EAST;
+		// 					__EAST = 1
+		//					__WEST = 2
+		//					__RESI = 3
+		//					__CIVI = 4
+		enemySide			= __EAST;
 		
 		// selected modset for unit group compilation
 		// see:		- class groupCompilations

@@ -106,7 +106,8 @@ __DEBUG( __FILE__, "END OCCUPY > _immobile", _immobile );
 
 if ( _immobile ) then
 {
-	{ if !( isNull _x ) then { _x enableAI "MOVE"; }; false } count _unitsRelease;
+	// { if !( isNull _x ) then { _x enableAI "MOVE"; }; false } count _unitsRelease;
+	{ if !( isNull _x ) then { _x enableAI "TARGET"; _x forceSpeed -1; }; false } count _unitsRelease;
 };
 
 // remove occupation

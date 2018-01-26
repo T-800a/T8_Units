@@ -67,12 +67,14 @@ while { sleep _timeout; _doLoop } do
 {	
 	private [ "_task", "_markerText", "_suppression", "_fnc_sT" ];
 	_fnc_sT = { private "_arr"; _arr = toArray _this; _arr resize 4; toString _arr };
-	if ( !isNull ( assignedVehicle _oL ) ) then { _markerType = "o_armor"; _v = assignedVehicle _oL; } else { _markerType = "o_inf"; };
+	private _veh = assignedVehicle _oL;
+	if ( !isNull _veh ) then { _markerType = "o_armor"; } else { _markerType = "o_inf"; };
 	
 // UGLY AS FUCK !!! -.-
-	_suppression = []; { private [ "_s" ]; _s = ( str ( getSuppression _x )) call _fnc_sT; if ( !isNil "_s" ) then { _suppression pushback call compile _s; }; false } count units _group;
+//	_suppression = []; { private [ "_s" ]; _s = ( str ( getSuppression _x )) call _fnc_sT; if ( !isNil "_s" ) then { _suppression pushback call compile _s; }; false } count units _group;
+
 	_task = _group getVariable [ "T8U_gvar_Assigned", " - " ]; if ( isNil "_task" ) then { _task = " - "; };
-	_markerText = format [ " %1 [%2][%3][%4][%5]S:%6", _group, count ( units _group ), ( combatMode _group ) call _fnc_sT, ( behaviour _oL ) call _fnc_sT, _task call _fnc_sT, _suppression ]; 
+	_markerText = format [ " %1 [%2][%3][%4][%5][%6]", _group, count ( units _group ), ( combatMode _group ) call _fnc_sT, ( behaviour _oL ) call _fnc_sT, _task call _fnc_sT, typeOf _veh ]; 
 	_marker setMarkerText _markerText;
 	_marker setMarkerPos ( getpos ( leader _group ) );
 	_marker setMarkerType _markerType;

@@ -463,7 +463,7 @@ if ( typeName _MasterArray != "ARRAY" OR { !( count _MasterArray > 0 ) } ) exitW
 						// _x assignAsCargoIndex [( _p select 0 ), ( _p select 1 )];
 						_x assignAsCargo ( _p select 0 );
 						_x moveInCargo ( _p select 0 );
-						_x action [ "GETIN CARGO", ( _p select 0 )];
+						_x action [ "getInCargo", ( _p select 0 )];
 					};
 					false
 				} count _unitsOnFoot;

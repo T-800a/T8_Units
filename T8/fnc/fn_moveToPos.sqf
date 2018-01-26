@@ -65,7 +65,8 @@ if ( ! _abort ) then
 	doStop _unit;
 	if ( _dir < 99999 ) then { _unit setDir _dir; };
 	if (( count _watchPos ) > 0 ) then { _unit doWatch _watchPos; };
-	if ( _immobile ) then { _unit disableAI "MOVE"; };
+	// if ( _immobile ) then { _unit disableAI "MOVE"; };
+	if ( _immobile ) then { _unit disableAI "TARGET"; _unit forceSpeed 0; };
 	if ( _stance AND { random 100 > 33 } ) then { _unit setUnitPos "Middle"; };
 };
 

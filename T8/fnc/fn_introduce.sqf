@@ -275,7 +275,7 @@ if !(( side _group ) isEqualTo civilian ) then
 				private _p = _freeCargo call BIS_fnc_arrayPop;
 				_x assignAsCargo ( _p select 0 );
 				_x moveInCargo ( _p select 0 );
-				_x action [ "GETIN CARGO", ( _p select 0 )];
+				_x action [ "getInCargo", ( _p select 0 )];
 			};
 			false
 		} count _unitsOnFoot;

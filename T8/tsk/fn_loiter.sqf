@@ -88,7 +88,7 @@ _wp1 setWaypointType "SAD";
 _wp1 setWaypointBehaviour "SAFE";	
 _wp1 setWaypointSpeed "LIMITED";
 _wp1 setWaypointCompletionRadius (random (_range));
-_wp setWaypointTimeout [ 10, 20, 30 ];
+_wp1 setWaypointTimeout [ 10, 20, 30 ];
 _wp1 setWaypointStatements ["true", "[ this ] spawn T8U_fnc_GetOutVehicle;"];
 
 // Cycle

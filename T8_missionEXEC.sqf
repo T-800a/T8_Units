@@ -103,7 +103,7 @@ _SpawnThisUnits =
 	[ [ _groupArrayW_APC + _groupArrayFireTeam, "Marker07", false ], [ "PATROL_URBAN" ], [ false, false, false ]],
 	[ [ _groupArrayW_APC + _groupArrayFireTeam, [ "marker_urban_01", "marker_urban_02" ], false ], [ "PATROL_URBAN" ]],
 	[ [ _groupArrayFullTeam, "ip" ], [ "PATROL_MARKER", [ "ip1", "ip2", "ip3" ] ] ],
-	[ [ _groupArrayIfritPat + _groupArrayFullTeam, "vp", false ], [ "PATROL_MARKER", [ "vp1", "vp2", "vp3" ], false ]],
+	[ [ _groupArrayIfritPat + _groupArrayFullTeam, "vp", true ], [ "PATROL_MARKER", [ "vp1", "vp2", "vp3" ], false ]],
 	[ [ _groupArraySniperTeam, "spawnSnipers" ], [ "OVERWATCH", "overwatchTHIS" ]],
 	
 	[ [ "fireteam", [ "Marker08_01", "Marker08_02" ], "T8u_fnc_rmNVG_TEST" ], [ "PATROL" ]],
